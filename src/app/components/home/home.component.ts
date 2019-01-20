@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GraphComponent } from "../graph/graph.component";
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
