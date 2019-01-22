@@ -16,6 +16,10 @@ export class APIService {
     return this.httpClient.get(`${this.API_URL}/${resource_path}`);
   }
 
+  getStats() {
+    return this.httpClient.get(`${this.API_URL}/about`);
+  }
+
   getEvaluationFake() {
     return {
       "external_url": "100percentfedup.com",

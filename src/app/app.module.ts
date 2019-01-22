@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatProgressSpinnerModule, MatProgressBarModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatProgressSpinnerModule, MatProgressBarModule, MatDividerModule, MatTableModule } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from  '@angular/common/http';
@@ -39,6 +39,8 @@ import { AboutComponent } from './components/about/about.component';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatDividerModule,
+    MatTableModule,
     NgxGraphModule,
     NgxChartsModule
   ],
