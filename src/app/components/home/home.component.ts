@@ -16,45 +16,63 @@ export class HomeComponent implements OnInit {
 
   score_pos: number;
   score_neg: number;
+  score_unk: number;
   tweet_cnt: number;
 
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
+  pie_data_you = []
+  pie_data_overall = []
+  loading_you: boolean = false
+  show_you: boolean = false
+
+  result_you = {}
+  result_overall = {}
+  loading_overall: boolean = false
 
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
+    this.update_overall()
   }
-/*
-  get_colour(score) {
-    if (score > 0) {
-      return `rgb(0,${Math.abs(score * 255)},0)`
-    } else if (score < 0) {
-      return `rgb(${Math.abs(score * 255)},0,0)`
-    } else {
-      return 'white'
-    }
+
+  update_overall() {
+    this.loading_overall = true
+    this.apiService.getEvaluation(`count_urls/overall`).subscribe((results) => {
+      this.loading_overall = false
+      this.result_overall = results
+      console.log(this.result_overall)
+      this.pie_data_overall = this.extract_results(results)
+    })
   }
-*/
-  loading: boolean = false
+
+  private extract_results(json_data: any) {
+
+    return [{
+      name: 'Good',
+      value: json_data.verified_urls_cnt
+    }, {
+      name: 'Bad',
+      value: json_data.fake_urls_cnt
+    }, {
+      name: 'Unknown',
+      value: json_data.unknown_urls_cnt
+    }]
+  }
 
   onSubmit() {
-    this.loading = true
+    this.show_you = true
+    this.loading_you = true
     console.log("clicked!!!")
-    this.apiService.getEvaluation(`analyse/users?screen_name=${this.screen_name}`).subscribe((results: any) => {
-      this.loading = false
-      this.data_for_graph = results
-      this.score = results.score.value
-      //this.score_rescaled = 50 + 50 * (this.score)
-      const counts = results.reasons.reduce((partial, el) => {
-        if (el.related_analysis.score.value > 0) {
-          partial['pos']++
-        } else {
-          partial['neg']++
-        }
-        return partial
-      }, {pos: 0, neg: 0})
-      this.tweet_cnt = results.tweet_cnt
-      this.score_pos = 100 * (counts.pos / (counts.pos + counts.neg))
-      this.score_neg = 100 * (counts.neg / (counts.pos + counts.neg))
+    this.apiService.getEvaluation(`count_urls/users?handle=${this.screen_name}`).subscribe((results: any) => {
+      this.loading_you = false
+      this.result_you = results
+
+      this.pie_data_you = this.extract_results(results)
+
+      this.update_overall()
     })
   }
 }
