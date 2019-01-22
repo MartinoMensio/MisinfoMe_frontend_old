@@ -1,0 +1,24 @@
+<table mat-table [dataSource]="data" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="tweet_id">
+    <th mat-header-cell *matHeaderCellDef> Tweet </th>
+    <td mat-cell *matCellDef="let element"> {{element.tweet_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="urls">
+    <th mat-header-cell *matHeaderCellDef> URLs </th>
+    <td mat-cell *matCellDef="let element"> {{element.urls}} </td>
+  </ng-container>
+  <ng-container matColumnDef="reason">
+    <th mat-header-cell *matHeaderCellDef> Reason </th>
+    <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+  </ng-container>
+  <ng-container matColumnDef="dataset_names">
+    <th mat-header-cell *matHeaderCellDef> Dataset </th>
+    <td mat-cell *matCellDef="let element"> {{element.dataset_names}} </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

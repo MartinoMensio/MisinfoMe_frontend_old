@@ -1,0 +1,7 @@
+table {
+    width: 100%;
+}
+
+.mat-column-dataset_names{
+    max-width: 100px !important;
+}

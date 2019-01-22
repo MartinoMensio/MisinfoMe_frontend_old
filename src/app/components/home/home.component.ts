@@ -32,6 +32,10 @@ export class HomeComponent implements OnInit {
   result_overall = {}
   loading_overall: boolean = false
 
+
+  table_data_bad = []
+  table_data_good = []
+
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
@@ -62,6 +66,19 @@ export class HomeComponent implements OnInit {
     }]
   }
 
+  prepare_table_data(raw_urls_data: Array<any>) {
+    // TODO first aggregate by tweet_id
+    return raw_urls_data.reduce((acc, curr) => {
+      acc.push({
+        tweet_id: curr.found_in_tweet,
+        urls: [curr._id],
+        reason: curr.reason,
+        dataset_names: curr.score.sources
+      })
+      return acc
+    }, [])
+  }
+
   onSubmit() {
     this.show_you = true
     this.loading_you = true
@@ -71,6 +88,9 @@ export class HomeComponent implements OnInit {
       this.result_you = results
 
       this.pie_data_you = this.extract_results(results)
+
+      this.table_data_bad = this.prepare_table_data(results.fake_urls)
+      this.table_data_good = this.prepare_table_data(results.verified_urls)
 
       this.update_overall()
     })

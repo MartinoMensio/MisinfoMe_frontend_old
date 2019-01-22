@@ -33,9 +33,50 @@
       </div>
     </mat-card>
     <mat-divider></mat-divider>
-    <!-- <mat-card>
-      <h3>The bad </h3>
-    </mat-card> -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          The bad URLs you shared
+        </mat-panel-title>
+        <mat-panel-description>
+          Click to expand
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>For these URLs we know that they are not good. They may have been fact-checked or simply come from known domains that share fake content.</p>
+
+      <app-table-tweets [table_data]="table_data_bad"></app-table-tweets>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          The good URLs you shared
+        </mat-panel-title>
+        <mat-panel-description>
+          Click to expand
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>Tor these URLs we know that they are good. They may relate to fact-checking articles or come from well known domains.</p>
+
+      <app-table-tweets [table_data]="table_data_good"></app-table-tweets>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          The controversial URLs you shared
+        </mat-panel-title>
+        <mat-panel-description>
+          Click to expand
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>For these URLs we cannot assert their truthiness but some of our datasets suggest different points of view so that you get a more complete idea of the problems discussed.</p>
+
+
+    </mat-expansion-panel>
   </div>
   <mat-divider></mat-divider>
   <mat-card>

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatProgressSpinnerModule, MatProgressBarModule, MatDividerModule, MatTableModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatProgressSpinnerModule, MatProgressBarModule, MatDividerModule, MatTableModule, MatExpansionModule } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from  '@angular/common/http';
@@ -15,6 +15,7 @@ import { EditComponent } from './components/edit/edit.component';
 import { HomeComponent } from './components/home/home.component';
 import { GraphComponent } from './components/graph/graph.component';
 import { AboutComponent } from './components/about/about.component';
+import { TableTweetsComponent } from './components/table-tweets/table-tweets.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AboutComponent } from './components/about/about.component';
     EditComponent,
     HomeComponent,
     GraphComponent,
-    AboutComponent
+    AboutComponent,
+    TableTweetsComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +43,7 @@ import { AboutComponent } from './components/about/about.component';
     MatProgressBarModule,
     MatDividerModule,
     MatTableModule,
+    MatExpansionModule,
     NgxGraphModule,
     NgxChartsModule
   ],
