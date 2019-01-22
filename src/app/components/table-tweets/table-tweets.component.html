@@ -2,7 +2,7 @@
 
   <ng-container matColumnDef="tweet_id">
     <th mat-header-cell *matHeaderCellDef> Tweet </th>
-    <td mat-cell *matCellDef="let element"> {{element.tweet_id}} </td>
+    <td mat-cell *matCellDef="let element"> <ngx-tweet tweetId="{{element.tweet_id}}"></ngx-tweet> </td>
   </ng-container>
 
   <ng-container matColumnDef="urls">
