@@ -1,14 +1,24 @@
-<div>
+<div class="container">
   <h1>Welcome</h1>
   <p>Welcome to the Misinformed-me test. Put your Twitter screen name in the box and get your analysis!</p>
   <mat-card>
-    <form>
+    <form (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <mat-label></mat-label>
-        <input matInput placeholder="Twitter screen name" required="true" name="screen_name">
+        <mat-label for="screen_name">Screen Name</mat-label>
+        <input matInput placeholder="Twitter screen name" required="true" name="screen_name" [(ngModel)]="screen_name">
       </mat-form-field>
-      <button mat-raised-button color="accent">Submit</button>
+      <button type="submit" mat-raised-button color="accent">Submit</button>
     </form>
+    <mat-spinner *ngIf="loading"></mat-spinner>
   </mat-card>
-  <app-graph></app-graph>
+  <p></p>
+  <mat-card>
+    <div>We retrieved {{tweet_cnt}} tweets</div>
+    <div>Your score is: {{score}} (belonging to the interval [-1, 1])</div>
+    <div>Good links: {{score_pos}}%</div>
+    <mat-progress-bar [value]="score_pos" color="get_colour(score)"></mat-progress-bar>
+    <div>Bad links: {{score_neg}}%</div>
+    <mat-progress-bar [value]="score_neg" color="warn"></mat-progress-bar>
+  </mat-card>
+  <app-graph [data]="data_for_graph"></app-graph>
 </div>
