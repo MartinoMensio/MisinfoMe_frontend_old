@@ -23,7 +23,8 @@
   <div *ngIf="show_you">
     <mat-card>
       <mat-spinner *ngIf="loading_you"></mat-spinner>
-      <div *ngIf="!loading_you">
+      <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
+      <div *ngIf="!loading_you && !error_you">
         <h3>You</h3>
         <div>We retrieved {{result_you.tweets_cnt}} tweets</div>
         <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
@@ -32,6 +33,7 @@
         </ngx-charts-advanced-pie-chart>
       </div>
     </mat-card>
+    <div *ngIf="!error_you">
     <mat-divider></mat-divider>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -78,10 +80,12 @@
 
     </mat-expansion-panel>
   </div>
+</div>
   <mat-divider></mat-divider>
   <mat-card>
     <mat-spinner *ngIf="loading_overall"></mat-spinner>
-    <div *ngIf="!loading_overall">
+    <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
+    <div *ngIf="!loading_overall && !error_overall">
       <h3>Overall</h3>
       <div>We retrieved {{result_overall.tweets_cnt}} tweets</div>
       <div>Average score is: {{result_overall.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>

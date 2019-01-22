@@ -23,14 +23,16 @@ export class HomeComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
 
+  result_you = {}
   pie_data_you = []
-  pie_data_overall = []
   loading_you: boolean = false
   show_you: boolean = false
+  error_you: boolean = false
 
-  result_you = {}
+  pie_data_overall = []
   result_overall = {}
   loading_overall: boolean = false
+  error_overall: boolean = false
 
 
   table_data_bad = []
@@ -44,11 +46,16 @@ export class HomeComponent implements OnInit {
 
   update_overall() {
     this.loading_overall = true
+    this.error_overall = false
     this.apiService.getEvaluation(`count_urls/overall`).subscribe((results) => {
-      this.loading_overall = false
       this.result_overall = results
       console.log(this.result_overall)
       this.pie_data_overall = this.extract_results(results)
+    }, (error) => {
+      console.log(error)
+      this.error_overall = true
+    }).add(() => {
+      this.loading_overall = false
     })
   }
 
@@ -82,17 +89,21 @@ export class HomeComponent implements OnInit {
   onSubmit() {
     this.show_you = true
     this.loading_you = true
+    this.error_you = false
     console.log("clicked!!!")
     this.apiService.getEvaluation(`count_urls/users?handle=${this.screen_name}`).subscribe((results: any) => {
-      this.loading_you = false
       this.result_you = results
-
       this.pie_data_you = this.extract_results(results)
 
       this.table_data_bad = this.prepare_table_data(results.fake_urls)
       this.table_data_good = this.prepare_table_data(results.verified_urls)
 
       this.update_overall()
+    }, (error) => {
+      console.log(error)
+      this.error_you = true
+    }).add(() => {
+      this.loading_you = false
     })
   }
 }
