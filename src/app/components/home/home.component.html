@@ -1,25 +1,18 @@
 <div>
-  <h1>Welcome</h1>
-  <p>Welcome to the Misinformed-me test. Put your Twitter screen name (the part after the @ symbol) in the box and get
-    your analysis!</p>
+  <h1>Misinformed-me?</h1>
+  <p>It is hard to distinguish fact from fiction on social media.</p>
+  <p>Assess your Twitter profile, we will verify if your posts contain some detected misinformation.</p>
   <mat-card>
     <form (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <mat-label for="screen_name">Screen Name e.g. "realDonaldTrump"</mat-label>
+        <mat-label for="screen_name">Your Twitter screen name</mat-label>
         <input matInput placeholder="Twitter screen name" required="true" name="screen_name" [(ngModel)]="screen_name">
       </mat-form-field>
-      <button type="submit" mat-raised-button color="accent">Submit</button>
+      <button type="submit" mat-raised-button color="accent">Assess</button>
+      <p>Your screen name is the part after the '@', e.g. <i>realDonaldTrump</i></p>
     </form>
   </mat-card>
   <p></p>
-  <!-- <mat-card>
-    <div>We retrieved {{tweet_cnt}} tweets</div>
-    <div>Your score is: {{score}}% (0% is bad, 50% is unknown, 100% is good)</div>
-    <div>Good links: {{score_pos}}%</div>
-    <mat-progress-bar [value]="score_pos" color="get_colour(score)"></mat-progress-bar>
-    <div>Bad links: {{score_neg}}%</div>
-    <mat-progress-bar [value]="score_neg" color="warn"></mat-progress-bar>
-  </mat-card> -->
   <!-- <app-graph [data]="data_for_graph"></app-graph> -->
   <div *ngIf="show_you">
     <mat-card>
@@ -28,7 +21,7 @@
       <div *ngIf="!loading_you && !error_you">
         <h3>You</h3>
         <div>We retrieved {{result_you.tweets_cnt}} tweets</div>
-        <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
+        <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div>
         This is how the URLs that you shared are distirbuted
         <ngx-charts-advanced-pie-chart [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
@@ -38,8 +31,8 @@
       <mat-divider></mat-divider>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            The bad URLs you shared
+          <mat-panel-title class="bad">
+              <i class="material-icons md-48">error</i>The misinforming URLs you shared
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -49,13 +42,13 @@
         <p>For these URLs we know that they are not good. They may have been fact-checked or simply come from known
           domains that share fake content.</p>
 
-        <app-table-tweets [table_data]="table_data_bad"></app-table-tweets>
+        <app-table-tweets [data]="table_data_bad"></app-table-tweets>
 
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            The good URLs you shared
+          <mat-panel-title class="good">
+              <i class="material-icons md-48">check_circle</i>The verified URLs you shared
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -65,7 +58,7 @@
         <p>Tor these URLs we know that they are good. They may relate to fact-checking articles or come from well known
           domains.</p>
 
-        <app-table-tweets [table_data]="table_data_good"></app-table-tweets>
+        <app-table-tweets [data]="table_data_good"></app-table-tweets>
 
       </mat-expansion-panel>
       <mat-expansion-panel>
@@ -85,32 +78,35 @@
       </mat-expansion-panel>
     </div>
   </div>
-  <mat-divider></mat-divider>
+  <p></p>
+  <mat-card *ngIf="!loading_overall && !error_overall && !loading_you && !error_you && show_you">
+    <div>
+      <h3>You against the average user</h3>
+      <div>The comparison between your score and the average user score</div>
+      <ngx-charts-bar-horizontal [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average" legend="true"
+        xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
+        [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+      <div style="height: 100px;"></div>
+      <div>
+        <p *ngIf="result_you.score < result_overall.score" class="bad"><i class="material-icons md-48">error</i> You
+          seem to be worse than average</p>
+        <p *ngIf="result_you.score > result_overall.score" class="good"><i class="material-icons md-24">check_circle</i>
+          You seem to be better than average</p>
+      </div>
+    </div>
+  </mat-card>
+  <p></p>
   <mat-card>
     <mat-spinner *ngIf="loading_overall"></mat-spinner>
     <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
     <div *ngIf="!loading_overall && !error_overall">
-      <h3>Overall: compare yourself to the average user</h3>
+      <h3>How our assessment works</h3>
       <div>
-        Average user scores: {{result_overall.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
-      These statistics come from all the previous analysis run on this platform
-      <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>
-          <div>
-            <h4>The distribution of all the URLs that have been analysed</h4>
-            <ngx-charts-advanced-pie-chart [view]="[500,200]" [scheme]="colorScheme" [results]="pie_data_overall"
-              [gradient]="gradient">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-        </mat-grid-tile>
-        <mat-grid-tile *ngIf="!loading_you && !error_you && show_you">
-          <div>
-              <h4>The comparison between your score and the average user score</h4>
-            <ngx-charts-bar-horizontal [view]="[500,200]" [scheme]="colorScheme" [results]="you_vs_average" legend="true"
-              xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score" [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
-          </div>
-        </mat-grid-tile>
-      </mat-grid-list>
+        <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already detected as misinformation by fact-checkers/experts.</p>
+        <p> We have analysed {{result_overall.tweets_cnt}} tweets so far.</p>
+      </div>
+      <ngx-charts-advanced-pie-chart label="URLs encountered" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      <p><a [routerLink]="['/about']">More about our verification process</a></p>
     </div>
   </mat-card>
 </div>

@@ -2,6 +2,15 @@ table {
     width: 100%;
 }
 
-.mat-column-dataset_names{
+.max-100 {
     max-width: 100px !important;
+}
+.max-200 {
+    max-width: 200px !important;
+}
+.max-500 {
+    max-width: 500px !important;
+}
+.w500 {
+    width: 500px !important;
 }

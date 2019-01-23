@@ -1,8 +1,14 @@
 <table mat-table [dataSource]="data" class="mat-elevation-z8">
 
-  <ng-container matColumnDef="tweet_id">
+  <ng-container matColumnDef="tweet_text">
     <th mat-header-cell *matHeaderCellDef> Tweet </th>
-    <td mat-cell *matCellDef="let element"> <ngx-tweet tweetId="{{element.tweet_id}}"></ngx-tweet> </td>
+    <td mat-cell *matCellDef="let element">
+      <div class="w500">
+        <ngx-tweet tweetId="{{element.tweet_id}}" width="500"></ngx-tweet>
+      </div>
+    </td>
+    <!--<ngx-tweet tweetId="{{element.tweet_id}}"></ngx-tweet>-->
+    <!--<p class="max-200"><a href="https://twitter.com/foo/status/{{element.tweet_id}}">{{element.tweet_text}}</a></p> -->
   </ng-container>
 
   <ng-container matColumnDef="urls">
@@ -11,11 +17,23 @@
   </ng-container>
   <ng-container matColumnDef="reason">
     <th mat-header-cell *matHeaderCellDef> Reason </th>
-    <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+    <td mat-cell *matCellDef="let element">
+      <p class="max-200">You <i *ngIf="!element.retweet">tweeted</i><i *ngIf="element.retweet">retweeted</i> that and
+        the URL contained is a <b>{{element.reason}}</b></p>
+    </td>
   </ng-container>
   <ng-container matColumnDef="dataset_names">
     <th mat-header-cell *matHeaderCellDef> Dataset </th>
-    <td mat-cell *matCellDef="let element"> {{element.dataset_names}} </td>
+    <td mat-cell *matCellDef="let element">
+      <div class="max-200">
+        <div *ngFor="let dataset of element.datasets">
+          <mat-card>
+            <a href="{{dataset.url}}">{{dataset.name}}</a>
+          </mat-card>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </td>
   </ng-container>
 
 

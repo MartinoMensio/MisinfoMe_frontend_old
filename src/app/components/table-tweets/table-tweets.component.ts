@@ -16,9 +16,9 @@ interface TableTweetData {
 export class TableTweetsComponent implements OnInit {
 
   @Input()
-  table_data: Array<TableTweetData>;
+  data: Array<TableTweetData>;
 
-  displayedColumns: Array<String> = ['tweet_id', 'urls', 'reason', 'dataset_names']
+  displayedColumns: Array<String> = ['tweet_text', 'reason', 'dataset_names'];
 
   constructor() { }
 

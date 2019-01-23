@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from '../../api.service';
+import { APIService, CountResult } from '../../api.service';
 
 @Component({
   selector: 'app-home',
@@ -22,14 +22,14 @@ export class HomeComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
 
-  result_you = {};
+  result_you: CountResult;
   pie_data_you = [];
   loading_you: Boolean = false;
   show_you: Boolean = false;
   error_you: Boolean = false;
 
   pie_data_overall = [];
-  result_overall = {};
+  result_overall: CountResult;
   loading_overall: Boolean = false;
   error_overall: Boolean = false;
 
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
   update_overall() {
     this.loading_overall = true;
     this.error_overall = false;
-    this.apiService.getEvaluation(`count_urls/overall`).subscribe((results) => {
+    this.apiService.getEvaluation(`count_urls/overall`).subscribe((results: CountResult) => {
       this.result_overall = results;
       console.log(this.result_overall);
       this.pie_data_overall = this.extract_results(results);
@@ -63,13 +63,13 @@ export class HomeComponent implements OnInit {
   private extract_results(json_data: any) {
 
     return [{
-      name: 'Good',
+      name: 'Valid',
       value: json_data.verified_urls_cnt
     }, {
-      name: 'Bad',
+      name: 'Misinformation',
       value: json_data.fake_urls_cnt
     }, {
-      name: 'Unknown',
+      name: 'Not checked',
       value: json_data.unknown_urls_cnt
     }];
   }
@@ -79,9 +79,11 @@ export class HomeComponent implements OnInit {
     return raw_urls_data.reduce((acc, curr) => {
       acc.push({
         tweet_id: curr.found_in_tweet,
+        tweet_text: curr.tweet_text,
         urls: [curr._id],
         reason: curr.reason,
-        dataset_names: curr.score.sources
+        datasets: curr.sources,
+        retweet: curr.retweet
       });
       return acc;
     }, []);
@@ -92,7 +94,7 @@ export class HomeComponent implements OnInit {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.getEvaluation(`count_urls/users?handle=${this.screen_name}`).subscribe((results: any) => {
+    this.apiService.getEvaluation(`count_urls/users?handle=${this.screen_name}`).subscribe((results: CountResult) => {
       this.result_you = results;
       this.pie_data_you = this.extract_results(results);
 

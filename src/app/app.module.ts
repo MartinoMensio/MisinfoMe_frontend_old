@@ -11,7 +11,9 @@ import {
   MatDividerModule,
   MatTableModule,
   MatExpansionModule,
-  MatGridListModule
+  MatGridListModule,
+  MatIconModule,
+  MatListModule
 } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -58,6 +60,8 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     MatTableModule,
     MatExpansionModule,
     MatGridListModule,
+    MatIconModule,
+    MatListModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule

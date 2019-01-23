@@ -1,6 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+export interface CountResult {
+  fake_urls_cnt: number;
+  score: number;
+  shared_urls_cnt: number;
+  tweets_cnt: number;
+  unknown_urls_cnt: number;
+  verified_urls_cnt: number;
+  fake_urls: Array<any>;
+  verified_urls: Array<any>;
+  rebuttals: object;
+}
+
 @Injectable({
   providedIn: 'root'
 })
