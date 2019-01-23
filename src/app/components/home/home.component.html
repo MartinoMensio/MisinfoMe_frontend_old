@@ -1,10 +1,11 @@
 <div>
   <h1>Welcome</h1>
-  <p>Welcome to the Misinformed-me test. Put your Twitter screen name in the box and get your analysis!</p>
+  <p>Welcome to the Misinformed-me test. Put your Twitter screen name (the part after the @ symbol) in the box and get
+    your analysis!</p>
   <mat-card>
     <form (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <mat-label for="screen_name">Screen Name</mat-label>
+        <mat-label for="screen_name">Screen Name e.g. "realDonaldTrump"</mat-label>
         <input matInput placeholder="Twitter screen name" required="true" name="screen_name" [(ngModel)]="screen_name">
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent">Submit</button>
@@ -28,70 +29,88 @@
         <h3>You</h3>
         <div>We retrieved {{result_you.tweets_cnt}} tweets</div>
         <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
-        This is how you performed
+        This is how the URLs that you shared are distirbuted
         <ngx-charts-advanced-pie-chart [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
       </div>
     </mat-card>
     <div *ngIf="!error_you">
-    <mat-divider></mat-divider>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          The bad URLs you shared
-        </mat-panel-title>
-        <mat-panel-description>
-          Click to expand
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+      <mat-divider></mat-divider>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            The bad URLs you shared
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to expand
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-      <p>For these URLs we know that they are not good. They may have been fact-checked or simply come from known domains that share fake content.</p>
+        <p>For these URLs we know that they are not good. They may have been fact-checked or simply come from known
+          domains that share fake content.</p>
 
-      <app-table-tweets [table_data]="table_data_bad"></app-table-tweets>
+        <app-table-tweets [table_data]="table_data_bad"></app-table-tweets>
 
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          The good URLs you shared
-        </mat-panel-title>
-        <mat-panel-description>
-          Click to expand
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            The good URLs you shared
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to expand
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-      <p>Tor these URLs we know that they are good. They may relate to fact-checking articles or come from well known domains.</p>
+        <p>Tor these URLs we know that they are good. They may relate to fact-checking articles or come from well known
+          domains.</p>
 
-      <app-table-tweets [table_data]="table_data_good"></app-table-tweets>
+        <app-table-tweets [table_data]="table_data_good"></app-table-tweets>
 
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          The controversial URLs you shared
-        </mat-panel-title>
-        <mat-panel-description>
-          Click to expand
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            The controversial URLs you shared
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to expand
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-      <p>For these URLs we cannot assert their truthiness but some of our datasets suggest different points of view so that you get a more complete idea of the problems discussed.</p>
+        <p>For these URLs we cannot assert their truthiness but some of our datasets suggest different points of view
+          so that you get a more complete idea of the problems discussed.</p>
 
 
-    </mat-expansion-panel>
+      </mat-expansion-panel>
+    </div>
   </div>
-</div>
   <mat-divider></mat-divider>
   <mat-card>
     <mat-spinner *ngIf="loading_overall"></mat-spinner>
     <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
     <div *ngIf="!loading_overall && !error_overall">
-      <h3>Overall</h3>
-      <div>We retrieved {{result_overall.tweets_cnt}} tweets</div>
-      <div>Average score is: {{result_overall.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
+      <h3>Overall: compare yourself to the average user</h3>
+      <div>
+        Average user scores: {{result_overall.score | number : '1.2-2'}}% (0% is bad, 50% is unknown, 100% is good)</div>
       These statistics come from all the previous analysis run on this platform
-      <ngx-charts-advanced-pie-chart [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
-      </ngx-charts-advanced-pie-chart>
+      <mat-grid-list cols="2" rowHeight="2:1">
+        <mat-grid-tile>
+          <div>
+            <h4>The distribution of all the URLs that have been analysed</h4>
+            <ngx-charts-advanced-pie-chart [view]="[500,200]" [scheme]="colorScheme" [results]="pie_data_overall"
+              [gradient]="gradient">
+            </ngx-charts-advanced-pie-chart>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile *ngIf="!loading_you && !error_you && show_you">
+          <div>
+              <h4>The comparison between your score and the average user score</h4>
+            <ngx-charts-bar-horizontal [view]="[500,200]" [scheme]="colorScheme" [results]="you_vs_average" legend="true"
+              xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score" [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
     </div>
   </mat-card>
 </div>

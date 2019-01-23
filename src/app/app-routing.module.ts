@@ -4,7 +4,7 @@ import { ListComponent } from './components/list/list.component';
 import { CreateComponent } from './components/create/create.component';
 import { EditComponent } from './components/edit/edit.component';
 import { HomeComponent } from './components/home/home.component';
-import { AboutComponent } from "./components/about/about.component";
+import { AboutComponent } from './components/about/about.component';
 
 const routes: Routes = [
   { path: 'create', component: CreateComponent },

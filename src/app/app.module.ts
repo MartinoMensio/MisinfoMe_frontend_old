@@ -1,9 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatProgressSpinnerModule, MatProgressBarModule, MatDividerModule, MatTableModule, MatExpansionModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatToolbarModule,
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
+  MatDividerModule,
+  MatTableModule,
+  MatExpansionModule,
+  MatGridListModule
+} from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { HttpClientModule } from  '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgxTweetModule } from 'ngx-tweet';
 
@@ -45,6 +57,7 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     MatDividerModule,
     MatTableModule,
     MatExpansionModule,
+    MatGridListModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule

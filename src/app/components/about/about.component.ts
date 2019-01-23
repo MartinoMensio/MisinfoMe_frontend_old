@@ -8,19 +8,19 @@ import { APIService } from '../../api.service';
 })
 export class AboutComponent implements OnInit {
 
-  about_stats = []
-  displayedColumns: Array<String> = ['type', 'count']
+  about_stats = [];
+  displayedColumns: Array<String> = ['type', 'count'];
 
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
     this.apiService.getStats().subscribe(res => {
       this.about_stats = Object.keys(res).reduce((acc: Array<any>, cur) => {
-        acc.push({'type': cur, 'count': res[cur]})
-        return acc
+        acc.push({'type': cur, 'count': res[cur]});
+        return acc;
       }, []);
-      console.log('hola')
-    })
+      console.log('hola');
+    });
   }
 
 }
