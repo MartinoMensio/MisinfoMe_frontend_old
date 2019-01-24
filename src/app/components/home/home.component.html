@@ -18,23 +18,24 @@
     <mat-card>
       <mat-spinner *ngIf="loading_you"></mat-spinner>
       <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
-      <div *ngIf="!loading_you && !error_you">
+      <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
         <h3>You - @{{result_you.screen_name}}</h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from your profile.</div>
         <div *ngIf="result_you.score >= 50" class="good">Your score is good.</div>
         <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div> -->
         <div>This is how the URLs that you shared are classified</div>
-        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
+        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_you"
+          [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
       </div>
     </mat-card>
     <p></p>
-    <div *ngIf="!error_you">
+    <div *ngIf="!error_you && !loading_you">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title class="bad">
-              <i class="material-icons md-24">error</i>These tweets have been identified as linked to misinformation
+            <i class="material-icons md-24">error</i>These tweets have been identified as linked to misinformation
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -49,7 +50,8 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title class="good">
-              <i class="material-icons md-24">check_circle</i>These tweets have been identified as linked to verified content
+            <i class="material-icons md-24">check_circle</i>These tweets have been identified as linked to verified
+            content
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -64,7 +66,8 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <i class="material-icons md-24">info</i>These tweets have been identified as linked to controversial content
+            <i class="material-icons md-24">info</i>These tweets have been identified as linked to controversial
+            content
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -85,18 +88,16 @@
     <div>
       <h3>You against the average user</h3>
       <div>The comparison between your score and the average user score</div>
-      <ngx-charts-bar-horizontal-normalized [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
-        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared"
-        ></ngx-charts-bar-horizontal-normalized>
-      <ngx-charts-bar-horizontal [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average"
-        xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
-        [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+      <ngx-charts-bar-horizontal-normalized [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average_multi"
+        legend="true" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared"></ngx-charts-bar-horizontal-normalized>
+      <ngx-charts-bar-horizontal [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average" xScaleMax="100"
+        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score" [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
       <div style="height: 200px;"></div>
       <div>
         <p *ngIf="result_you.score < result_overall.score" class="bad"><i class="material-icons md-48">error</i> You
-          seem to be worse than average</p>
+          have spread more misinformation than the average of our users</p>
         <p *ngIf="result_you.score > result_overall.score" class="good"><i class="material-icons md-24">check_circle</i>
-          You seem to be better than average</p>
+          You have spread less misinformation than the average of our users</p>
       </div>
     </div>
   </mat-card>
@@ -104,13 +105,15 @@
   <mat-card>
     <mat-spinner *ngIf="loading_overall"></mat-spinner>
     <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
-    <div *ngIf="!loading_overall && !error_overall">
+    <div *ngIf="!loading_overall && !error_overall" [@enterAnimation]>
       <h3>How our assessment works</h3>
       <div>
-        <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already detected as misinformation by fact-checkers/experts.</p>
+        <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already
+          detected as misinformation by fact-checkers/experts.</p>
         <p> We have analysed {{result_overall.tweets_cnt}} tweets so far.</p>
       </div>
-      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall"
+        [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       <p><a [routerLink]="['/about']">More about our verification process</a></p>
     </div>
   </mat-card>
