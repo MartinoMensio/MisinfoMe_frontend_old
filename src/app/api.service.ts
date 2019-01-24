@@ -14,6 +14,10 @@ export interface CountResult {
   rebuttals: object;
 }
 
+export interface OverallCounts extends CountResult {
+  twitter_profiles_cnt: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,16 +26,29 @@ export class APIService {
   API_URL = 'https://misinformedme_backend.serveo.net';
   constructor(private httpClient: HttpClient) { }
 
-  getSomething() {
-    return this.httpClient.get(`${this.API_URL}/`);
+  // generic path can be passed
+  private getPath(resource_path) {
+    return this.httpClient.get(`${this.API_URL}${resource_path}`);
   }
 
-  getEvaluation(resource_path) {
-    return this.httpClient.get(`${this.API_URL}/${resource_path}`);
+  getUserCounts(screen_name, allow_cached: Boolean = false) {
+    if (allow_cached) {
+      return this.getPath(`/count_urls/users?handle=${screen_name}&allow_cached=true`);
+    } else {
+      return this.getPath(`/count_urls/users?handle=${screen_name}`);
+    }
+  }
+
+  getOverallCounts() {
+    return this.getPath('/count_urls/overall');
   }
 
   getStats() {
-    return this.httpClient.get(`${this.API_URL}/about`);
+    return this.getPath(`/about`);
+  }
+
+  getFriends(screen_name) {
+    return this.getPath(`/following?handle=${screen_name}`);
   }
 
 }

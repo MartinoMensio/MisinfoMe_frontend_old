@@ -10,6 +10,7 @@
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent">Assess</button>
       <p>Your screen name is the part after the '@', e.g. <i>realDonaldTrump</i></p>
+      <mat-checkbox [(ngModel)]="analyse_friends_too" name="analyse_friends_too">Also analyse friends network (this may take a while)</mat-checkbox>
     </form>
   </mat-card>
   <p></p>
@@ -102,15 +103,35 @@
     </div>
   </mat-card>
   <p></p>
+  <mat-card *ngIf="!loading_you && !error_you && show_you && result_friends">
+    <div>
+      <h3>Your twitter friends network</h3>
+      <div>Your Twitter feed is built with tweets that come from people that you are following.</div>
+      <div>You have {{friends_screen_names.length}} friends, {{result_friends.twitter_profiles_cnt}} have been analysed.</div>
+      <mat-progress-bar [value]="friends_analysed / friends_screen_names.length * 100"></mat-progress-bar>
+      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
+        [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+
+      <div>
+        <h4>Your best-scoring friends</h4>
+        <div>TODO</div>
+      </div>
+      <div>
+        <h4>Your worst-scoring friends</h4>
+        <div>TODO</div>
+      </div>
+    </div>
+  </mat-card>
+  <p></p>
   <mat-card>
-    <mat-spinner *ngIf="loading_overall"></mat-spinner>
+    <mat-spinner *ngIf="loading_overall && !result_friends"></mat-spinner>
     <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
-    <div *ngIf="!loading_overall && !error_overall" [@enterAnimation]>
+    <div *ngIf="!error_overall && (result_friends || !loading_overall)">
       <h3>How our assessment works</h3>
       <div>
         <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already
           detected as misinformation by fact-checkers/experts.</p>
-        <p> We have analysed {{result_overall.tweets_cnt}} tweets so far.</p>
+        <p>So far we have analysed {{result_overall.tweets_cnt}} tweets coming from {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
       </div>
       <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall"
         [gradient]="gradient"></ngx-charts-advanced-pie-chart>

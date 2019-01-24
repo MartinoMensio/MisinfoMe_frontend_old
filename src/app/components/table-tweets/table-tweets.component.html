@@ -20,7 +20,7 @@
       <th mat-header-cell *matHeaderCellDef> <h2>Reason</h2> </th>
       <td mat-cell *matCellDef="let element">
         <p class="max-200 justify">You <i *ngIf="!element.retweet">tweeted</i><i *ngIf="element.retweet">retweeted</i> that and
-          the <a href="{{element.url}}">URL contained</a><b> {{get_friendly_reason(element.reason, element.label)}}</b></p>
+          the <a href="{{element.url}}" target="_blank">URL contained</a><b> {{get_friendly_reason(element.reason, element.label)}}</b></p>
       </td>
     </ng-container>
     <ng-container matColumnDef="dataset_names">
@@ -29,7 +29,7 @@
         <div class="max-200">
           <div *ngFor="let dataset of element.datasets">
             <mat-card [style.backgroundColor]="'#eeeeee'">
-              <a class="justify" href="{{dataset.url}}">{{dataset.name}}</a>
+              <a class="justify" href="{{dataset.url}}" target="_blank">{{dataset.name}}</a>
             </mat-card>
             <mat-divider></mat-divider>
           </div>

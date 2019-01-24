@@ -13,7 +13,8 @@ import {
   MatExpansionModule,
   MatGridListModule,
   MatIconModule,
-  MatListModule
+  MatListModule,
+  MatCheckboxModule
 } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -62,6 +63,7 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     MatGridListModule,
     MatIconModule,
     MatListModule,
+    MatCheckboxModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule

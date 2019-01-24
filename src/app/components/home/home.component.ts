@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService, CountResult } from '../../api.service';
+import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
 
 @Component({
@@ -10,12 +10,12 @@ import { trigger, style, transition, animate, keyframes, query, stagger, state }
     trigger(
       'enterAnimation', [
         transition(':enter', [
-          style({transform: 'translateX(100%)', opacity: 0}),
-          animate('500ms', style({transform: 'translateX(0)', opacity: 1}))
+          style({ transform: 'translateX(100%)', opacity: 0 }),
+          animate('500ms', style({ transform: 'translateX(0)', opacity: 1 }))
         ]),
         transition(':leave', [
-          style({transform: 'translateX(0)', opacity: 1}),
-          animate('500ms', style({transform: 'translateX(100%)', opacity: 0}))
+          style({ transform: 'translateX(0)', opacity: 1 }),
+          animate('500ms', style({ transform: 'translateX(100%)', opacity: 0 }))
         ])
       ]
     )
@@ -44,9 +44,16 @@ export class HomeComponent implements OnInit {
   error_you: Boolean = false;
 
   pie_data_overall = [];
-  result_overall: CountResult;
+  result_overall: OverallCounts;
   loading_overall: Boolean = false;
   error_overall: Boolean = false;
+
+  analyse_friends_too: Boolean = false;
+  friends_screen_names: Array<string> = [];
+  friends_analysed: number;
+  pie_data_friends: any[];
+  result_friends: OverallCounts;
+
 
   you_vs_average = [];
   you_vs_average_multi = [];
@@ -64,7 +71,7 @@ export class HomeComponent implements OnInit {
   update_overall() {
     this.loading_overall = true;
     this.error_overall = false;
-    return this.apiService.getEvaluation(`count_urls/overall`).subscribe((results: CountResult) => {
+    return this.apiService.getOverallCounts().subscribe((results: OverallCounts) => {
       this.result_overall = results;
       console.log(this.result_overall);
       this.pie_data_overall = this.extract_results(results);
@@ -74,6 +81,19 @@ export class HomeComponent implements OnInit {
     }).add(() => {
       this.loading_overall = false;
     });
+  }
+
+  private default_pie_data() {
+    return [{
+      name: 'Valid',
+      value: 0
+    }, {
+      name: 'Misinformation',
+      value: 0
+    }, {
+      name: 'Not checked',
+      value: 0
+    }];
   }
 
   private extract_results(json_data: any) {
@@ -111,7 +131,7 @@ export class HomeComponent implements OnInit {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.getEvaluation(`count_urls/users?handle=${this.screen_name}`).subscribe((results: CountResult) => {
+    this.apiService.getUserCounts(this.screen_name).subscribe((results: CountResult) => {
       this.result_you = results;
       this.pie_data_you = this.extract_results(results);
 
@@ -162,13 +182,54 @@ export class HomeComponent implements OnInit {
             ]
           }
         ];
-
       });
+      if (this.analyse_friends_too) {
+        this.update_friends();
+      }
     }, (error) => {
       console.log(error);
       this.error_you = true;
     }).add(() => {
       this.loading_you = false;
+    });
+  }
+
+  update_friends() {
+    this.apiService.getFriends(this.screen_name).subscribe((friends_screen_names: Array<string>) => {
+      this.friends_screen_names = friends_screen_names;
+      this.friends_analysed = 0;
+      this.result_friends = {
+        screen_name: '',
+        score: -1,
+        tweets_cnt: 0,
+        shared_urls_cnt: 0,
+        fake_urls_cnt: 0,
+        unknown_urls_cnt: 0,
+        verified_urls_cnt: 0,
+        fake_urls: [],
+        verified_urls: [],
+        rebuttals: [],
+        twitter_profiles_cnt: 0
+      };
+      this.pie_data_friends = this.default_pie_data();
+      friends_screen_names.forEach((el: string) => {
+        this.apiService.getUserCounts(el, true).subscribe((results: CountResult) => {
+          this.friends_analysed++;
+          this.result_friends.tweets_cnt += results.tweets_cnt;
+          this.result_friends.shared_urls_cnt += results.shared_urls_cnt;
+          this.result_friends.fake_urls_cnt += results.fake_urls_cnt;
+          this.result_friends.unknown_urls_cnt += results.unknown_urls_cnt;
+          this.result_friends.verified_urls_cnt += results.verified_urls_cnt;
+          this.result_friends.twitter_profiles_cnt++;
+          this.pie_data_friends = this.extract_results(this.result_friends);
+
+          if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
+            // update sometimes
+            this.update_overall();
+          }
+        });
+      });
+      this.update_overall();
     });
   }
 }
