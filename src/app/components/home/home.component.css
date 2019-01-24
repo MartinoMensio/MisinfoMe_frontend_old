@@ -1,9 +1,11 @@
 mat-form-field {
     min-width: 300px;
   }
+
 .bad {
     color: rgb(134, 19, 19);
 }
+
 .good {
     color: rgb(0, 141, 0);
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface CountResult {
+  screen_name: string;
   fake_urls_cnt: number;
   score: number;
   shared_urls_cnt: number;

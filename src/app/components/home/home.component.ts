@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
   error_overall: Boolean = false;
 
   you_vs_average = [];
+  you_vs_average_multi = [];
 
 
   table_data_bad = [];
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
   update_overall() {
     this.loading_overall = true;
     this.error_overall = false;
-    this.apiService.getEvaluation(`count_urls/overall`).subscribe((results: CountResult) => {
+    return this.apiService.getEvaluation(`count_urls/overall`).subscribe((results: CountResult) => {
       this.result_overall = results;
       console.log(this.result_overall);
       this.pie_data_overall = this.extract_results(results);
@@ -80,10 +81,11 @@ export class HomeComponent implements OnInit {
       acc.push({
         tweet_id: curr.found_in_tweet,
         tweet_text: curr.tweet_text,
-        urls: [curr._id],
+        url: curr.url,
         reason: curr.reason,
         datasets: curr.sources,
-        retweet: curr.retweet
+        retweet: curr.retweet,
+        label: curr.score.label
       });
       return acc;
     }, []);
@@ -101,19 +103,52 @@ export class HomeComponent implements OnInit {
       this.table_data_bad = this.prepare_table_data(results.fake_urls);
       this.table_data_good = this.prepare_table_data(results.verified_urls);
 
-      this.update_overall();
+      this.update_overall().add(something => {
 
-      this.you_vs_average = [
-        {
-          'name': 'You',
-          'value': results.score
-        },
-        {
-          'name': 'Average',
-          'value': this.result_overall.score
-        }
-      ];
+        this.you_vs_average = [
+          {
+            'name': 'You',
+            'value': results.score
+          },
+          {
+            'name': 'Average',
+            'value': this.result_overall.score
+          }
+        ];
 
+        this.you_vs_average_multi = [
+          {
+            name: 'You',
+            series: [
+              {
+                name: 'Valid',
+                value: results.verified_urls_cnt
+              }, {
+                name: 'Misinformation',
+                value: results.fake_urls_cnt
+              }, {
+                name: 'Not checked',
+                value: results.unknown_urls_cnt
+              }
+            ]
+          }, {
+            name: 'Overall',
+            series: [
+              {
+                name: 'Valid',
+                value: this.result_overall.verified_urls_cnt
+              }, {
+                name: 'Misinformation',
+                value: this.result_overall.fake_urls_cnt
+              }, {
+                name: 'Not checked',
+                value: this.result_overall.unknown_urls_cnt
+              }
+            ]
+          }
+        ];
+
+      });
     }, (error) => {
       console.log(error);
       this.error_you = true;

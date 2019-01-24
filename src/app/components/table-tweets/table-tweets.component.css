@@ -1,5 +1,14 @@
+.table-container {
+    height: 400px;
+    overflow: auto;
+  }
+
 table {
     width: 100%;
+}
+
+.justify {
+    text-align: justify;
 }
 
 .max-100 {

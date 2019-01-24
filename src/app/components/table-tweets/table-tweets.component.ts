@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 interface TableTweetData {
-  tweet_id: number,
-  urls: Array<string>,
-  domains?: Array<string>,
-  reason: string,
-  dataset_names: Array<string>
+  tweet_id: number;
+  urls: Array<string>;
+  domains?: Array<string>;
+  reason: string;
+  dataset_names: Array<string>;
 }
 
 @Component({
@@ -23,6 +23,23 @@ export class TableTweetsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  get_friendly_reason(description_label, label) {
+    switch (description_label) {
+      case 'full_url_match':
+        if (label === 'fake') {
+          return 'matched a URL that has been debunked';
+        } else {
+          return 'matched a URL that has been verified';
+        }
+      case 'domain_match':
+      if (label === 'fake') {
+        return 'comes from a domain that is known to provide misinforming content';
+      } else {
+        return 'comes from a domain that is known to provide verified content';
+      }
+    }
   }
 
 }
