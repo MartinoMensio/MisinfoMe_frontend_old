@@ -10,7 +10,6 @@
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent">Assess</button>
       <p>Your screen name is the part after the '@', e.g. <i>realDonaldTrump</i></p>
-      <!-- <mat-checkbox [(ngModel)]="analyse_friends_too" name="analyse_friends_too">Also analyse friends network (this may take a while)</mat-checkbox> -->
     </form>
   </mat-card>
   <p></p>
@@ -107,6 +106,7 @@
     <div>
       <h3>Your twitter friends network</h3>
       <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool can analyse the profiles that you are following.</p>
+      <mat-spinner *ngIf="loading_friends"></mat-spinner>
       <div *ngIf="friends_analysis_show">
         <p>You have {{friends_count}} friends, {{result_friends.twitter_profiles_cnt}} of them
           have already been analysed.</p>
@@ -114,16 +114,20 @@
         <p></p>
         <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
           remaining</button>
-        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
+        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
           [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
-      <div>
-        <h4>Your best-scoring friends</h4>
-        <div>TODO</div>
+      <div *ngIf="best_friend">
+        <h4>Your best-scoring friend</h4>
+        <div>{{best_friend.screen_name}} with a score of {{best_friend.score}}</div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]" [scheme]="colorScheme" [results]="best_friend_pie_data"
+          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
-      <div>
-        <h4>Your worst-scoring friends</h4>
-        <div>TODO</div>
+      <div *ngIf="worst_friend">
+        <h4>Your worst-scoring friend</h4>
+        <div>{{worst_friend.screen_name}} with a score of {{worst_friend.score}}</div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]" [scheme]="colorScheme" [results]="worst_friend_pie_data"
+          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
     </div>
   </mat-card>

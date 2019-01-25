@@ -48,13 +48,18 @@ export class HomeComponent implements OnInit {
   loading_overall: Boolean = false;
   error_overall: Boolean = false;
 
-  analyse_friends_too: Boolean = false;
+  loading_friends: Boolean = false;
   friends_count: number;
   friends_screen_names: {}; // a dict {'screen_name': analysed(Boolean)}
   friends_analysis_show: Boolean = false;
   pie_data_friends: any[];
   result_friends: OverallCounts;
   analyse_remaining_disabled: Boolean = true;
+
+  best_friend: CountResult;
+  best_friend_pie_data = [];
+  worst_friend: CountResult;
+  worst_friend_pie_data = [];
 
 
   you_vs_average = [];
@@ -197,7 +202,13 @@ export class HomeComponent implements OnInit {
   }
 
   get_friends_list(screen_name) {
+    this.loading_friends = true;
     this.apiService.getFriends(screen_name).subscribe((friends_screen_names: Array<string>) => {
+      let done_cnt = 0; // this is different from this.result_friends.twitter_profiles_cnt
+      // best and worst
+      this.best_friend = null;
+      this.worst_friend = null;
+
       this.friends_screen_names = {};
       this.friends_count = friends_screen_names.length;
       this.friends_analysis_show = false;
@@ -216,6 +227,7 @@ export class HomeComponent implements OnInit {
         if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
           this.analyse_remaining_disabled = false;
         }
+        this.loading_friends = false;
       });
     });
   }
@@ -229,12 +241,36 @@ export class HomeComponent implements OnInit {
     this.result_friends.twitter_profiles_cnt++;
     this.pie_data_friends = this.extract_results(this.result_friends);
 
-    if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
-      // update sometimes
-      this.update_overall();
-    }
-
     this.friends_analysis_show = true;
+
+    // check best and worse
+    if (!this.best_friend) {
+      this.best_friend = friend;
+    }
+    // first compare the score, then if equal the comparison is on the number of fake urls shared
+    if (friend.score > this.best_friend.score) {
+      this.best_friend = friend;
+    } else if (friend.score === this.best_friend.score) {
+      if (friend.fake_urls_cnt < this.best_friend.fake_urls_cnt) {
+        this.best_friend = friend;
+      } else if (friend.fake_urls_cnt === this.best_friend.fake_urls_cnt) {
+        if (friend.verified_urls_cnt > this.best_friend.verified_urls_cnt) {
+          this.best_friend = friend;
+        }
+      }
+    }
+    if (!this.worst_friend) {
+      this.worst_friend = friend;
+    }
+    if (friend.score < this.worst_friend.score) {
+      this.worst_friend = friend;
+    } else if (friend.score === this.worst_friend.score) {
+      if (friend.fake_urls_cnt > this.worst_friend.fake_urls_cnt) {
+        this.worst_friend = friend;
+      }
+    }
+    this.best_friend_pie_data = this.extract_results(this.best_friend);
+    this.worst_friend_pie_data = this.extract_results(this.worst_friend);
   }
 
   get_resetted_counts(): OverallCounts {
@@ -261,11 +297,11 @@ export class HomeComponent implements OnInit {
         // TODO manage wait observable call
         this.apiService.getUserCounts(el, true).subscribe((results: CountResult) => {
           this.update_friends_stat_with_new(results);
+          if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
+            // update sometimes
+            this.update_overall();
+          }
         });
-      }
-      if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
-        // update sometimes
-        this.update_overall();
       }
     });
     this.update_overall();
