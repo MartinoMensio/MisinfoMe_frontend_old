@@ -31,9 +31,13 @@ export class APIService {
     return this.httpClient.get(`${this.API_URL}${resource_path}`);
   }
 
-  getUserCounts(screen_name, allow_cached: Boolean = false) {
+  getUserCounts(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false) {
     if (allow_cached) {
-      return this.getPath(`/count_urls/users?handle=${screen_name}&allow_cached=true`);
+      if (only_cached) {
+        return this.getPath(`/count_urls/users?handle=${screen_name}&allow_cached=true&only_cached=true`);
+      } else {
+        return this.getPath(`/count_urls/users?handle=${screen_name}&allow_cached=true`);
+      }
     } else {
       return this.getPath(`/count_urls/users?handle=${screen_name}`);
     }

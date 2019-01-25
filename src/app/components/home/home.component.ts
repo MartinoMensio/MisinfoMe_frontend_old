@@ -49,10 +49,12 @@ export class HomeComponent implements OnInit {
   error_overall: Boolean = false;
 
   analyse_friends_too: Boolean = false;
-  friends_screen_names: Array<string> = [];
-  friends_analysed: number;
+  friends_count: number;
+  friends_screen_names: {}; // a dict {'screen_name': analysed(Boolean)}
+  friends_analysis_show: Boolean = false;
   pie_data_friends: any[];
   result_friends: OverallCounts;
+  analyse_remaining_disabled: Boolean = true;
 
 
   you_vs_average = [];
@@ -73,7 +75,6 @@ export class HomeComponent implements OnInit {
     this.error_overall = false;
     return this.apiService.getOverallCounts().subscribe((results: OverallCounts) => {
       this.result_overall = results;
-      console.log(this.result_overall);
       this.pie_data_overall = this.extract_results(results);
     }, (error) => {
       console.log(error);
@@ -183,9 +184,10 @@ export class HomeComponent implements OnInit {
           }
         ];
       });
-      if (this.analyse_friends_too) {
-        this.update_friends();
-      }
+      this.friends_analysis_show = false;
+      this.result_friends = this.get_resetted_counts();
+      this.pie_data_friends = this.default_pie_data();
+      this.get_friends_list(this.screen_name);
     }, (error) => {
       console.log(error);
       this.error_you = true;
@@ -194,42 +196,78 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  update_friends() {
-    this.apiService.getFriends(this.screen_name).subscribe((friends_screen_names: Array<string>) => {
-      this.friends_screen_names = friends_screen_names;
-      this.friends_analysed = 0;
-      this.result_friends = {
-        screen_name: '',
-        score: -1,
-        tweets_cnt: 0,
-        shared_urls_cnt: 0,
-        fake_urls_cnt: 0,
-        unknown_urls_cnt: 0,
-        verified_urls_cnt: 0,
-        fake_urls: [],
-        verified_urls: [],
-        rebuttals: [],
-        twitter_profiles_cnt: 0
-      };
-      this.pie_data_friends = this.default_pie_data();
-      friends_screen_names.forEach((el: string) => {
-        this.apiService.getUserCounts(el, true).subscribe((results: CountResult) => {
-          this.friends_analysed++;
-          this.result_friends.tweets_cnt += results.tweets_cnt;
-          this.result_friends.shared_urls_cnt += results.shared_urls_cnt;
-          this.result_friends.fake_urls_cnt += results.fake_urls_cnt;
-          this.result_friends.unknown_urls_cnt += results.unknown_urls_cnt;
-          this.result_friends.verified_urls_cnt += results.verified_urls_cnt;
-          this.result_friends.twitter_profiles_cnt++;
-          this.pie_data_friends = this.extract_results(this.result_friends);
-
-          if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
-            // update sometimes
-            this.update_overall();
+  get_friends_list(screen_name) {
+    this.apiService.getFriends(screen_name).subscribe((friends_screen_names: Array<string>) => {
+      this.friends_screen_names = {};
+      this.friends_count = friends_screen_names.length;
+      this.friends_analysis_show = false;
+      const joined_screen_names = friends_screen_names.join(',');
+      this.apiService.getUserCounts(joined_screen_names, true, true).subscribe((res: any) => {
+        Object.keys(res).forEach((el: string) => {
+          if (res[el].cache === 'miss') {
+            // this is a cache miss, profile not yet evaluated
+            this.friends_screen_names[el] = false;
+          } else {
+            // cache hit
+            this.friends_screen_names[el] = true;
+            this.update_friends_stat_with_new(res[el]);
           }
         });
+        if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
+          this.analyse_remaining_disabled = false;
+        }
       });
-      this.update_overall();
     });
+  }
+
+  update_friends_stat_with_new(friend: CountResult) {
+    this.result_friends.tweets_cnt += friend.tweets_cnt;
+    this.result_friends.shared_urls_cnt += friend.shared_urls_cnt;
+    this.result_friends.fake_urls_cnt += friend.fake_urls_cnt;
+    this.result_friends.unknown_urls_cnt += friend.unknown_urls_cnt;
+    this.result_friends.verified_urls_cnt += friend.verified_urls_cnt;
+    this.result_friends.twitter_profiles_cnt++;
+    this.pie_data_friends = this.extract_results(this.result_friends);
+
+    if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
+      // update sometimes
+      this.update_overall();
+    }
+
+    this.friends_analysis_show = true;
+  }
+
+  get_resetted_counts(): OverallCounts {
+    return {
+      screen_name: '',
+      score: -1,
+      tweets_cnt: 0,
+      shared_urls_cnt: 0,
+      fake_urls_cnt: 0,
+      unknown_urls_cnt: 0,
+      verified_urls_cnt: 0,
+      fake_urls: [],
+      verified_urls: [],
+      rebuttals: [],
+      twitter_profiles_cnt: 0
+    };
+  }
+
+  analyse_remaining() {
+    this.analyse_remaining_disabled = true;
+    Object.keys(this.friends_screen_names).forEach((el: string) => {
+      if (!this.friends_screen_names[el]) {
+        // not already analysed
+        // TODO manage wait observable call
+        this.apiService.getUserCounts(el, true).subscribe((results: CountResult) => {
+          this.update_friends_stat_with_new(results);
+        });
+      }
+      if (this.result_friends.twitter_profiles_cnt % 50 === 0) {
+        // update sometimes
+        this.update_overall();
+      }
+    });
+    this.update_overall();
   }
 }

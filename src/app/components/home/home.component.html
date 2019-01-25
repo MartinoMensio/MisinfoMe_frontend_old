@@ -10,7 +10,7 @@
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent">Assess</button>
       <p>Your screen name is the part after the '@', e.g. <i>realDonaldTrump</i></p>
-      <mat-checkbox [(ngModel)]="analyse_friends_too" name="analyse_friends_too">Also analyse friends network (this may take a while)</mat-checkbox>
+      <!-- <mat-checkbox [(ngModel)]="analyse_friends_too" name="analyse_friends_too">Also analyse friends network (this may take a while)</mat-checkbox> -->
     </form>
   </mat-card>
   <p></p>
@@ -103,15 +103,20 @@
     </div>
   </mat-card>
   <p></p>
-  <mat-card *ngIf="!loading_you && !error_you && show_you && result_friends">
+  <mat-card *ngIf="!loading_you && !error_you && show_you">
     <div>
       <h3>Your twitter friends network</h3>
-      <div>Your Twitter feed is built with tweets that come from people that you are following.</div>
-      <div>You have {{friends_screen_names.length}} friends, {{result_friends.twitter_profiles_cnt}} have been analysed.</div>
-      <mat-progress-bar [value]="friends_analysed / friends_screen_names.length * 100"></mat-progress-bar>
-      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
-        [gradient]="gradient"></ngx-charts-advanced-pie-chart>
-
+      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool can analyse the profiles that you are following.</p>
+      <div *ngIf="friends_analysis_show">
+        <p>You have {{friends_count}} friends, {{result_friends.twitter_profiles_cnt}} of them
+          have already been analysed.</p>
+        <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
+        <p></p>
+        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
+          remaining</button>
+        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
+          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      </div>
       <div>
         <h4>Your best-scoring friends</h4>
         <div>TODO</div>
@@ -131,7 +136,8 @@
       <div>
         <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already
           detected as misinformation by fact-checkers/experts.</p>
-        <p>So far we have analysed {{result_overall.tweets_cnt}} tweets coming from {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
+        <p>So far we have analysed {{result_overall.tweets_cnt}} tweets coming from
+          {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
       </div>
       <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall"
         [gradient]="gradient"></ngx-charts-advanced-pie-chart>
