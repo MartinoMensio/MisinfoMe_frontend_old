@@ -3,9 +3,10 @@ import { Component, OnInit, Input } from '@angular/core';
 interface TableTweetData {
   tweet_id: number;
   urls: Array<string>;
-  domains?: Array<string>;
+  domain?: Array<string>;
   reason: string;
   dataset_names: Array<string>;
+  rebuttals?: Array<any>;
 }
 
 @Component({
@@ -34,11 +35,13 @@ export class TableTweetsComponent implements OnInit {
           return 'matched a URL that has been verified';
         }
       case 'domain_match':
-      if (label === 'fake') {
-        return 'comes from a domain that is known to provide misinforming content';
-      } else {
-        return 'comes from a domain that is known to provide verified content';
-      }
+        if (label === 'fake') {
+          return 'comes from a domain that is known to provide misinforming content';
+        } else {
+          return 'comes from a domain that is known to provide verified content';
+        }
+      case 'rebuttal_match':
+        return 'has been marked as controversial';
     }
   }
 

@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit {
 
   table_data_bad = [];
   table_data_good = [];
+  table_data_rebuttals = [];
 
   constructor(private apiService: APIService) { }
 
@@ -126,7 +127,8 @@ export class HomeComponent implements OnInit {
         reason: curr.reason,
         datasets: curr.sources,
         retweet: curr.retweet,
-        label: curr.score.label
+        label: curr.score.label,
+        rebuttals: curr.rebuttals
       });
       return acc;
     }, []);
@@ -143,6 +145,7 @@ export class HomeComponent implements OnInit {
 
       this.table_data_bad = this.prepare_table_data(results.fake_urls);
       this.table_data_good = this.prepare_table_data(results.verified_urls);
+      this.table_data_rebuttals = this.prepare_table_data(results.rebuttals);
 
       this.update_overall().add(something => {
 
@@ -204,7 +207,6 @@ export class HomeComponent implements OnInit {
   get_friends_list(screen_name) {
     this.loading_friends = true;
     this.apiService.getFriends(screen_name).subscribe((friends_screen_names: Array<string>) => {
-      let done_cnt = 0; // this is different from this.result_friends.twitter_profiles_cnt
       // best and worst
       this.best_friend = null;
       this.worst_friend = null;

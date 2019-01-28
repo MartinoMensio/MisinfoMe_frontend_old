@@ -11,7 +11,7 @@ export interface CountResult {
   verified_urls_cnt: number;
   fake_urls: Array<any>;
   verified_urls: Array<any>;
-  rebuttals: object;
+  rebuttals: Array<any>;
 }
 
 export interface OverallCounts extends CountResult {
