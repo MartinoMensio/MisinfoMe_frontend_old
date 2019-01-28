@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +23,7 @@ import { trigger, style, transition, animate, keyframes, query, stagger, state }
     )
   ]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   data_for_graph = {};
 
@@ -70,10 +72,23 @@ export class HomeComponent implements OnInit {
   table_data_good = [];
   table_data_rebuttals = [];
 
-  constructor(private apiService: APIService) { }
+  private sub: Subscription;
+
+  constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      this.screen_name = params['screen_name'];
+      console.log('sub called' + this.screen_name);
+      if (this.screen_name) {
+        this.analyse();
+      }
+    });
     this.update_overall();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   update_overall() {
@@ -135,6 +150,10 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit() {
+    this.router.navigate(['/analyse', this.screen_name]);
+  }
+
+  analyse() {
     this.show_you = true;
     this.loading_you = true;
     this.error_you = false;
@@ -229,6 +248,7 @@ export class HomeComponent implements OnInit {
           this.analyse_remaining_disabled = false;
         }
         this.loading_friends = false;
+        this.friends_analysis_show = true;
       });
     });
   }
