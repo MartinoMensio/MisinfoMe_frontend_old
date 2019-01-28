@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,7 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   data_for_graph = {};
 
-  screen_name: string;
+  screen_name = new FormControl('');
   score: number;
 
   score_pos: number;
@@ -78,9 +79,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      this.screen_name = params['screen_name'];
-      console.log('sub called' + this.screen_name);
-      if (this.screen_name) {
+      this.screen_name.setValue(params['screen_name']);
+      console.log('sub called' + this.screen_name.value);
+      if (this.screen_name.value) {
         this.analyse();
       }
     });
@@ -89,6 +90,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  getErrorMessage() {
+    if (this.screen_name.hasError('required')) {
+      return 'Screen name is required';
+    } else if (this.screen_name.hasError('pattern')) {
+      return 'Invalid screen name. It can only contain letters and numbers';
+    } else {
+      console.log(this.screen_name.errors);
+      return 'Invalid';
+    }
   }
 
   update_overall() {
@@ -150,7 +162,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.router.navigate(['/analyse', this.screen_name]);
+    this.router.navigate(['/analyse', this.screen_name.value]);
   }
 
   analyse() {
@@ -158,7 +170,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.getUserCounts([this.screen_name]).subscribe((results: CountResult) => {
+    this.apiService.getUserCounts([this.screen_name.value]).subscribe((results: CountResult) => {
       this.result_you = results;
       this.pie_data_you = this.extract_results(results);
 
@@ -214,7 +226,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.friends_analysis_show = false;
       this.result_friends = this.get_resetted_counts();
       this.pie_data_friends = this.default_pie_data();
-      this.get_friends_list(this.screen_name);
+      this.get_friends_list(this.screen_name.value);
     }, (error) => {
       console.log(error);
       this.error_you = true;

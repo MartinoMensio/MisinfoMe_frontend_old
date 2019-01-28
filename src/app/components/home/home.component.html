@@ -3,12 +3,13 @@
   <p>It is hard to distinguish fact from fiction on social media.</p>
   <p>Assess your Twitter profile, we will verify if your posts contain some detected misinformation.</p>
   <mat-card>
-    <form (ngSubmit)="onSubmit()">
+    <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <mat-form-field>
         <mat-label for="screen_name">Your Twitter screen name</mat-label>
-        <input matInput placeholder="Twitter screen name" required="true" name="screen_name" [(ngModel)]="screen_name">
+        <input matInput placeholder="Twitter screen name" required="true" [formControl]="screen_name" pattern="[a-zA-Z0-9_]+">
+        <mat-error *ngIf="!screen_name.valid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button color="accent">Assess</button>
+      <button type="submit" mat-raised-button color="accent" [disabled]="!screen_name.valid">Assess</button>
       <p>Your screen name is the part after the '@', e.g. <i>realDonaldTrump</i></p>
     </form>
   </mat-card>
@@ -19,7 +20,7 @@
       <mat-spinner *ngIf="loading_you" class="center"></mat-spinner>
       <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
       <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
-        <h3>You - @{{result_you.screen_name}}</h3>
+        <h3>You - <a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">@{{result_you.screen_name}}</a></h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from your profile.</div>
         <div *ngIf="result_you.score >= 50" class="good">Your score is good.</div>
         <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>

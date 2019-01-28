@@ -19,7 +19,7 @@ import {
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxTweetModule } from 'ngx-tweet';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -42,6 +42,7 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatToolbarModule,
