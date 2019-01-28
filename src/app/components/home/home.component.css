@@ -9,3 +9,7 @@ mat-form-field {
 .good {
     color: rgb(0, 141, 0);
 }
+
+.center {
+    margin: 0 auto;
+}

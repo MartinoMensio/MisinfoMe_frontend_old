@@ -16,7 +16,7 @@
   <!-- <app-graph [data]="data_for_graph"></app-graph> -->
   <div *ngIf="show_you">
     <mat-card>
-      <mat-spinner *ngIf="loading_you"></mat-spinner>
+      <mat-spinner *ngIf="loading_you" class="center"></mat-spinner>
       <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
       <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
         <h3>You - @{{result_you.screen_name}}</h3>
@@ -105,35 +105,36 @@
   <mat-card *ngIf="!loading_you && !error_you && show_you">
     <div>
       <h3>Your twitter friends network</h3>
-      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool can analyse the profiles that you are following.</p>
-      <mat-spinner *ngIf="loading_friends"></mat-spinner>
+      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool
+        can analyse the profiles that you are following.</p>
+      <p>You have {{friends_count || "..."}} friends<span *ngIf="friends_analysis_show">,
+          {{result_friends.twitter_profiles_cnt}} of them have already been analysed.</span></p>
+      <mat-spinner *ngIf="loading_friends" class="center"></mat-spinner>
       <div *ngIf="friends_analysis_show">
-        <p>You have {{friends_count}} friends, {{result_friends.twitter_profiles_cnt}} of them
-          have already been analysed.</p>
         <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
         <p></p>
         <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
           remaining</button>
-        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_friends"
-          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
+          [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
       <div *ngIf="best_friend">
         <h4>Your best-scoring friend</h4>
         <div>{{best_friend.screen_name}} with a score of {{best_friend.score}}</div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]" [scheme]="colorScheme" [results]="best_friend_pie_data"
-          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="best_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
       <div *ngIf="worst_friend">
         <h4>Your worst-scoring friend</h4>
         <div>{{worst_friend.screen_name}} with a score of {{worst_friend.score}}</div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]" [scheme]="colorScheme" [results]="worst_friend_pie_data"
-          [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
     </div>
   </mat-card>
   <p></p>
   <mat-card>
-    <mat-spinner *ngIf="loading_overall && !result_friends"></mat-spinner>
+    <mat-spinner *ngIf="loading_overall && !result_friends" class="center"></mat-spinner>
     <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
     <div *ngIf="!error_overall && (result_friends || !loading_overall)">
       <h3>How our assessment works</h3>

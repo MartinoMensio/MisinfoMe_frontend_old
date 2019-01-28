@@ -137,7 +137,7 @@ export class HomeComponent implements OnInit {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.getUserCounts(this.screen_name).subscribe((results: CountResult) => {
+    this.apiService.getUserCounts([this.screen_name]).subscribe((results: CountResult) => {
       this.result_you = results;
       this.pie_data_you = this.extract_results(results);
 
@@ -212,8 +212,7 @@ export class HomeComponent implements OnInit {
       this.friends_screen_names = {};
       this.friends_count = friends_screen_names.length;
       this.friends_analysis_show = false;
-      const joined_screen_names = friends_screen_names.join(',');
-      this.apiService.getUserCounts(joined_screen_names, true, true).subscribe((res: any) => {
+      this.apiService.getUserCounts(friends_screen_names, true, true).subscribe((res: any) => {
         Object.keys(res).forEach((el: string) => {
           if (res[el].cache === 'miss') {
             // this is a cache miss, profile not yet evaluated
@@ -295,7 +294,7 @@ export class HomeComponent implements OnInit {
       if (!this.friends_screen_names[el]) {
         // not already analysed
         // TODO manage wait observable call
-        this.apiService.getUserCounts(el, true).subscribe((results: CountResult) => {
+        this.apiService.getUserCounts([el], true).subscribe((results: CountResult) => {
           this.update_friends_stat_with_new(results);
           if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
             // update sometimes
