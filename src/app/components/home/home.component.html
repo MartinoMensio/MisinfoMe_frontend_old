@@ -1,5 +1,5 @@
 <div>
-  <h1>Misinformed-me?</h1>
+  <h1>MisinfoMe</h1>
   <p>It is hard to distinguish fact from fiction on social media.</p>
   <p>Assess your Twitter profile, we will verify if your posts contain some detected misinformation.</p>
   <mat-card>
@@ -119,12 +119,12 @@
         <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
           [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
-      <div *ngIf="best_friend">
+      <!-- <div *ngIf="best_friend">
         <h4>Your best-scoring friend</h4>
         <div><a href="https://twitter.com/{{best_friend.screen_name}}" target="_blank">{{best_friend.screen_name}}</a> with a <a [routerLink]="['/analyse', best_friend.screen_name]">score of {{best_friend.score}}</a></div>
         <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]"
           [scheme]="colorScheme" [results]="best_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
-      </div>
+      </div> -->
       <div *ngIf="worst_friend">
         <h4>Your worst-scoring friend</h4>
         <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a> with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score}}</a></div>

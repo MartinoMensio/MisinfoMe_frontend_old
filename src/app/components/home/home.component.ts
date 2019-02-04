@@ -59,8 +59,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   result_friends: OverallCounts;
   analyse_remaining_disabled: Boolean = true;
 
-  best_friend: CountResult;
-  best_friend_pie_data = [];
+  // best_friend: CountResult;
+  // best_friend_pie_data = [];
   worst_friend: CountResult;
   worst_friend_pie_data = [];
 
@@ -239,7 +239,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loading_friends = true;
     this.apiService.getFriends(screen_name).subscribe((friends_screen_names: Array<string>) => {
       // best and worst
-      this.best_friend = null;
+      // this.best_friend = null;
       this.worst_friend = null;
 
       this.friends_screen_names = {};
@@ -276,6 +276,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.friends_analysis_show = true;
 
+    /*
     // check best and worse
     if (!this.best_friend) {
       this.best_friend = friend;
@@ -292,6 +293,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }
     }
+    */
     if (!this.worst_friend) {
       this.worst_friend = friend;
     }
@@ -302,7 +304,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.worst_friend = friend;
       }
     }
-    this.best_friend_pie_data = this.extract_results(this.best_friend);
+    // this.best_friend_pie_data = this.extract_results(this.best_friend);
     this.worst_friend_pie_data = this.extract_results(this.worst_friend);
   }
 
