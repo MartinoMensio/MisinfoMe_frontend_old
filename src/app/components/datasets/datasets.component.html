@@ -1,0 +1,36 @@
+<div>
+  <h3>Datasets</h3>
+  <table mat-table [dataSource]="datasets" class="mat-elevation-z8">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> <h2>Name</h2> </th>
+      <td mat-cell *matCellDef="let element"> <a href="{{element.url}}">{{element.name}}</a> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="domain_classification">
+      <th mat-header-cell *matHeaderCellDef> <h2>Domain Classification</h2> </th>
+      <td mat-cell *matCellDef="let element">
+          <i class="material-icons md-24 good" *ngIf="element.contains.domain_classification">check_circle</i>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="url_classification">
+      <th mat-header-cell *matHeaderCellDef> <h2>URL Classification</h2> </th>
+      <td mat-cell *matCellDef="let element">
+          <i class="material-icons md-24 good" *ngIf="element.contains.url_classification">check_circle</i>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fact_checking_urls">
+      <th mat-header-cell *matHeaderCellDef> <h2>Contains Info from Fact Checking</h2> </th>
+      <td mat-cell *matCellDef="let element">
+        <i class="material-icons md-24 good" *ngIf="element.contains.fact_checking_urls">check_circle</i>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

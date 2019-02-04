@@ -14,7 +14,8 @@ import {
   MatGridListModule,
   MatIconModule,
   MatListModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatTooltipModule
 } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -29,6 +30,8 @@ import { HomeComponent } from './components/home/home.component';
 import { GraphComponent } from './components/graph/graph.component';
 import { AboutComponent } from './components/about/about.component';
 import { TableTweetsComponent } from './components/table-tweets/table-tweets.component';
+import { DatasetsComponent } from './components/datasets/datasets.component';
+import { DomainsComponent } from './components/domains/domains.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     HomeComponent,
     GraphComponent,
     AboutComponent,
-    TableTweetsComponent
+    TableTweetsComponent,
+    DatasetsComponent,
+    DomainsComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +64,7 @@ import { TableTweetsComponent } from './components/table-tweets/table-tweets.com
     MatIconModule,
     MatListModule,
     MatCheckboxModule,
+    MatTooltipModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule

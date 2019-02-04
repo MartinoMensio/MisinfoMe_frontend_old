@@ -71,6 +71,14 @@ export class APIService {
     return this.getPath(`/about`);
   }
 
+  getDatasets() {
+    return this.getPath('/about/datasets');
+  }
+
+  getDomains() {
+    return this.getPath('/about/domains');
+  }
+
   getFriends(screen_name, limit: number = 500) {
     if (limit) {
       return this.getPath(`/following?handle=${screen_name}&limit=${limit}`);

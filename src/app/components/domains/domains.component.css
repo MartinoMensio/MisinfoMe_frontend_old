@@ -1,0 +1,17 @@
+.bad {
+    color: rgb(134, 19, 19);
+}
+
+.good {
+    color: rgb(0, 141, 0);
+}
+
+.table-container {
+    height: 800px;
+    overflow: auto;
+}
+
+.mat-header-cell {
+    padding-left: 5px;
+    padding-right: 5px;
+}
