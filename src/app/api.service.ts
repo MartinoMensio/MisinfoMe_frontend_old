@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 export interface CountResult {
   screen_name: string;
@@ -22,8 +23,8 @@ export interface OverallCounts extends CountResult {
   providedIn: 'root'
 })
 export class APIService {
-  // API_URL = 'http://localhost:5000';
-  API_URL = 'https://misinformedme_backend.serveo.net';
+  API_URL = environment.api_url;
+
   constructor(private httpClient: HttpClient) { }
 
   // generic path can be passed

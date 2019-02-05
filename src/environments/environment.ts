@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  // in dev environment I want to use the live angular and live server, so this can be disjoint
+  api_url: 'http://localhost:5000/misinfo/api'
 };
 
 /*
