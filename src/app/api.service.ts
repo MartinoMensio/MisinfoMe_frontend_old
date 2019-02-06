@@ -10,8 +10,10 @@ export interface CountResult {
   tweets_cnt: number;
   unknown_urls_cnt: number;
   verified_urls_cnt: number;
+  mixed_urls_cnt: number;
   fake_urls: Array<any>;
   verified_urls: Array<any>;
+  mixed_urls: Array<any>;
   rebuttals: Array<any>;
 }
 

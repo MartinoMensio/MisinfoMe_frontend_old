@@ -57,7 +57,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   friends_analysis_show: Boolean = false;
   pie_data_friends: any[];
   result_friends: OverallCounts;
+  friends_results: Array<CountResult>;
   analyse_remaining_disabled: Boolean = true;
+
+  friends_graph: { links: any[]; nodes: any[] };
 
   // best_friend: CountResult;
   // best_friend_pie_data = [];
@@ -70,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   table_data_bad = [];
+  table_data_mixed = [];
   table_data_good = [];
   table_data_rebuttals = [];
 
@@ -118,16 +122,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private default_pie_data() {
-    return [{
-      name: 'Valid',
-      value: 0
-    }, {
-      name: 'Misinformation',
-      value: 0
-    }, {
-      name: 'Not checked',
-      value: 0
-    }];
+    return this.extract_results({
+      verified_urls_cnt: 0,
+      fake_urls_cnt: 0,
+      mixed_urls_cnt: 0,
+      unknown_urls_cnt: 0
+    });
   }
 
   private extract_results(json_data: any) {
@@ -138,6 +138,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, {
       name: 'Misinformation',
       value: json_data.fake_urls_cnt
+    }, {
+      name: 'Mixed',
+      value: json_data.mixed_urls_cnt
     }, {
       name: 'Not checked',
       value: json_data.unknown_urls_cnt
@@ -175,6 +178,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.pie_data_you = this.extract_results(results);
 
       this.table_data_bad = this.prepare_table_data(results.fake_urls);
+      this.table_data_mixed = this.prepare_table_data(results.mixed_urls);
       this.table_data_good = this.prepare_table_data(results.verified_urls);
       this.table_data_rebuttals = this.prepare_table_data(results.rebuttals);
 
@@ -225,6 +229,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
       this.friends_analysis_show = false;
       this.result_friends = this.get_resetted_counts();
+      this.friends_results = [];
       this.pie_data_friends = this.default_pie_data();
       this.get_friends_list(this.screen_name.value);
     }, (error) => {
@@ -269,8 +274,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.result_friends.tweets_cnt += friend.tweets_cnt;
     this.result_friends.shared_urls_cnt += friend.shared_urls_cnt;
     this.result_friends.fake_urls_cnt += friend.fake_urls_cnt;
-    this.result_friends.unknown_urls_cnt += friend.unknown_urls_cnt;
     this.result_friends.verified_urls_cnt += friend.verified_urls_cnt;
+    this.result_friends.mixed_urls_cnt += friend.mixed_urls_cnt;
+    this.result_friends.unknown_urls_cnt += friend.unknown_urls_cnt;
     this.result_friends.twitter_profiles_cnt++;
     this.pie_data_friends = this.extract_results(this.result_friends);
 
@@ -306,6 +312,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     // this.best_friend_pie_data = this.extract_results(this.best_friend);
     this.worst_friend_pie_data = this.extract_results(this.worst_friend);
+
+    this.friends_results.push(friend);
+    this.friends_graph = this.generateGraph(this.result_you, this.friends_results);
   }
 
   get_resetted_counts(): OverallCounts {
@@ -317,8 +326,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       fake_urls_cnt: 0,
       unknown_urls_cnt: 0,
       verified_urls_cnt: 0,
+      mixed_urls_cnt: 0,
       fake_urls: [],
       verified_urls: [],
+      mixed_urls: [],
       rebuttals: [],
       twitter_profiles_cnt: 0
     };
@@ -341,4 +352,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     this.update_overall();
   }
+
+  generateGraph(you: CountResult, friends_scores: Array<CountResult>) {
+    const nodes = [];
+    const links = [];
+    nodes.push({
+      value: you.screen_name
+    });
+    // console.log(friends_scores);
+    for (const f of friends_scores) {
+      nodes.push({
+        value: f.screen_name
+      });
+      links.push({
+        source: you.screen_name,
+        target: f.screen_name
+      });
+    }
+    return { links, nodes };
+  }
+
 }

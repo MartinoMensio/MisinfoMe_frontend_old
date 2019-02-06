@@ -3,11 +3,14 @@ mat-form-field {
   }
 
 .bad {
-    color: rgb(134, 19, 19);
+    color: rgb(161, 10, 40);
 }
 
 .good {
-    color: rgb(0, 141, 0);
+    color: rgb(90, 164, 84);
+}
+.mixed {
+    color: rgb(199, 180, 44);
 }
 
 .center {

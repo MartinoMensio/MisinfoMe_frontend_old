@@ -50,6 +50,21 @@
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
+          <mat-panel-title class="mixed">
+            <i class="material-icons md-24">error</i>These tweets have been identified as linked to not completely true content
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to expand
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p>The URLs may have been fact-checked and TODO.</p>
+
+        <app-table-tweets [data]="table_data_mixed"></app-table-tweets>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
           <mat-panel-title class="good">
             <i class="material-icons md-24">check_circle</i>These tweets have been identified as linked to verified
             content
@@ -116,6 +131,18 @@
         <p></p>
         <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
           remaining</button>
+        <!-- <ngx-charts-force-directed-graph
+          class="chart-container"
+          [legend]="true"
+          [links]="friends_graph.links"
+          [animations]="true"
+          (legendLabelClick)="onLegendLabelClick($event)"
+          [nodes]="friends_graph.nodes"
+          [scheme]="colorScheme"
+          [view]="[1000,200]"
+          [tooltipDisabled]="false"
+          (select)="select($event)">
+        </ngx-charts-force-directed-graph> -->
         <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
           [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
