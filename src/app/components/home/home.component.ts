@@ -4,6 +4,7 @@ import { trigger, style, transition, animate, keyframes, query, stagger, state }
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 
 @Component({
   selector: 'app-home',
@@ -61,6 +62,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse_remaining_disabled: Boolean = true;
 
   friends_graph: { links: any[]; nodes: any[] };
+  graph_force = forceSimulation<any>()
+  .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
+  .force('x', forceX()) // make them go to the center
+  .force('y', forceY());
+  // .force('collide', forceCollide(30))
+  graph_force_link = forceLink<any, any>().distance(100).id(node => node.value); // the desired length of the links
 
   // best_friend: CountResult;
   // best_friend_pie_data = [];
@@ -250,6 +257,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.friends_screen_names = {};
       this.friends_count = friends_screen_names.length;
       this.friends_analysis_show = false;
+      this.friends_graph = this.generateGraph(this.result_you, []);
       this.apiService.getUserCounts(friends_screen_names, true, true).subscribe((res: any) => {
         Object.keys(res).forEach((el: string) => {
           if (res[el].cache === 'miss') {
@@ -314,12 +322,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.worst_friend_pie_data = this.extract_results(this.worst_friend);
 
     this.friends_results.push(friend);
+    // this.updateGraphWithFriend(this.friends_graph, this.result_you, friend);
     this.friends_graph = this.generateGraph(this.result_you, this.friends_results);
   }
 
   get_resetted_counts(): OverallCounts {
     return {
       screen_name: '',
+      profile_image_url: '',
       score: -1,
       tweets_cnt: 0,
       shared_urls_cnt: 0,
@@ -353,23 +363,67 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.update_overall();
   }
 
+  updateGraphWithFriend(graph, you, friend_score) {
+    graph.nodes.push({
+      value: friend_score.screen_name,
+      // x: -100,
+      // y: 0,
+      options: {
+        image: friend_score.profile_image_url,
+        size: 20,
+        fill: this.getColor(friend_score),
+        stroke: this.getColor(friend_score)
+      }
+    });
+    graph.links.push({
+      source: you.screen_name,
+      target: friend_score.screen_name,
+      options: {
+        color: this.getColor(friend_score) + '!important'
+      }
+    });
+  }
+
   generateGraph(you: CountResult, friends_scores: Array<CountResult>) {
-    const nodes = [];
-    const links = [];
-    nodes.push({
-      value: you.screen_name
+    const graph = {
+      links: [],
+      nodes: [],
+      overall_move_x: 20,
+      overall_move_y: 20 // the whole graph is translated
+    };
+    graph.nodes.push({
+      value: you.screen_name,
+      options: {
+        image: you.profile_image_url,
+        size: 20,
+        fill: this.getColor(you),
+        stroke: this.getColor(you)
+      }
     });
     // console.log(friends_scores);
     for (const f of friends_scores) {
-      nodes.push({
-        value: f.screen_name
-      });
-      links.push({
-        source: you.screen_name,
-        target: f.screen_name
-      });
+      this.updateGraphWithFriend(graph, you, f);
     }
-    return { links, nodes };
+    return graph;
+  }
+
+  getColor(counts: CountResult) {
+    if (counts.score > 50) {
+      return 'rgb(90, 164, 84)';
+    } else if (counts.score < 50) {
+      return 'rgb(161, 10, 40)';
+    } else {
+      return 'grey';
+    }
+  }
+
+  select_node(event: any) {
+    console.log('node selected');
+    console.log(event);
+    const screen_name = event.name;
+    console.log(screen_name);
+    this.router.navigate(['/analyse', screen_name]);
+    return;
   }
 
 }
