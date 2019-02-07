@@ -51,7 +51,8 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title class="mixed">
-            <i class="material-icons md-24">error</i>These tweets have been identified as linked to not completely true content
+            <i class="material-icons md-24">error</i>These tweets have been identified as linked to not completely true
+            content
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
@@ -100,6 +101,63 @@
     </div>
   </div>
   <p></p>
+  <mat-card *ngIf="!loading_you && !error_you && show_you">
+    <div>
+      <h3>Your twitter friends network</h3>
+      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool
+        can analyse the profiles that you are following.</p>
+      <p>You have {{friends_count || "..."}} friends<span *ngIf="friends_analysis_show">,
+          {{result_friends.twitter_profiles_cnt}} of them have already been analysed.</span></p>
+      <p><i>*This is limited to the last 500 people you are following, and this number could be less because of private
+          profiles</i></p>
+      <mat-spinner *ngIf="loading_friends" class="center"></mat-spinner>
+      <div *ngIf="friends_analysis_show">
+        <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
+        <p></p>
+        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
+          remaining</button>
+        <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="friends_graph.links"
+          [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes" [scheme]="colorScheme"
+          [view]="[1000,getGraphHeight()]" [tooltipDisabled]="false" (select)="select_node($event)" [force]="graph_force"
+          [forceLink]="graph_force_link">
+          <ng-template #nodeTemplate let-node>
+            <svg [attr.width]="node.options.size * 2" [attr.height]="node.options.size * 2">
+              <defs>
+                <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse" [attr.height]="node.options.size * 2"
+                  [attr.width]="node.options.size * 2">
+                  <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2" attr.xlink:href="{{node.options.image}}"></image>
+                </pattern>
+              </defs>
+              <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size"
+                attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%" />
+            </svg>
+          </ng-template>
+          <ng-template #linkTemplate let-link>
+            <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.target.x"
+              [attr.y2]="link.target.y" [attr.stroke]="link.options.color" attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
+          </ng-template>
+        </ngx-charts-force-directed-graph>
+        <div id="asdasdasd" [style.height]="getGraphHeight() + 100 + 'px'"></div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
+          [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      </div>
+      <!-- <div *ngIf="best_friend">
+        <h4>Your best-scoring friend</h4>
+        <div><a href="https://twitter.com/{{best_friend.screen_name}}" target="_blank">{{best_friend.screen_name}}</a> with a <a [routerLink]="['/analyse', best_friend.screen_name]">score of {{best_friend.score}}</a></div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="best_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      </div> -->
+      <div *ngIf="worst_friend">
+        <h4>Your worst-scoring friend</h4>
+        <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a>
+          with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score |
+            number : '1.2-2'}}</a></div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      </div>
+    </div>
+  </mat-card>
+  <p></p>
   <mat-card *ngIf="!loading_overall && !error_overall && !loading_you && !error_you && show_you">
     <div>
       <h3>You against the average user</h3>
@@ -114,72 +172,6 @@
           have spread more misinformation than the average of our users</p>
         <p *ngIf="result_you.score > result_overall.score" class="good"><i class="material-icons md-24">check_circle</i>
           You have spread less misinformation than the average of our users</p>
-      </div>
-    </div>
-  </mat-card>
-  <p></p>
-  <mat-card *ngIf="!loading_you && !error_you && show_you">
-    <div>
-      <h3>Your twitter friends network</h3>
-      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool
-        can analyse the profiles that you are following.</p>
-      <p>You have {{friends_count || "..."}} friends<span *ngIf="friends_analysis_show">,
-          {{result_friends.twitter_profiles_cnt}} of them have already been analysed.</span></p>
-      <mat-spinner *ngIf="loading_friends" class="center"></mat-spinner>
-      <div *ngIf="friends_analysis_show">
-        <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
-        <p></p>
-        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
-          remaining</button>
-        <ngx-charts-force-directed-graph
-          class="chart-container"
-          [legend]="false"
-          [links]="friends_graph.links"
-          [animations]="true"
-          (legendLabelClick)="onLegendLabelClick($event)"
-          [nodes]="friends_graph.nodes"
-          [scheme]="colorScheme"
-          [view]="[1000,500]"
-          [tooltipDisabled]="false"
-          (select)="select_node($event)"
-          [force]="graph_force"
-          [forceLink]="graph_force_link">
-          <ng-template #nodeTemplate let-node>
-            <svg [attr.width]="node.options.size * 2" [attr.height]="node.options.size * 2">
-              <defs>
-                <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse" [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2">
-                  <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2" attr.xlink:href="{{node.options.image}}"></image>
-                </pattern>
-              </defs>
-              <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size" attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%" />
-            </svg>
-          </ng-template>
-          <ng-template #linkTemplate let-link>
-              <svg:line
-              strokeWidth="1" class="edge"
-              [attr.x1]="link.source.x"
-              [attr.y1]="link.source.y"
-              [attr.x2]="link.target.x"
-              [attr.y2]="link.target.y"
-              [attr.stroke]="link.options.color" attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})"
-            />
-          </ng-template>
-        </ngx-charts-force-directed-graph>
-        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
-          [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
-      </div>
-      <div style="height: 500px;"></div>
-      <!-- <div *ngIf="best_friend">
-        <h4>Your best-scoring friend</h4>
-        <div><a href="https://twitter.com/{{best_friend.screen_name}}" target="_blank">{{best_friend.screen_name}}</a> with a <a [routerLink]="['/analyse', best_friend.screen_name]">score of {{best_friend.score}}</a></div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]"
-          [scheme]="colorScheme" [results]="best_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
-      </div> -->
-      <div *ngIf="worst_friend">
-        <h4>Your worst-scoring friend</h4>
-        <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a> with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score | number : '1.2-2'}}</a></div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
-          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
     </div>
   </mat-card>

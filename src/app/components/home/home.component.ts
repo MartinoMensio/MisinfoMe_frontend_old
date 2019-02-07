@@ -27,8 +27,7 @@ import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  data_for_graph = {};
-
+  state_screen_name: string; // the value that comes from the url parameter
   screen_name = new FormControl('');
   score: number;
 
@@ -90,6 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
+      this.state_screen_name = params['screen_name'];
       this.screen_name.setValue(params['screen_name']);
       console.log('sub called' + this.screen_name.value);
       if (this.screen_name.value) {
@@ -172,7 +172,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.router.navigate(['/analyse', this.screen_name.value]);
+    if (this.state_screen_name !== this.screen_name.value) {
+      return this.router.navigate(['/analyse', this.screen_name.value]);
+    } else {
+      // reload current page
+      return this.ngOnInit();
+    }
   }
 
   analyse() {
@@ -415,6 +420,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       return 'grey';
     }
+  }
+
+  getGraphHeight() {
+    // a proportional value to the friends, between the two extremes
+    const min_height = 300;
+    const max_height = 1000;
+    const max_friends = 500;
+    return min_height + (this.result_friends.twitter_profiles_cnt) * (max_height - min_height) / max_friends;
   }
 
   select_node(event: any) {
