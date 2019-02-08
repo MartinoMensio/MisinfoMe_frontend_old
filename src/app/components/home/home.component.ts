@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-home',
@@ -60,7 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   friends_results: Array<CountResult>;
   analyse_remaining_disabled: Boolean = true;
 
-  friends_graph: { links: any[]; nodes: any[] };
+  friends_graph: { links: any[]; nodes: any[]; trick: any };
   graph_force = forceSimulation<any>()
   .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
   .force('x', forceX()) // make them go to the center
@@ -277,6 +278,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
           this.analyse_remaining_disabled = false;
         }
+        this.friends_graph.trick(this.friends_graph);
         this.loading_friends = false;
         this.friends_analysis_show = true;
       });
@@ -362,6 +364,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             // update sometimes
             this.update_overall();
           }
+          this.friends_graph.trick(this.friends_graph);
         });
       }
     });
@@ -394,7 +397,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       links: [],
       nodes: [],
       overall_move_x: 20,
-      overall_move_y: 20 // the whole graph is translated
+      overall_move_y: 20, // the whole graph is translated
+      update_trick_ticks: 50,
+      update_trick_interval: 100, // milliseconds
+      trick: (g) => {
+        // This function is needed because the ngx-charts-force-directed-graph is just animating the links and not the edges,
+        // unless the mouse moves on the svg.
+        // The trick is simply trigger programmatically clicks every 100ms for 5 secs on the center of the graph in order
+        // to trigger the update of the position of the edges.
+        setTimeout(() => {
+          // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
+          g.update_trick_ticks -= 1;
+          if (g.update_trick_ticks > 0) {
+            g.trick(g);
+            const selector = `[ng-reflect-tooltip-title="${this.screen_name.value}"]`;
+            // console.log(selector);
+            $(selector).get(0).dispatchEvent(new Event('click'));
+          }
+        }, 100);
+      }
     };
     graph.nodes.push({
       value: you.screen_name,
