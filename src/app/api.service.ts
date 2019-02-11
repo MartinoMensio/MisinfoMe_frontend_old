@@ -83,6 +83,10 @@ export class APIService {
     return this.getPath('/about/domains');
   }
 
+  getFactCheckers() {
+    return this.getPath('/about/fact_checkers_table');
+  }
+
   getFriends(screen_name, limit: number = 500) {
     if (limit) {
       return this.getPath(`/following?handle=${screen_name}&limit=${limit}`);

@@ -8,6 +8,8 @@ import { APIService } from 'src/app/api.service';
 })
 export class DomainsComponent implements OnInit {
 
+  tsv = '';
+
   domain_datasets = {};
   domain_datasets_list: Array<any> = [];
   domains: Array<any> = [];
@@ -19,10 +21,11 @@ export class DomainsComponent implements OnInit {
     this.apiService.getDatasets().subscribe((res: Array<any>) => {
       res.forEach((val) => {
         // just select the datasets that have a name and are used someway
-        if (val.name && (val.contains.domain_classification || val.contains.fact_checking_urls || val.contains.url_classification)) {
+        if (val.name && (val.contains.domain_classification)) {
           this.domain_datasets[val['_id']] = val;
           this.domain_datasets_list.push(val);
           this.displayedColumns.push(val.name);
+          this.tsv += val._id;
         }
       });
     });
@@ -33,6 +36,7 @@ export class DomainsComponent implements OnInit {
 
   getScore(element, d) {
     const result = element.score.sources.includes(d._id);
+    this.tsv += result;
     return result;
   }
 }

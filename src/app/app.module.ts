@@ -32,6 +32,7 @@ import { AboutComponent } from './components/about/about.component';
 import { TableTweetsComponent } from './components/table-tweets/table-tweets.component';
 import { DatasetsComponent } from './components/datasets/datasets.component';
 import { DomainsComponent } from './components/domains/domains.component';
+import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { DomainsComponent } from './components/domains/domains.component';
     AboutComponent,
     TableTweetsComponent,
     DatasetsComponent,
-    DomainsComponent
+    DomainsComponent,
+    FactCheckingComponent
   ],
   imports: [
     BrowserModule,

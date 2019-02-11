@@ -15,3 +15,16 @@
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.rotate {
+    /* writing-mode: tb;
+    transform: rotate(180deg); */
+}
+
+.mat-column:nth-child(even){
+    background-color:red;
+    }
+
+.mat-column:nth-child(odd){
+    background-color:black;
+    }

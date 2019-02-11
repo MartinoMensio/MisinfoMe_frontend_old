@@ -1,0 +1,48 @@
+<div>
+  <div class="table-container">
+  <h3>Fact checking organisations</h3>
+  <table mat-table [dataSource]="table_data" class="mat-elevation-z8">
+
+    <!-- 'name', 'nationality', 'belongs_to_ifcn', 'uses_claimreview' -->
+
+      <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            <h2>Name</h2>
+          </th>
+          <td mat-cell *matCellDef="let element"> <a href="//{{element[2]}}">{{element[1]}}</a> </td>
+        </ng-container>
+
+      <ng-container matColumnDef="nationality">
+          <th mat-header-cell *matHeaderCellDef>
+            <h2>Nationality</h2>
+          </th>
+          <td mat-cell *matCellDef="let element">{{element[3]}}</td>
+        </ng-container>
+      <ng-container matColumnDef="belongs_to_ifcn">
+          <th mat-header-cell *matHeaderCellDef>
+            <h2>IFCN member</h2>
+          </th>
+          <td mat-cell *matCellDef="let element">{{element[4]}}</td>
+        </ng-container>
+      <ng-container matColumnDef="uses_claimreview">
+          <th mat-header-cell *matHeaderCellDef>
+            <h2>Uses ClaimReview</h2>
+          </th>
+          <td mat-cell *matCellDef="let element">{{element[5]}}</td>
+        </ng-container>
+
+    <!-- <ng-container matColumnDef="{{h}}" *ngFor="let h of properties; let i=index">
+      <th mat-header-cell *matHeaderCellDef class="rotate">
+        <h2>{{h}}</h2>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <i class="material-icons md-24" *ngIf="element[i]">check_circle</i>
+      </td>
+    </ng-container> -->
+
+
+    <tr mat-header-row *matHeaderRowDef="table_headers; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: table_headers;"></tr>
+    </table>
+  </div>
+</div>

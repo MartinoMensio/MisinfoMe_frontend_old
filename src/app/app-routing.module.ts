@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AboutComponent } from './components/about/about.component';
 import { DatasetsComponent } from './components/datasets/datasets.component';
 import { DomainsComponent } from './components/domains/domains.component';
+import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 
 const routes: Routes = [
   { path: 'analyse/:screen_name', component: HomeComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   // { path: 'about/datasets/:dataset_name', component: DatasetsComponent },
   { path: 'about/domains', component: DomainsComponent },
   // { path: 'about/domains/:domain', component: DomainsComponent },
+  { path: 'about/fact_checking', component: FactCheckingComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
 
