@@ -16,3 +16,9 @@ mat-form-field {
 .center {
     margin: 0 auto;
 }
+
+.table-container-2 {
+    height: 400px;
+    overflow: auto;
+    background-color: bisque;
+  }

@@ -6,7 +6,8 @@
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <mat-form-field>
         <mat-label for="screen_name">Your Twitter screen name</mat-label>
-        <input matInput placeholder="Twitter screen name" required="true" [formControl]="screen_name" pattern="[a-zA-Z0-9_]+">
+        <input matInput placeholder="Twitter screen name" required="true" [formControl]="screen_name"
+          pattern="[a-zA-Z0-9_]+">
         <mat-error *ngIf="!screen_name.valid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent" [disabled]="!screen_name.valid">Assess</button>
@@ -20,14 +21,15 @@
       <mat-spinner *ngIf="loading_you" class="center"></mat-spinner>
       <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
       <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
-        <h3>You - <a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">@{{result_you.screen_name}}</a></h3>
+        <h3>You - <a href="https://twitter.com/{{result_you.screen_name}}"
+            target="_blank">@{{result_you.screen_name}}</a></h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from your profile.</div>
         <div *ngIf="result_you.score >= 50" class="good">Your score is good.</div>
         <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div> -->
         <div>This is how the URLs that you shared are classified</div>
-        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_you"
-          [gradient]="gradient">
+        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme"
+          [results]="pie_data_you" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
       </div>
     </mat-card>
@@ -114,18 +116,20 @@
       <div *ngIf="friends_analysis_show">
         <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
         <p></p>
-        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled" (click)="analyse_remaining()">Analyse
+        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
+          (click)="analyse_remaining()">Analyse
           remaining</button>
         <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="friends_graph.links"
-          [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes" [scheme]="colorScheme"
-          [view]="[1000,getGraphHeight()]" [tooltipDisabled]="false" (select)="select_node($event)" [force]="graph_force"
-          [forceLink]="graph_force_link">
+          [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes"
+          [scheme]="colorScheme" [view]="[1000,getGraphHeight()]" [tooltipDisabled]="false"
+          (select)="select_node($event)" [force]="graph_force" [forceLink]="graph_force_link">
           <ng-template #nodeTemplate let-node>
             <svg [attr.width]="node.options.size * 2" [attr.height]="node.options.size * 2">
               <defs>
-                <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse" [attr.height]="node.options.size * 2"
-                  [attr.width]="node.options.size * 2">
-                  <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2" attr.xlink:href="{{node.options.image}}"></image>
+                <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse"
+                  [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2">
+                  <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2"
+                    attr.xlink:href="{{node.options.image}}"></image>
                 </pattern>
               </defs>
               <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size"
@@ -133,13 +137,14 @@
             </svg>
           </ng-template>
           <ng-template #linkTemplate let-link>
-            <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.target.x"
-              [attr.y2]="link.target.y" [attr.stroke]="link.options.color" attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
+            <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y"
+              [attr.x2]="link.target.x" [attr.y2]="link.target.y" [attr.stroke]="link.options.color"
+              attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
           </ng-template>
         </ngx-charts-force-directed-graph>
         <div id="asdasdasd" [style.height]="getGraphHeight() + 100 + 'px'"></div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]" [scheme]="colorScheme"
-          [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div>
       <!-- <div *ngIf="best_friend">
         <h4>Your best-scoring friend</h4>
@@ -153,7 +158,39 @@
           with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score |
             number : '1.2-2'}}</a></div>
         <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
-          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient">
+        </ngx-charts-advanced-pie-chart>
+      </div>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Your worst-scoring friends
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to expand
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p>Your friends have been sorted by their score. Here are the worst 10</p>
+        <div class="table-container-2">
+          <div *ngFor=" let f of friends_results_sorted; let i=index">
+            <div *ngIf="i < 10">
+              <ngx-charts-advanced-pie-chart label="URLs verified from {{f.screen_name}}" [view]="[1000,200]"
+                [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
+              </ngx-charts-advanced-pie-chart>
+            </div>
+          </div>
+        </div>
+
+      </mat-expansion-panel>
+      <div *ngIf="worst_friend">
+        <h4>Your worst-scoring friends</h4>
+        <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a>
+          with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score |
+            number : '1.2-2'}}</a></div>
+        <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
+          [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient">
+        </ngx-charts-advanced-pie-chart>
       </div>
     </div>
   </mat-card>
@@ -163,9 +200,11 @@
       <h3>You against the average user</h3>
       <div>The comparison between your score and the average user score</div>
       <ngx-charts-bar-horizontal-normalized [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average_multi"
-        legend="true" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared"></ngx-charts-bar-horizontal-normalized>
+        legend="true" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared">
+      </ngx-charts-bar-horizontal-normalized>
       <ngx-charts-bar-horizontal [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average" xScaleMax="100"
-        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score" [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
+        [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
       <div style="height: 200px;"></div>
       <div>
         <p *ngIf="result_you.score < result_overall.score" class="bad"><i class="material-icons md-48">error</i> You
@@ -187,8 +226,8 @@
         <p>So far we have analysed {{result_overall.tweets_cnt}} tweets coming from
           {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
       </div>
-      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme" [results]="pie_data_overall"
-        [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme"
+        [results]="pie_data_overall" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       <p><a [routerLink]="['/about']">More about our verification process</a></p>
     </div>
   </mat-card>

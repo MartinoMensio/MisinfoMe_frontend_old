@@ -17,6 +17,7 @@ export class FactCheckingComponent implements OnInit {
   ngOnInit() {
     this.apiService.getFactCheckers().subscribe((result: Array<Array<string>>) => {
       const headers_received = result[0];
+      // tslint:disable-next-line:forin
       for (const i in this.table_headers) {
         this.table_headers_indexes[i] = headers_received.indexOf(this.table_headers[i]);
       }

@@ -3,9 +3,13 @@ import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as $ from 'jquery';
+
+interface CountResultWithPieData extends CountResult {
+  pie_data: Array<any>;
+}
 
 @Component({
   selector: 'app-home',
@@ -58,7 +62,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   friends_analysis_show: Boolean = false;
   pie_data_friends: any[];
   result_friends: OverallCounts;
-  friends_results: Array<CountResult>;
+  friends_results: Array<CountResultWithPieData>;
+  friends_results_sorted: Array<CountResultWithPieData>;
   analyse_remaining_disabled: Boolean = true;
 
   friends_graph: { links: any[]; nodes: any[]; trick: any };
@@ -92,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       this.state_screen_name = params['screen_name'];
       this.screen_name.setValue(params['screen_name']);
-      console.log('sub called' + this.screen_name.value);
+      console.log('sub called ' + this.screen_name.value);
       if (this.screen_name.value) {
         this.analyse();
       }
@@ -243,6 +248,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.friends_analysis_show = false;
       this.result_friends = this.get_resetted_counts();
       this.friends_results = [];
+      this.friends_results_sorted = [];
       this.pie_data_friends = this.default_pie_data();
       this.get_friends_list(this.screen_name.value);
     }, (error) => {
@@ -328,7 +334,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     // this.best_friend_pie_data = this.extract_results(this.best_friend);
     this.worst_friend_pie_data = this.extract_results(this.worst_friend);
 
-    this.friends_results.push(friend);
+    this.friends_results.push({
+      ...friend, pie_data: this.extract_results(friend)
+    });
+    this.friends_results_sorted = this.friends_results.sort((a, b) => {
+      return b.fake_urls_cnt - a.fake_urls_cnt;
+      if (a.score !== b.score) {
+        return a.score - b.score;
+      } else {
+        return b.fake_urls_cnt - a.fake_urls_cnt;
+      }
+    });
     // this.updateGraphWithFriend(this.friends_graph, this.result_you, friend);
     this.friends_graph = this.generateGraph(this.result_you, this.friends_results);
   }
@@ -354,7 +370,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   analyse_remaining() {
     this.analyse_remaining_disabled = true;
-    Object.keys(this.friends_screen_names).forEach((el: string) => {
+    const candidate = this.get_candidate();
+    this.analyse_candidate(candidate).subscribe(res => {
+      this.update_overall();
+    });
+    /*Object.keys(this.friends_screen_names).forEach((el: string) => {
       if (!this.friends_screen_names[el]) {
         // not already analysed
         // TODO manage wait observable call
@@ -367,8 +387,32 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.friends_graph.trick(this.friends_graph);
         });
       }
+    });*/
+  }
+
+  get_candidate() {
+    return Object.keys(this.friends_screen_names).find(el => !this.friends_screen_names[el]);
+  }
+
+  analyse_candidate(candidate: string): Observable<Object> {
+    if (!candidate) {
+      return;
+    }
+    this.apiService.getUserCounts([candidate], true).subscribe((results: CountResult) => {
+      this.update_friends_stat_with_new(results);
+      this.friends_screen_names[candidate] = true;
+      if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
+        // update sometimes
+        this.update_overall();
+      }
+      this.friends_graph.trick(this.friends_graph);
+      const next = this.get_candidate();
+      return this.analyse_candidate(next);
+    }, error => {
+      this.friends_screen_names[candidate] = true;
+      const next = this.get_candidate();
+      return this.analyse_candidate(next);
     });
-    this.update_overall();
   }
 
   updateGraphWithFriend(graph, you, friend_score) {
@@ -452,10 +496,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   select_node(event: any) {
-    console.log('node selected');
-    console.log(event);
+    // console.log('node selected');
+    // console.log(event);
     const screen_name = event.name;
-    console.log(screen_name);
+    // console.log(screen_name);
     this.router.navigate(['/analyse', screen_name]);
     return;
   }
