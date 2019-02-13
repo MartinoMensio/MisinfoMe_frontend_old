@@ -70,7 +70,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   graph_force = forceSimulation<any>()
   .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
   .force('x', forceX()) // make them go to the center
-  .force('y', forceY());
+  .force('y', forceY())
+  .alphaDecay(0.1); // decay bigger so stop faster
   // .force('collide', forceCollide(30))
   graph_force_link = forceLink<any, any>().distance(100).id(node => node.value); // the desired length of the links
 
@@ -454,7 +455,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           g.update_trick_ticks -= 1;
           if (g.update_trick_ticks > 0) {
             g.trick(g);
-            const selector = `[ng-reflect-tooltip-title="${this.screen_name.value}"]`;
+            const selector = `g.nodes g`;
             // console.log(selector);
             $(selector).get(0).dispatchEvent(new Event('click'));
           }
