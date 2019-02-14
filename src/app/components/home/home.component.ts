@@ -372,7 +372,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse_remaining() {
     this.analyse_remaining_disabled = true;
     const candidate = this.get_candidate();
-    this.analyse_candidate(candidate).subscribe(res => {
+    this.analyse_candidate(candidate).then(res => {
       this.update_overall();
     });
     /*Object.keys(this.friends_screen_names).forEach((el: string) => {
@@ -395,11 +395,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     return Object.keys(this.friends_screen_names).find(el => !this.friends_screen_names[el]);
   }
 
-  analyse_candidate(candidate: string): Observable<Object> {
+  analyse_candidate(candidate: string): Promise<any> {
     if (!candidate) {
-      return;
+      return Promise.resolve();
     }
-    this.apiService.getUserCounts([candidate], true).subscribe((results: CountResult) => {
+    return this.apiService.getUserCounts([candidate], true).toPromise().then((results: CountResult) => {
       this.update_friends_stat_with_new(results);
       this.friends_screen_names[candidate] = true;
       if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
@@ -459,7 +459,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             // console.log(selector);
             $(selector).get(0).dispatchEvent(new Event('click'));
           }
-        }, 100);
+        }, g.update_trick_interval);
       }
     };
     graph.nodes.push({
