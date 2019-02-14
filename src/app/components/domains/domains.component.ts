@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { APIService } from 'src/app/api.service';
+import { VennSet } from '../venn/venn.component';
 
 @Component({
   selector: 'app-domains',
@@ -8,12 +9,12 @@ import { APIService } from 'src/app/api.service';
 })
 export class DomainsComponent implements OnInit {
 
-  tsv = '';
-
   domain_datasets = {};
   domain_datasets_list: Array<any> = [];
   domains: Array<any> = [];
   displayedColumns: Array<String> = ['domain', 'label'];
+
+  domain_sets: Array<VennSet> = [];
 
   constructor(private apiService: APIService) { }
 
@@ -25,18 +26,34 @@ export class DomainsComponent implements OnInit {
           this.domain_datasets[val['_id']] = val;
           this.domain_datasets_list.push(val);
           this.displayedColumns.push(val.name);
-          this.tsv += val._id;
         }
       });
     });
     this.apiService.getDomains().subscribe((res: Array<any>) => {
       this.domains = res;
+      const initial_sets = this.domain_datasets_list.map(el => {
+        return {size: 0, sets: new Set([el['_id']]), label: el['name']};
+      })
+      const sets_with_counts = res.reduce((prev: Array<any>, el: any) => {
+        const a = new Set(el.score.sources);
+        const match = prev.find((b: any) => {
+          return a.size === b.sets.size && Array.from(a).every(value => b.sets.has(value));
+        });
+        if (match) {
+          match.size++;
+        } else {
+          prev.push({size: 1, sets: a});
+        }
+        return prev;
+      }, initial_sets) as Array<any>;
+      this.domain_sets = sets_with_counts.map(el => {
+        return {size: el.size as number, sets: Array.from(el.sets) as Array<string>, label: el.label}
+      });//.slice(0, 10);
     });
   }
 
   getScore(element, d) {
     const result = element.score.sources.includes(d._id);
-    this.tsv += result;
     return result;
   }
 }
