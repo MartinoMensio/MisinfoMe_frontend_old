@@ -7,6 +7,7 @@ FROM node:latest
 
 # install and cache app dependencies
 COPY package.json /app/
+COPY package-lock.json /app/
 WORKDIR /app
 RUN npm install
 RUN npm install -g @angular/cli
