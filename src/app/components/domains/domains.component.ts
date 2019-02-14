@@ -33,7 +33,8 @@ export class DomainsComponent implements OnInit {
       this.domains = res;
       const initial_sets = this.domain_datasets_list.map(el => {
         return {size: 0, sets: new Set([el['_id']]), label: el['name']};
-      })
+      });
+      console.log(initial_sets);
       const sets_with_counts = res.reduce((prev: Array<any>, el: any) => {
         const a = new Set(el.score.sources);
         const match = prev.find((b: any) => {

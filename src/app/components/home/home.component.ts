@@ -64,14 +64,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   result_friends: OverallCounts;
   friends_results: Array<CountResultWithPieData>;
   friends_results_sorted: Array<CountResultWithPieData>;
+  max_worst = 10;
+  _chosen_criterion = 'bad_percentage';
+  get chosen_criterion() {
+    return this._chosen_criterion;
+  }
+  set chosen_criterion(chosen_criterion) {
+    this._chosen_criterion = chosen_criterion;
+    this.friends_results_sorted = this.sort_friends()
+  }
+  sorting_criteria = [{
+    'value': 'bad_cnt',
+    'name': 'Descending count of misinforming URLs'
+  }, {
+    'value': 'score',
+    'name': 'Worst score first, if equal sort by descending count of misinforming URLs'
+  }, {
+    'value': 'bad_percentage',
+    'name': 'Highest percentage of misinforming URLs'
+  }
+  ];
   analyse_remaining_disabled: Boolean = true;
 
   friends_graph: { links: any[]; nodes: any[]; trick: any };
   graph_force = forceSimulation<any>()
-  .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
-  .force('x', forceX()) // make them go to the center
-  .force('y', forceY())
-  .alphaDecay(0.1); // decay bigger so stop faster
+    .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
+    .force('x', forceX()) // make them go to the center
+    .force('y', forceY())
+    .alphaDecay(0.1); // decay bigger so stop faster
   // .force('collide', forceCollide(30))
   graph_force_link = forceLink<any, any>().distance(100).id(node => node.value); // the desired length of the links
 
@@ -338,16 +358,33 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.friends_results.push({
       ...friend, pie_data: this.extract_results(friend)
     });
-    this.friends_results_sorted = this.friends_results.sort((a, b) => {
-      return b.fake_urls_cnt - a.fake_urls_cnt;
-      if (a.score !== b.score) {
-        return a.score - b.score;
-      } else {
-        return b.fake_urls_cnt - a.fake_urls_cnt;
-      }
-    });
+    this.friends_results_sorted = this.sort_friends()
     // this.updateGraphWithFriend(this.friends_graph, this.result_you, friend);
     this.friends_graph = this.generateGraph(this.result_you, this.friends_results);
+  }
+
+  sort_friends() {
+    return this.friends_results.sort((a, b) => {
+      const score_diff = a.score - b.score;
+      const fake_cnt_diff = b.fake_urls_cnt - a.fake_urls_cnt;
+      const perc_fake_diff = (100 * b.fake_urls_cnt) / b.shared_urls_cnt - (100 * a.fake_urls_cnt) / a.shared_urls_cnt;
+      switch (this.chosen_criterion) {
+        case 'bad_cnt':
+          return b.fake_urls_cnt - a.fake_urls_cnt;
+        case 'score':
+          if (Math.abs(score_diff) > 0.01) {
+            return score_diff;
+          } else {
+            return fake_cnt_diff;
+          }
+        case 'bad_percentage':
+          if (Math.abs(perc_fake_diff) > 0.01) {
+            return perc_fake_diff;
+          } else {
+            return fake_cnt_diff;
+          }
+      }
+    });
   }
 
   get_resetted_counts(): OverallCounts {

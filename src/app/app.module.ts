@@ -15,7 +15,9 @@ import {
   MatIconModule,
   MatListModule,
   MatCheckboxModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSelectModule,
+  MatSliderModule
 } from '@angular/material';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -69,6 +71,8 @@ import { VennComponent } from './components/venn/venn.component';
     MatListModule,
     MatCheckboxModule,
     MatTooltipModule,
+    MatSelectModule,
+    MatSliderModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule

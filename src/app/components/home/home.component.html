@@ -152,7 +152,7 @@
         <ngx-charts-advanced-pie-chart label="URLs verified from {{best_friend.screen_name}}" [view]="[1000,200]"
           [scheme]="colorScheme" [results]="best_friend_pie_data" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
       </div> -->
-      <div *ngIf="worst_friend">
+      <!-- <div *ngIf="worst_friend">
         <h4>Your worst-scoring friend</h4>
         <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a>
           with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score |
@@ -160,8 +160,8 @@
         <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
           [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
-      </div>
-      <mat-expansion-panel>
+      </div> -->
+      <mat-expansion-panel class="mat-elevation-z5">
         <mat-expansion-panel-header>
           <mat-panel-title>
             Your worst-scoring friends
@@ -170,20 +170,35 @@
             Click to expand
           </mat-panel-description>
         </mat-expansion-panel-header>
-
-        <p>Your friends have been sorted by their score. Here are the worst 10</p>
         <div class="table-container-2">
-          <div *ngFor=" let f of friends_results_sorted; let i=index">
-            <div *ngIf="i < 10">
-              <ngx-charts-advanced-pie-chart label="URLs verified from {{f.screen_name}}" [view]="[1000,200]"
-                [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
-              </ngx-charts-advanced-pie-chart>
+          <h3>Your friends have been sorted by their score.</h3>
+          <h4>Maximum number of friends displayed: {{max_worst}} / 30</h4>
+
+            <!-- <mat-form-field ngNativeValidate>
+              <mat-label for="max_cnt">How many to show</mat-label>
+              <input type="number" min="1" max="20" step="1" matInput [(ngModel)]="max_worst">
+            </mat-form-field> -->
+            <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst"></mat-slider>
+            <mat-form-field>
+              <mat-select placeholder="Sorting criterion" [(ngModel)]="chosen_criterion">
+                <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
+                  {{c.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          <div>
+            <div *ngFor=" let f of friends_results_sorted; let i=index">
+              <div *ngIf="i < max_worst">
+                <ngx-charts-advanced-pie-chart label="URLs verified from {{f.screen_name}}" [view]="[1000,200]"
+                  [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
+                </ngx-charts-advanced-pie-chart>
+              </div>
             </div>
           </div>
         </div>
 
       </mat-expansion-panel>
-      <div *ngIf="worst_friend">
+      <!-- <div *ngIf="worst_friend">
         <h4>Your worst-scoring friends</h4>
         <div><a href="https://twitter.com/{{worst_friend.screen_name}}" target="_blank">{{worst_friend.screen_name}}</a>
           with a score of <a [routerLink]="['/analyse', worst_friend.screen_name]">score of {{worst_friend.score |
@@ -191,7 +206,7 @@
         <ngx-charts-advanced-pie-chart label="URLs verified from {{worst_friend.screen_name}}" [view]="[1000,200]"
           [scheme]="colorScheme" [results]="worst_friend_pie_data" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
-      </div>
+      </div> -->
     </div>
   </mat-card>
   <p></p>

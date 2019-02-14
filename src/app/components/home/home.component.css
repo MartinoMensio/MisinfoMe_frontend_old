@@ -21,4 +21,8 @@ mat-form-field {
     height: 400px;
     overflow: auto;
     background-color: bisque;
-  }
+}
+
+.mat-slider-horizontal {
+    width: 300px;
+}
