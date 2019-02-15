@@ -24,6 +24,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxTweetModule } from 'ngx-tweet';
+import { NestableModule } from 'ngx-nestable';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -75,7 +77,9 @@ import { VennComponent } from './components/venn/venn.component';
     MatSliderModule,
     NgxGraphModule,
     NgxChartsModule,
-    NgxTweetModule
+    NgxTweetModule,
+    NestableModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

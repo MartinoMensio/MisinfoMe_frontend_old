@@ -100,6 +100,43 @@
 
 
       </mat-expansion-panel> -->
+
+      <mat-card class="mat-elevation-z5">
+        <h3>Details of what you have shared</h3>
+
+        <ngx-nestable [(list)]="list" [options]="options" [template]="itemTemplate">
+        </ngx-nestable>
+
+        <ng-template #itemTemplate let-row>
+          <!-- <button mat-icon-button [ngxNestableDragHandle]="row">
+            <mat-icon>drag_handle</mat-icon>
+          </button> -->
+          <div fxLayout="column" style="width: 100%;">
+            <div [ngxNestableExpandCollapse]="row" fxLayout="row" style="width: 100%;">
+              <button mat-icon-button *ngIf="row.item.children && row.item.children.length; else empty_item">
+                <mat-icon>{{row.item.$$expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
+                </mat-icon>
+              </button>
+
+              <div [class]="row.item.class">
+                <mat-icon *ngIf="row.item.icon" class="material-icons md-24">{{row.item.icon}}</mat-icon>
+                {{row.item.label}}
+              </div>
+              <span fxFlex></span>
+              <div>{{row.item.count}}</div>
+            </div>
+            <div *ngIf="!row.item.children" style="width: 100%">
+              <!-- display content for leaf nodes -->
+              <app-table-tweets [data]="row.item.tweets" fxFlex="100%"></app-table-tweets>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #empty_item>
+          <span style="width: 40px"></span>
+        </ng-template>
+      </mat-card>
+
     </div>
   </div>
   <p></p>
@@ -174,18 +211,18 @@
           <h3>Your friends have been sorted by their score.</h3>
           <h4>Maximum number of friends displayed: {{max_worst}} / 30</h4>
 
-            <!-- <mat-form-field ngNativeValidate>
+          <!-- <mat-form-field ngNativeValidate>
               <mat-label for="max_cnt">How many to show</mat-label>
               <input type="number" min="1" max="20" step="1" matInput [(ngModel)]="max_worst">
             </mat-form-field> -->
-            <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst"></mat-slider>
-            <mat-form-field>
-              <mat-select placeholder="Sorting criterion" [(ngModel)]="chosen_criterion">
-                <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
-                  {{c.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst"></mat-slider>
+          <mat-form-field>
+            <mat-select placeholder="Sorting criterion" [(ngModel)]="chosen_criterion">
+              <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
+                {{c.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
           <div>
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">

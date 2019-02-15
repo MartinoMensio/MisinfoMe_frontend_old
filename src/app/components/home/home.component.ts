@@ -110,6 +110,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   table_data_good = [];
   table_data_rebuttals = [];
 
+  options = {
+    fixedDepth: true,
+    disableDrag: true
+  };
+  list = [];
+
   private sub: Subscription;
 
   constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
@@ -128,6 +134,132 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  group_tweets_hierarchically(tweets: Array<any>) {
+    const result = tweets.reduce((acc: any, curr: any) => {
+      const label = curr.score.label;
+      const reason = curr.reason;
+      let by_label_group = acc[label];
+      if (!by_label_group) {
+        // new label
+        by_label_group = {};
+        acc[label] = by_label_group;
+      }
+      let by_reason_group = by_label_group[reason];
+      if (!by_reason_group) {
+        // new reason
+        by_reason_group = [];
+        by_label_group[reason] = by_reason_group;
+      }
+      by_reason_group.push(curr);
+      return acc;
+    }, {});
+    return result;
+  }
+
+  create_nested_list(grouped) {
+    this.list = [{
+      'id': 'fake',
+      'label': 'These tweets have been identified as linked to misinformation',
+      'icon': 'error',
+      'class': 'bad',
+      'count': 0,
+      'children': [
+        {
+          'id': 'fact_checking',
+          'label': 'Origin: Debunked by fact-checking agencies',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'domain_match',
+          'label': 'Origin: Known provider of misinforming content',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'full_url_match',
+          'label': 'Origin: Other datasets',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }
+      ]
+    }, {
+      'id': 'mixed',
+      'label': 'These tweets have been identified as linked to not completely true content',
+      'icon': 'error',
+      'class': 'mixed',
+      'count': 0,
+      'children': [
+        {
+          'id': 'fact_checking',
+          'label': 'Origin: Discussed by fact-checking agencies',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'domain_match',
+          'label': 'Origin: Known provider of mixed content',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'full_url_match',
+          'label': 'Origin: Other datasets',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }
+      ]
+    }, {
+      'id': 'true',
+      'label': 'These tweets have been identified as linked to verified content',
+      'icon': 'check_circle',
+      'class': 'good',
+      'count': 0,
+      'children': [
+        {
+          'id': 'fact_checking',
+          'label': 'Origin: Fact-checked by agencies',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'fact_checker',
+          'label': 'Origin: URLs pointing to fact-checking agencies',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'domain_match',
+          'label': 'Origin: Known provider of good content',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }, {
+          'id': 'full_url_match',
+          'label': 'Origin: Other datasets',
+          'expanded': false,
+          'count': 0,
+          'children': [{ 'tweets': [] }]
+        }
+      ]
+    }];
+    Object.keys(grouped).forEach((label) => {
+      const l0 = this.list.find((el) => el.id === label);
+      let tot_cnt = 0;
+      Object.keys(grouped[label]).forEach((reason) => {
+        const l1 = l0.children.find((el) => el.id === reason);
+        const tweets = grouped[label][reason];
+        const prepared_table = this.prepare_table_data(tweets);
+        l1.children[0]['tweets'] = prepared_table;
+        l1.count = tweets.length;
+        tot_cnt += tweets.length;
+      });
+      l0.count = tot_cnt;
+    });
   }
 
   getErrorMessage() {
@@ -220,6 +352,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.table_data_mixed = this.prepare_table_data(results.mixed_urls);
       this.table_data_good = this.prepare_table_data(results.verified_urls);
       this.table_data_rebuttals = this.prepare_table_data(results.rebuttals);
+
+      const grouped = this.group_tweets_hierarchically(results.fake_urls.concat(results.mixed_urls).concat(results.verified_urls));
+      this.create_nested_list(grouped);
 
       this.update_overall().add(something => {
 
