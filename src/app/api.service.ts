@@ -48,12 +48,12 @@ export class APIService {
     const screen_names_joined = screen_names.join(',');
     if (allow_cached) {
       if (only_cached) {
-        return this.getPath(`/count_urls/users?handle=${screen_names_joined}&allow_cached=true&only_cached=true`);
+        return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}&allow_cached=true&only_cached=true`);
       } else {
-        return this.getPath(`/count_urls/users?handle=${screen_names_joined}&allow_cached=true`);
+        return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}&allow_cached=true`);
       }
     } else {
-      return this.getPath(`/count_urls/users?handle=${screen_names_joined}`);
+      return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}`);
     }
   }
 
@@ -89,9 +89,9 @@ export class APIService {
 
   getFriends(screen_name, limit: number = 500) {
     if (limit) {
-      return this.getPath(`/following?handle=${screen_name}&limit=${limit}`);
+      return this.getPath(`/following?screen_name=${screen_name}&limit=${limit}`);
     } else {
-      return this.getPath(`/following?handle=${screen_name}`);
+      return this.getPath(`/following?screen_name=${screen_name}`);
     }
   }
 
