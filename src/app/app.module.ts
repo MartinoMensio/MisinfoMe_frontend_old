@@ -26,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxTweetModule } from 'ngx-tweet';
 import { NestableModule } from 'ngx-nestable';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -79,7 +80,8 @@ import { VennComponent } from './components/venn/venn.component';
     NgxChartsModule,
     NgxTweetModule,
     NestableModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    InfiniteScrollModule
   ],
   providers: [],
   bootstrap: [AppComponent]

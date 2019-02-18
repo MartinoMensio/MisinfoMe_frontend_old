@@ -16,14 +16,39 @@ interface TableTweetData {
 })
 export class TableTweetsComponent implements OnInit {
 
+  private _data: Array<TableTweetData>;
+  private _visualised: number;
+  private _step = 10;
   @Input()
-  data: Array<TableTweetData>;
+  set data(data) {
+    this._data = data;
+    this.scrolled_data = data.slice(0, this._step);
+    this._visualised = this._step;
+  }
+  get data() {
+    return this._data;
+  }
+  scrolled_data: Array<TableTweetData> = [];
 
   displayedColumns: Array<String> = ['tweet_text', 'reason', 'dataset_names'];
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onScrollDown() {
+    // TODO investigate why this is not called more than once
+    console.log('scrolled');
+    if (this._visualised >= this.data.length) {
+      return;
+    }
+    const to_add = this._data.slice(this._visualised, this._visualised + this._step);
+    const new_array = [];
+    new_array.push(...this.scrolled_data);
+    new_array.push(...to_add);
+    this._visualised += this._step;
+    this.scrolled_data = new_array;
   }
 
   get_friendly_reason(description_label, label) {
