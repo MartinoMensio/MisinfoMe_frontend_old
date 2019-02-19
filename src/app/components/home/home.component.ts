@@ -380,6 +380,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 name: 'Misinformation',
                 value: results.fake_urls_cnt
               }, {
+                name: 'Mixed',
+                value: results.mixed_urls_cnt
+              }, {
                 name: 'Not checked',
                 value: results.unknown_urls_cnt
               }
@@ -393,6 +396,9 @@ export class HomeComponent implements OnInit, OnDestroy {
               }, {
                 name: 'Misinformation',
                 value: this.result_overall.fake_urls_cnt
+              }, {
+                name: 'Mixed',
+                value: this.result_overall.mixed_urls_cnt
               }, {
                 name: 'Not checked',
                 value: this.result_overall.unknown_urls_cnt
