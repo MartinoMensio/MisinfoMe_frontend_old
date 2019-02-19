@@ -26,7 +26,7 @@
         <p class="max-200 justify">You <i *ngIf="!element.retweet">tweeted</i><i *ngIf="element.retweet">retweeted</i> that and
           the <a href="{{element.url}}" target="_blank">URL contained</a><b> {{get_friendly_reason(element.reason, element.label)}}.</b>
           <span *ngIf="element.rebuttals"> Recommended URLs
-            <a *ngFor="let rebuttal of element.rebuttals" href="{{rebuttal.url}}">{{rebuttal.source}} </a>
+            <a *ngFor="let rebuttal of element.rebuttals" href="{{rebuttal.url}}" target="_blank">{{rebuttal.source}} </a>
           </span>
         </p>
       </td>
