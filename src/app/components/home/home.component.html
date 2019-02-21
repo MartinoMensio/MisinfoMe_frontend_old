@@ -35,7 +35,7 @@
     </mat-card>
     <p></p>
     <div *ngIf="!error_you && !loading_you">
-      <mat-expansion-panel>
+      <!-- <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title class="bad">
             <i class="material-icons md-24">error</i>These tweets have been identified as linked to misinformation
@@ -81,7 +81,7 @@
 
         <app-table-tweets [data]="table_data_good"></app-table-tweets>
 
-      </mat-expansion-panel>
+      </mat-expansion-panel> -->
       <!-- <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -102,7 +102,7 @@
       </mat-expansion-panel> -->
 
       <mat-card class="mat-elevation-z5">
-        <h3>Details of what you have shared</h3>
+        <h3>Details of the URLs you have shared</h3>
 
         <ngx-nestable [(list)]="list" [options]="options" [template]="itemTemplate">
         </ngx-nestable>
@@ -259,9 +259,9 @@
         [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
       <div style="height: 200px;"></div>
       <div>
-        <p *ngIf="result_you.score < result_overall.score" class="bad"><i class="material-icons md-48">error</i> You
+        <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i class="material-icons md-48">error</i> You
           have spread more misinformation than the average of our users</p>
-        <p *ngIf="result_you.score > result_overall.score" class="good"><i class="material-icons md-24">check_circle</i>
+        <p *ngIf="result_you.score > result_overall.score && result_you.score > 50" class="good"><i class="material-icons md-24">check_circle</i>
           You have spread less misinformation than the average of our users</p>
       </div>
     </div>

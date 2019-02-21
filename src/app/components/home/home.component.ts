@@ -161,26 +161,27 @@ export class HomeComponent implements OnInit, OnDestroy {
   create_nested_list(grouped) {
     this.list = [{
       'id': 'fake',
-      'label': 'These tweets have been identified as linked to misinformation',
+      'label': 'These tweets have been identified as linked to misinforming URLs',
       'icon': 'error',
       'class': 'bad',
+      'expanded': false,
       'count': 0,
       'children': [
         {
           'id': 'fact_checking',
-          'label': 'Origin: Debunked by fact-checking agencies',
+          'label': 'Classified as "fake" by fact-checking agencies',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Origin: Known provider of misinforming content',
+          'label': 'Known provider of misinforming content',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Origin: Other datasets',
+          'label': 'Other datasets',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -188,26 +189,27 @@ export class HomeComponent implements OnInit, OnDestroy {
       ]
     }, {
       'id': 'mixed',
-      'label': 'These tweets have been identified as linked to not completely true content',
+      'label': 'These tweets have been identified as linked to mixed URLs',
       'icon': 'error',
       'class': 'mixed',
+      'expanded': false,
       'count': 0,
       'children': [
         {
           'id': 'fact_checking',
-          'label': 'Origin: Discussed by fact-checking agencies',
+          'label': 'Classified as "mixed" by fact-checking agencies',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Origin: Known provider of mixed content',
+          'label': 'Known provider of mixed content',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Origin: Other datasets',
+          'label': 'Other datasets',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -215,32 +217,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       ]
     }, {
       'id': 'true',
-      'label': 'These tweets have been identified as linked to verified content',
+      'label': 'These tweets have been identified as linked to verified URLs',
       'icon': 'check_circle',
       'class': 'good',
+      'expanded': false,
       'count': 0,
       'children': [
         {
           'id': 'fact_checking',
-          'label': 'Origin: Fact-checked by agencies',
+          'label': 'Classified as "true" by fact-checking agencies',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'fact_checker',
-          'label': 'Origin: URLs pointing to fact-checking agencies',
+          'label': 'URLs pointing to fact-checking agencies',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Origin: Known provider of good content',
+          'label': 'Known provider of verified content',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Origin: Other datasets',
+          'label': 'Other datasets',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
