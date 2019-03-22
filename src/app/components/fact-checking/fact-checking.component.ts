@@ -8,7 +8,7 @@ import { APIService } from 'src/app/api.service';
 })
 export class FactCheckingComponent implements OnInit {
 
-  table_headers = ['name', 'nationality', 'belongs_to_ifcn', 'uses_claimreview'];
+  table_headers = ['name', 'nationality', 'belongs_to_ifcn', 'valid'];
   table_headers_indexes: Array<number> = [];
   table_data: Array<Array<string>>;
 
