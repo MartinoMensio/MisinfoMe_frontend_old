@@ -39,6 +39,7 @@ import { DatasetsComponent } from './components/datasets/datasets.component';
 import { DomainsComponent } from './components/domains/domains.component';
 import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 import { VennComponent } from './components/venn/venn.component';
+import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { VennComponent } from './components/venn/venn.component';
     DatasetsComponent,
     DomainsComponent,
     FactCheckingComponent,
-    VennComponent
+    VennComponent,
+    ImpactFactcheckingComponent
   ],
   imports: [
     BrowserModule,

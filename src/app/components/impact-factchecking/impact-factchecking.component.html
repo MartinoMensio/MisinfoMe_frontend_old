@@ -1,0 +1,82 @@
+<div>
+  <p>This page shows the reach on twitter of Fact-checking articles against the spread of the debunked URLs</p>
+  <mat-card>
+    <h3>Filters</h3>
+    <mat-form-field>
+      <mat-label>Fact checker</mat-label>
+      <mat-select [(value)]="selected_factchecker_str">
+        <mat-option *ngFor="let fact_checker of factchecking_by_domain" [value]="fact_checker.domain">
+          {{fact_checker.domain}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Label</mat-label>
+      <mat-select [(value)]="selected_label">
+        <mat-option *ngFor="let label of labels" [value]="label">
+          {{label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </mat-card>
+  <mat-card>
+  </mat-card>
+  <h3>Counts</h3>
+  <p>How many URLs belong to the factchecking and the factchecked</p>
+  <p></p>
+  <!-- <ngx-charts-bar-vertical-2d label="URL counts" [view]="[1000,500]"
+    [results]="url_counts_multi" [scheme]="colorScheme" [schemeType]="schemeType" [tooltipDisabled]="false"></ngx-charts-bar-vertical-2d> -->
+  <ngx-charts-bar-vertical label="URL counts" [view]="[1000,100]" [results]="graph_data_count_url"
+    [scheme]="colorScheme" [schemeType]="schemeType" [tooltipDisabled]="false" legend="true"></ngx-charts-bar-vertical>
+  <p style="height:100px;"></p>
+  <p>How many times they have been shared on Twitter</p>
+  <div *ngIf="!sharing_data">Loading...</div>
+  <div *ngIf="sharing_data">
+    <ngx-charts-bar-vertical label="Tweets sharing counts" [view]="[1000,100]" [results]="graph_data_share_counts"
+      [scheme]="colorScheme" [schemeType]="schemeType" [tooltipDisabled]="false" legend="true">
+    </ngx-charts-bar-vertical>
+    <div>
+      <h3>Temporal diffusion</h3>
+      <mat-form-field>
+          <mat-label>Time granularity</mat-label>
+          <mat-select [(value)]="selected_time_granularity">
+            <mat-option *ngFor="let granularity of time_granularities" [value]="granularity">
+              {{granularity}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Time mode</mat-label>
+            <mat-select [(value)]="selected_time_mode">
+              <mat-option *ngFor="let mode of time_modes" [value]="mode">
+                {{mode}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      <ngx-charts-line-chart label="Time distribution" [view]="[1000,300]" [results]="time_graph_data"
+      [scheme]="colorScheme" [schemeType]="schemeType" [tooltipDisabled]="false" legend="true" xAxis="true" yAxis="true">
+    </ngx-charts-line-chart>
+    <div style="height:300px;"></div>
+  </div>
+    <div style="max-height: 500px; overflow:auto;">
+      <table>
+        <tr>
+          <th>Fact-checking URL</th>
+          <th>Fact-checked URL</th>
+          <th>Label</th>
+          <th>Sharing Fact-checking</th>
+          <th>Sharing Fact-checked</th>
+        </tr>
+        <tr *ngFor="let el of list_debunking">
+          <td>{{el.factchecking_url}}</td>
+          <td>{{el.claim_url}}</td>
+          <td>{{el.label}}</td>
+          <td>{{el.factchecking_shares}}</td><td>{{el.claim_shares}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!-- <ngx-charts-bar-vertical label="URL counts" [view]="[1000,200]" [scheme]="colorScheme"
+    [results]="pie_data_you" [gradient]="gradient"></ngx-charts-bar-vertical> -->
+</div>

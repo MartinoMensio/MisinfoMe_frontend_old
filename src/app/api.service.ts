@@ -95,4 +95,20 @@ export class APIService {
     }
   }
 
+  getAllFactcheckingByDomain() {
+    return this.getPath('/factchecking_by_domain');
+  }
+
+  getFactcheckingShareByDomain(checking_domain) {
+    return this.getPath(`/factchecking_by_domain?from=${checking_domain}`);
+  }
+
+  getTimeDistribution(tweet_ids, time_granularity) {
+    const body = {
+      'tweet_ids': tweet_ids,
+      'time_granularity': time_granularity
+    };
+    return this.postPath('/tweets_time_distrib', body);
+  }
+
 }
