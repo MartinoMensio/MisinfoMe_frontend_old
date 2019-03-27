@@ -28,6 +28,9 @@
           <span *ngIf="element.rebuttals"> Recommended URLs
             <a *ngFor="let rebuttal of element.rebuttals" href="{{rebuttal.url}}" target="_blank">{{rebuttal.source}} </a>
           </span>
+          <span *ngIf="element.fact_checked_count"><br><i class="material-icons md-48">error</i>The domain <b>{{element.domain}}</b> has been fact-checked {{element.fact_checked_count}} times:
+            <a *ngFor="let fc of element.fact_checking; let i = index" href="{{fc}}" target="_blank">[{{i+1}}]</a>
+          </span>
         </p>
       </td>
     </ng-container>

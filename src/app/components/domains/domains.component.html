@@ -22,6 +22,24 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="factchecked_false">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Factchecked as "false"</h2>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.score.factchecking_stats.fake && element.score.factchecking_stats.fake.length || 0}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="factchecked_true">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Factchecked as "true"</h2>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.score.factchecking_stats.true && element.score.factchecking_stats.true.length || 0}}
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="{{d.name}}" *ngFor="let d of domain_datasets_list; let i=index">
         <th mat-header-cell *matHeaderCellDef class="rotate">
           <div><span><a href="{{d.url}}">{{d.name}}</a></span></div>
