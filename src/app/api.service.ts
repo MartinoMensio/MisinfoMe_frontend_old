@@ -103,6 +103,11 @@ export class APIService {
     return this.getPath(`/factchecking_by_domain?from=${checking_domain}`);
   }
 
+  getFactcheckingByFactchecker() {
+    return this.getPath(`/factchecking_by_factchecker`);
+  }
+  //getFactcheckingShareByFactchecker()
+
   getTimeDistribution(tweet_ids, time_granularity) {
     const body = {
       'tweet_ids': tweet_ids,

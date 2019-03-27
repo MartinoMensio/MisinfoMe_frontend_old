@@ -25,27 +25,27 @@ export class ImpactFactcheckingComponent implements OnInit {
   _selected_time_granularity = 'month';
   set selected_time_granularity(time_granularity) {
     this._selected_time_granularity = time_granularity;
-    this.update_time_plot();
+    //this.update_time_plot();
   }
   get selected_time_granularity() {
     return this._selected_time_granularity;
   }
-  time_modes = ['absolute', 'relative'];
+  time_modes = ['absolute', 'relative to factchecking'];
   selected_time_mode = 'absolute';
-  private _selected_factchecker_str = 'snopes.com';
+  private _selected_factchecker_str = 'www.snopes.com';
   selected_factchecker_obj = null;
   all_factcheckers_data: any;
   graph_data_count_url: any;
   graph_data_share_counts: any;
   sharing_data: any;
   list_debunking: any[];
-  time_graph_data = []
-    set selected_factchecker_str(selected_factchecker_str) {
+  time_graph_data = [];
+  set selected_factchecker_str(selected_factchecker_str) {
     this._selected_factchecker_str = selected_factchecker_str;
     this.selected_factchecker_obj = this.all_factcheckers_data[selected_factchecker_str];
     this.graph_data_count_url = [{
       'name': 'Fact checking articles',
-      'value': this.selected_factchecker_obj.urls_cnt
+      'value': this.selected_factchecker_obj.factchecking_urls_cnt
     }, {
       'name': 'Fact-checked articles',
       'value': this.selected_factchecker_obj.claim_urls_cnt
@@ -53,7 +53,7 @@ export class ImpactFactcheckingComponent implements OnInit {
     console.log(this.graph_data_count_url);
 
     // get share counts
-    this.apiService.getFactcheckingShareByDomain(selected_factchecker_str).subscribe((result) => {
+    this.apiService.getFactcheckingShareByDomain(this.selected_factchecker_obj.domain).subscribe((result) => {
       this.sharing_data = result;
       this.graph_data_share_counts = [{
         'name': 'Tweets sharing the fact checking articles',
@@ -64,31 +64,31 @@ export class ImpactFactcheckingComponent implements OnInit {
       }];
       console.log(this.graph_data_share_counts);
       this.list_debunking = this.sharing_data.by_url.sort((el1, el2) => {
-        return el2.factchecking_shares - el1.factchecking_shares;
+        return (el2.factchecking_shares + el2.claim_shares) - (el1.factchecking + el1.claim_shares);
       });
       // add to the time distribution
-      this.update_time_plot();
+      //this.update_time_plot();
     });
   }
 
   update_time_plot() {
     this.time_graph_data = []
-      this.apiService.getTimeDistribution(this.sharing_data.tweet_ids.sharing_claim, this.selected_time_granularity).subscribe((result_times: Array<any>) => {
-        // clone array because the graph does not refresh
-        this.time_graph_data = Object.assign([], this.time_graph_data);
-        this.time_graph_data.push({
-          'name': 'Claim',
-          'series': result_times
-        });
+    this.apiService.getTimeDistribution(this.sharing_data.tweet_ids.sharing_factchecking, this.selected_time_granularity).subscribe((result_times: Array<any>) => {
+      // clone array because the graph does not refresh
+      this.time_graph_data = Object.assign([], this.time_graph_data);
+      this.time_graph_data.unshift({
+        'name': 'Factchecking',
+        'series': result_times
       });
-      this.apiService.getTimeDistribution(this.sharing_data.tweet_ids.sharing_factchecking, this.selected_time_granularity).subscribe((result_times: Array<any>) => {
-        // clone array because the graph does not refresh
-        this.time_graph_data = Object.assign([], this.time_graph_data);
-        this.time_graph_data.push({
-          'name': 'Factchecking',
-          'series': result_times
-        });
+    });
+    this.apiService.getTimeDistribution(this.sharing_data.tweet_ids.sharing_claim, this.selected_time_granularity).subscribe((result_times: Array<any>) => {
+      // clone array because the graph does not refresh
+      this.time_graph_data = Object.assign([], this.time_graph_data);
+      this.time_graph_data.push({
+        'name': 'Claim',
+        'series': result_times
       });
+    });
   }
 
   get selected_factchecker_str() {
@@ -101,10 +101,10 @@ export class ImpactFactcheckingComponent implements OnInit {
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
-    this.apiService.getAllFactcheckingByDomain().subscribe(result => {
+    this.apiService.getFactcheckingByFactchecker().subscribe(result => {
       this.all_factcheckers_data = result;
       this.factchecking_by_domain = Object.keys(result).reduce((acc, curr) => {
-        acc.push({ 'domain': curr });
+        acc.push({ ...result[curr], key: curr });
         return acc;
       }, []);
       console.log(this.factchecking_by_domain);

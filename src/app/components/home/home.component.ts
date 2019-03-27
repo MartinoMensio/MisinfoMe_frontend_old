@@ -319,6 +319,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   prepare_table_data(raw_urls_data: Array<any>) {
     // TODO first aggregate by tweet_id
     return raw_urls_data.reduce((acc, curr) => {
+      const fact_checked_count = curr.score.factchecking_stats && curr.score.factchecking_stats.fake && curr.score.factchecking_stats.fake.length || 0
       acc.push({
         tweet_id: curr.found_in_tweet,
         tweet_text: curr.tweet_text,
@@ -327,7 +328,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         datasets: curr.sources,
         retweet: curr.retweet,
         label: curr.score.label,
-        rebuttals: curr.rebuttals
+        rebuttals: curr.rebuttals,
+        fact_checked_count: fact_checked_count,
+        domain: curr.domain,
+        fact_checking: fact_checked_count && curr.score.factchecking_stats.fake || []
       });
       return acc;
     }, []);
