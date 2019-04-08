@@ -351,16 +351,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.getUserCounts([this.screen_name.value]).subscribe((results: CountResult) => {
-      this.result_you = results;
-      this.pie_data_you = this.extract_results(results);
+    this.apiService.postUserCounts([this.screen_name.value]).subscribe((results: Array<CountResult>) => {
+      const result = results[0];
+      this.result_you = result;
+      this.pie_data_you = this.extract_results(result);
 
-      this.table_data_bad = this.prepare_table_data(results.fake_urls);
-      this.table_data_mixed = this.prepare_table_data(results.mixed_urls);
-      this.table_data_good = this.prepare_table_data(results.verified_urls);
-      this.table_data_rebuttals = this.prepare_table_data(results.rebuttals);
+      this.table_data_bad = this.prepare_table_data(result.fake_urls);
+      this.table_data_mixed = this.prepare_table_data(result.mixed_urls);
+      this.table_data_good = this.prepare_table_data(result.verified_urls);
+      this.table_data_rebuttals = this.prepare_table_data(result.rebuttals);
 
-      const grouped = this.group_tweets_hierarchically(results.fake_urls.concat(results.mixed_urls).concat(results.verified_urls));
+      const grouped = this.group_tweets_hierarchically(result.fake_urls.concat(result.mixed_urls).concat(result.verified_urls));
       this.create_nested_list(grouped);
 
       this.update_overall().add(something => {
@@ -368,7 +369,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.you_vs_average = [
           {
             'name': 'You',
-            'value': results.score
+            'value': result.score
           },
           {
             'name': 'Average',
@@ -382,16 +383,16 @@ export class HomeComponent implements OnInit, OnDestroy {
             series: [
               {
                 name: 'Valid',
-                value: results.verified_urls_cnt
+                value: result.verified_urls_cnt
               }, {
                 name: 'Misinformation',
-                value: results.fake_urls_cnt
+                value: result.fake_urls_cnt
               }, {
                 name: 'Mixed',
-                value: results.mixed_urls_cnt
+                value: result.mixed_urls_cnt
               }, {
                 name: 'Not checked',
-                value: results.unknown_urls_cnt
+                value: result.unknown_urls_cnt
               }
             ]
           }, {
@@ -430,24 +431,28 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   get_friends_list(screen_name) {
     this.loading_friends = true;
-    this.apiService.getFriends(screen_name).subscribe((friends_screen_names: Array<string>) => {
+    this.apiService.getFriends(screen_name).subscribe((friends: Array<any>) => {
       // best and worst
       // this.best_friend = null;
       this.worst_friend = null;
 
+      const friends_screen_names = friends.reduce((acc, curr) => {
+        acc.push(curr);
+        return acc;
+      }, []);
       this.friends_screen_names = {};
       this.friends_count = friends_screen_names.length;
       this.friends_analysis_show = false;
       this.friends_graph = this.generateGraph(this.result_you, []);
-      this.apiService.getUserCounts(friends_screen_names, true, true).subscribe((res: any) => {
-        Object.keys(res).forEach((el: string) => {
-          if (res[el].cache === 'miss') {
+      this.apiService.getUserCounts(friends_screen_names, true, true).subscribe((res: Array<CountResult>) => {
+        res.forEach((el: CountResult) => {
+          if (el.cache === 'miss') {
             // this is a cache miss, profile not yet evaluated
-            this.friends_screen_names[el] = false;
+            this.friends_screen_names[el.screen_name] = false;
           } else {
             // cache hit
-            this.friends_screen_names[el] = true;
-            this.update_friends_stat_with_new(res[el]);
+            this.friends_screen_names[el.screen_name] = true;
+            this.update_friends_stat_with_new(el);
           }
         });
         if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
@@ -584,8 +589,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!candidate) {
       return Promise.resolve();
     }
-    return this.apiService.getUserCounts([candidate], true).toPromise().then((results: CountResult) => {
-      this.update_friends_stat_with_new(results);
+    return this.apiService.postUserCounts([candidate], true).toPromise().then((results: Array<CountResult>) => {
+      const result = results[0]
+      this.update_friends_stat_with_new(result);
       this.friends_screen_names[candidate] = true;
       if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
         // update sometimes

@@ -16,6 +16,7 @@ export interface CountResult {
   verified_urls: Array<any>;
   mixed_urls: Array<any>;
   rebuttals: Array<any>;
+  cache?: string;
 }
 
 export interface OverallCounts extends CountResult {
@@ -41,6 +42,10 @@ export class APIService {
   }
 
   getUserCounts(screen_names, allow_cached: Boolean = false, only_cached: Boolean = false) {
+    if (screen_names.length === 1) {
+      // cache disabled for GET
+      return this.getPath(`/analysis/twitter_accounts?screen_name=${screen_names[0]}`);
+    }
     if (screen_names.length > 10) {
       console.log(allow_cached, only_cached);
       return this.postUserCounts(screen_names, allow_cached, only_cached);
@@ -48,12 +53,12 @@ export class APIService {
     const screen_names_joined = screen_names.join(',');
     if (allow_cached) {
       if (only_cached) {
-        return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}&allow_cached=true&only_cached=true`);
+        return this.getPath(`/analysis/twitter_accounts?screen_names=${screen_names_joined}&allow_cached=true&only_cached=true`);
       } else {
-        return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}&allow_cached=true`);
+        return this.getPath(`/analysis/twitter_accounts?screen_names=${screen_names_joined}&allow_cached=true`);
       }
     } else {
-      return this.getPath(`/count_urls/users?screen_names=${screen_names_joined}`);
+      return this.getPath(`/analysis/twitter_accounts?screen_names=${screen_names_joined}`);
     }
   }
 
@@ -64,34 +69,34 @@ export class APIService {
       'allow_cached': allow_cached,
       'only_cached': only_cached
     };
-    return this.postPath(`/count_urls/users`, json_content);
+    return this.postPath(`/analysis/twitter_accounts`, json_content);
   }
 
   getOverallCounts() {
-    return this.getPath('/count_urls/overall');
+    return this.getPath('/stats/twitter_accounts');
   }
 
   getStats() {
-    return this.getPath(`/about`);
+    return this.getPath(`/entities`);
   }
 
   getDatasets() {
-    return this.getPath('/about/datasets');
+    return this.getPath('/entities/datasets');
   }
 
   getDomains() {
-    return this.getPath('/about/domains');
+    return this.getPath('/entities/domains');
   }
 
   getFactCheckers() {
-    return this.getPath('/about/fact_checkers_table');
+    return this.getPath('/entities/factcheckers_table');
   }
 
   getFriends(screen_name, limit: number = 500) {
     if (limit) {
-      return this.getPath(`/following?screen_name=${screen_name}&limit=${limit}`);
+      return this.getPath(`/entities/twitter_accounts?relation=friends&screen_name=${screen_name}&limit=${limit}`);
     } else {
-      return this.getPath(`/following?screen_name=${screen_name}`);
+      return this.getPath(`/entities/twitter_accounts?relation=friends&screen_name=${screen_name}`);
     }
   }
 
@@ -104,7 +109,7 @@ export class APIService {
   }
 
   getFactcheckingByFactchecker() {
-    return this.getPath(`/factchecking_by_factchecker`);
+    return this.getPath(`/entities/factchecking_reviews`);
   }
   //getFactcheckingShareByFactchecker()
 
