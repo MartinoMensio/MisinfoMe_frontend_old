@@ -1,0 +1,30 @@
+<div>
+
+  <div *ngIf="credibility_graph">
+  <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="credibility_graph.links"
+    [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="credibility_graph.nodes"
+    [scheme]="colorScheme" [view]="[1000,500]" [tooltipDisabled]="false" (select)="select_node($event)"
+    [force]="graph_force" [forceLink]="graph_force_link">
+    <ng-template #nodeTemplate let-node>
+      <svg [attr.width]="20" [attr.height]="20">
+        <defs>
+          <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse"
+            [attr.height]="20" [attr.width]="20">
+            <image [attr.height]="20" [attr.width]="20"
+              attr.xlink:href="{{node.options.image}}"></image>
+          </pattern>
+        </defs>
+        <circle [attr.cx]="10" [attr.cy]="10" [attr.r]="10"
+          attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.fill" stroke-width="20%"
+          cursor="pointer" />
+      </svg>
+    </ng-template>
+    <ng-template #linkTemplate let-link>
+      <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y"
+        [attr.x2]="link.target.x" [attr.y2]="link.target.y" [attr.stroke]="link.options.color"
+        attr.transform="translate({{credibility_graph.overall_move_x}}, {{credibility_graph.overall_move_y}})" />
+    </ng-template>
+  </ngx-charts-force-directed-graph>
+</div>
+
+</div>

@@ -40,6 +40,7 @@ import { DomainsComponent } from './components/domains/domains.component';
 import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 import { VennComponent } from './components/venn/venn.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
+import { CredibilityComponent } from './components/credibility/credibility.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ImpactFactcheckingComponent } from './components/impact-factchecking/im
     DomainsComponent,
     FactCheckingComponent,
     VennComponent,
-    ImpactFactcheckingComponent
+    ImpactFactcheckingComponent,
+    CredibilityComponent
   ],
   imports: [
     BrowserModule,

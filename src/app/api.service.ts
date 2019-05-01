@@ -121,4 +121,8 @@ export class APIService {
     return this.postPath('/tweets_time_distrib', body);
   }
 
+  getCredibilityGraph() {
+    return this.getPath('/credibility');
+  }
+
 }
