@@ -19,7 +19,7 @@ export class DomainsComponent implements OnInit {
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
-    this.apiService.getDatasets().subscribe((res: Array<any>) => {
+    this.apiService.getSources().subscribe((res: Array<any>) => {
       res.forEach((val) => {
         // just select the datasets that have a name and are used someway
         if (val.name && (val.contains.domain_classification)) {

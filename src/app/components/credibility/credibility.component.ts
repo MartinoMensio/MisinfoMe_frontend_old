@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
+import * as shape from 'd3-shape';
 import * as $ from 'jquery';
 
 @Component({
@@ -11,6 +12,8 @@ import * as $ from 'jquery';
 export class CredibilityComponent implements OnInit {
 
   credibility_graph: any = null;
+
+  curve: any = shape.curveBasis;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -29,7 +32,7 @@ export class CredibilityComponent implements OnInit {
   ngOnInit() {
     this.apiService.getCredibilityGraph().subscribe(result => {
       this.credibility_graph = this.generateGraph(result);
-      this.credibility_graph.trick(this.credibility_graph);
+      // this.credibility_graph.trick(this.credibility_graph);
     });
   }
 
@@ -41,29 +44,31 @@ export class CredibilityComponent implements OnInit {
       overall_move_y: 10, // the whole graph is translated
       update_trick_ticks: 50,
       update_trick_interval: 100, // milliseconds
-      trick: (g) => {
-        // This function is needed because the ngx-charts-force-directed-graph is just animating the links and not the edges,
-        // unless the mouse moves on the svg.
-        // The trick is simply trigger programmatically clicks every 100ms for 5 secs on the center of the graph in order
-        // to trigger the update of the position of the edges.
-        setTimeout(() => {
-          // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
-          g.update_trick_ticks -= 1;
-          if (g.update_trick_ticks > 0) {
-            g.trick(g);
-            const selector = `g.nodes g`;
-            // console.log(selector);
-            $(selector).get(0).dispatchEvent(new Event('click'));
-          }
-        }, g.update_trick_interval);
-      }
+      // trick: (g) => {
+      //   // This function is needed because the ngx-charts-force-directed-graph is just animating the links and not the edges,
+      //   // unless the mouse moves on the svg.
+      //   // The trick is simply trigger programmatically clicks every 100ms for 5 secs on the center of the graph in order
+      //   // to trigger the update of the position of the edges.
+      //   setTimeout(() => {
+      //     // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
+      //     g.update_trick_ticks -= 1;
+      //     if (g.update_trick_ticks > 0) {
+      //       g.trick(g);
+      //       const selector = `g.nodes g`;
+      //       // console.log(selector);
+      //       $(selector).get(0).dispatchEvent(new Event('click'));
+      //     }
+      //   }, g.update_trick_interval);
+      // }
     };
     //console.log(source_graph.nodes)
     for (const n_name in source_graph.nodes) {
       const n = source_graph.nodes[n_name];
       //console.log(n)
       graph.nodes.push({
+        id: this.clean(n._id),
         value: n._id,
+        label: n._id,
         options: {
           image: n.avatar,
           size: 20,
@@ -75,14 +80,22 @@ export class CredibilityComponent implements OnInit {
     // console.log(friends_scores);
     for (const l of source_graph.links) {
       graph.links.push({
-        source: l.from,
-        target: l.to,
+        id: `${this.clean(l.from)}-${this.clean(l.to)}`,
+        source: this.clean(l.from),
+        target: this.clean(l.to),
         options: {
           //color: this.getColor(friend_score) + '!important'
         }
       });
     }
     return graph;
+  }
+
+  clean(str) {
+    str = str.replace(/\//g, '');
+    str = str.replace(/:/g, '');
+    str = str.replace(/\./g, '');
+    return str;
   }
 
   select_node(event: any) {
