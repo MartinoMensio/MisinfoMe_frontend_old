@@ -41,6 +41,7 @@ import { FactCheckingComponent } from './components/fact-checking/fact-checking.
 import { VennComponent } from './components/venn/venn.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
+import { SourcesComponent } from './components/sources/sources.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { CredibilityComponent } from './components/credibility/credibility.compo
     FactCheckingComponent,
     VennComponent,
     ImpactFactcheckingComponent,
-    CredibilityComponent
+    CredibilityComponent,
+    SourcesComponent
   ],
   imports: [
     BrowserModule,

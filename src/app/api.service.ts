@@ -80,8 +80,8 @@ export class APIService {
     return this.getPath(`/entities`);
   }
 
-  getDatasets() {
-    return this.getPath('/entities/datasets');
+  getSources() {
+    return this.getPath('/entities/sources');
   }
 
   getDomains() {
