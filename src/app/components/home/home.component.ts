@@ -338,6 +338,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    console.log('submit with ' + this.screen_name.value, ' from ' + this.state_screen_name);
     if (this.state_screen_name !== this.screen_name.value) {
       return this.router.navigate(['/analyse', this.screen_name.value]);
     } else {
@@ -437,7 +438,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.worst_friend = null;
 
       const friends_screen_names = friends.reduce((acc, curr) => {
-        acc.push(curr);
+        acc.push(curr.screen_name);
         return acc;
       }, []);
       this.friends_screen_names = {};
