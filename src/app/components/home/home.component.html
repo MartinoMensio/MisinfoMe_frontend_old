@@ -28,9 +28,16 @@
         <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div> -->
         <div>This is how the URLs that you shared are classified</div>
-        <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme"
-          [results]="pie_data_you" [gradient]="gradient">
-        </ngx-charts-advanced-pie-chart>
+        <div style="display: grid;" >
+          <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs verified</h2>
+          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false"
+            [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient" [labels]="true">
+          </ngx-charts-pie-chart>
+          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified"
+             [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
+          </ngx-charts-advanced-pie-chart>
+          <!-- <div style="height: 50px;"></div> -->
+        </div>
       </div>
     </mat-card>
     <p></p>
@@ -170,7 +177,8 @@
                 </pattern>
               </defs>
               <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size"
-                attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%" cursor="pointer" />
+                attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%"
+                cursor="pointer" />
             </svg>
           </ng-template>
           <ng-template #linkTemplate let-link>
@@ -180,8 +188,16 @@
           </ng-template>
         </ngx-charts-force-directed-graph>
         <div id="asdasdasd" [style.height]="getGraphHeight() + 100 + 'px'"></div>
-        <ngx-charts-advanced-pie-chart label="URLs verified from your friends" [view]="[1000,200]"
-          [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+          <div style="display: grid;" >
+            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from your friends</h2>
+            <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified from your friends"
+              [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient" [labels]="true">
+            </ngx-charts-pie-chart>
+            <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from your friends"
+               [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient">
+            </ngx-charts-advanced-pie-chart>
+            <!-- <div style="height: 50px;"></div> -->
+          </div>
       </div>
       <!-- <div *ngIf="best_friend">
         <h4>Your best-scoring friend</h4>
@@ -207,7 +223,7 @@
             Click to expand
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <div class="table-container-2">
+        <div>
           <h3>Your friends have been sorted by their score.</h3>
           <h4>Maximum number of friends displayed: {{max_worst}} / 30</h4>
 
@@ -223,12 +239,19 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div>
+          <div class="table-container-2">
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">
-                <ngx-charts-advanced-pie-chart label="URLs verified from {{f.screen_name}}" [view]="[1000,200]"
-                  [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
-                </ngx-charts-advanced-pie-chart>
+                <div style="display: grid;" >
+                  <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs verified from {{f.screen_name}}</h3>
+                  <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false"
+                    [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
+                  </ngx-charts-pie-chart>
+                  <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from {{f.screen_name}}" [view]="[undefined, 200]"
+                     [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
+                  </ngx-charts-advanced-pie-chart>
+                  <!-- <div style="height: 50px;"></div> -->
+                </div>
               </div>
             </div>
           </div>
@@ -259,9 +282,11 @@
         [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
       <div style="height: 200px;"></div>
       <div>
-        <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i class="material-icons md-48">error</i> You
+        <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i
+            class="material-icons md-48">error</i> You
           have spread more misinformation than the average of our users</p>
-        <p *ngIf="result_you.score > result_overall.score && result_you.score > 50" class="good"><i class="material-icons md-24">check_circle</i>
+        <p *ngIf="result_you.score > result_overall.score && result_you.score > 50" class="good"><i
+            class="material-icons md-24">check_circle</i>
           You have spread less misinformation than the average of our users</p>
       </div>
     </div>
@@ -278,8 +303,16 @@
         <p>So far we have analysed {{result_overall.tweets_cnt}} tweets coming from
           {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
       </div>
-      <ngx-charts-advanced-pie-chart label="URLs verified" [view]="[1000,200]" [scheme]="colorScheme"
-        [results]="pie_data_overall" [gradient]="gradient"></ngx-charts-advanced-pie-chart>
+      <!-- overflow: hidden; -->
+      <div style="display: grid;" >
+        <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified"
+          [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
+        </ngx-charts-pie-chart>
+        <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified"
+           [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
+        </ngx-charts-advanced-pie-chart>
+        <!-- <div style="height: 50px;"></div> -->
+      </div>
       <p><a [routerLink]="['/about']">More about our verification process</a></p>
     </div>
   </mat-card>

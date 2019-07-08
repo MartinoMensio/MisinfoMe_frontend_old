@@ -1,0 +1,4 @@
+/* cropped labels in advanced pie chart https://github.com/swimlane/ngx-charts/issues/717 */
+.advanced-pie-legend {
+    line-height: 32px;
+}

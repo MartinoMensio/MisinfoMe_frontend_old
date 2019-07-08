@@ -20,7 +20,6 @@ mat-form-field {
 .table-container-2 {
     height: 400px;
     overflow: auto;
-    background-color: bisque;
 }
 
 .mat-slider-horizontal {
