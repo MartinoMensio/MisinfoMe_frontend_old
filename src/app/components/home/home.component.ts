@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
   analyse_remaining_disabled: Boolean = true;
 
-  friends_graph: { links: any[]; nodes: any[]; trick: any };
+  friends_graph: { links: any[]; nodes: any[]; trick: any; update_trick_ticks: number };
   graph_force = forceSimulation<any>()
     .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
     .force('x', forceX()) // make them go to the center
@@ -693,6 +693,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // console.log(event);
     const screen_name = event.name;
     // console.log(screen_name);
+    this.friends_graph.update_trick_ticks = 0;
     this.router.navigate(['/analyse', screen_name]);
     return;
   }
