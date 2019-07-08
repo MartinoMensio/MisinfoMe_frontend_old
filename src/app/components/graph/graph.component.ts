@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { curveLinear, curveBundle } from 'd3-shape';
-import { element } from '@angular/core/src/render3';
 
 interface Node {
   id: string;
