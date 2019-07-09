@@ -25,3 +25,19 @@ mat-form-field {
 .mat-slider-horizontal {
     width: 300px;
 }
+
+/* this makes the chart size dynamic in width but fixed in height https://github.com/swimlane/ngx-charts/issues/147#issuecomment-492959081 */
+.piechart-container {
+    display: grid;
+    height: 250px;
+}
+
+.barchart-container {
+    display: grid;
+    height: 150px;
+}
+
+.graph-container {
+    display: grid;
+    /* height: 500px;  SET BY ANGULAR DYNAMICALLY */
+}

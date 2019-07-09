@@ -28,15 +28,14 @@
         <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div> -->
         <div>This is how the URLs that you shared are classified</div>
-        <div style="display: grid;" >
-          <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs verified</h2>
-          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false"
-            [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient" [labels]="true">
+        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs verified</h2>
+        <div class="piechart-container">
+          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme" [results]="pie_data_you"
+            [gradient]="gradient" [labels]="true">
           </ngx-charts-pie-chart>
           <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified"
-             [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
+            [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
           </ngx-charts-advanced-pie-chart>
-          <!-- <div style="height: 50px;"></div> -->
         </div>
       </div>
     </mat-card>
@@ -163,41 +162,43 @@
         <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
           (click)="analyse_remaining()">Analyse
           remaining</button>
-        <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="friends_graph.links"
-          [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes"
-          [scheme]="colorScheme" [view]="[1000,getGraphHeight()]" [tooltipDisabled]="false"
-          (select)="select_node($event)" [force]="graph_force" [forceLink]="graph_force_link">
-          <ng-template #nodeTemplate let-node>
-            <svg [attr.width]="node.options.size * 2" [attr.height]="node.options.size * 2">
-              <defs>
-                <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse"
-                  [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2">
-                  <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2"
-                    attr.xlink:href="{{node.options.image}}"></image>
-                </pattern>
-              </defs>
-              <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size"
-                attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%"
-                cursor="pointer" />
-            </svg>
-          </ng-template>
-          <ng-template #linkTemplate let-link>
-            <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y"
-              [attr.x2]="link.target.x" [attr.y2]="link.target.y" [attr.stroke]="link.options.color"
-              attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
-          </ng-template>
-        </ngx-charts-force-directed-graph>
-        <div id="asdasdasd" [style.height]="getGraphHeight() + 100 + 'px'"></div>
-          <div style="display: grid;" >
-            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from your friends</h2>
-            <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified from your friends"
-              [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient" [labels]="true">
-            </ngx-charts-pie-chart>
-            <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from your friends"
-               [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient">
-            </ngx-charts-advanced-pie-chart>
-            <!-- <div style="height: 50px;"></div> -->
-          </div>
+        <div class="graph-container" [style.height.px]="getGraphHeight()">
+          <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="friends_graph.links"
+            [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes"
+            [scheme]="colorScheme" [tooltipDisabled]="false" (select)="select_node($event)" [force]="graph_force"
+            [forceLink]="graph_force_link">
+            <ng-template #nodeTemplate let-node>
+              <svg [attr.width]="node.options.size * 2" [attr.height]="node.options.size * 2">
+                <defs>
+                  <pattern attr.id="{{'image' + node.value}}" patternUnits="userSpaceOnUse"
+                    [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2">
+                    <image [attr.height]="node.options.size * 2" [attr.width]="node.options.size * 2"
+                      attr.xlink:href="{{node.options.image}}"></image>
+                  </pattern>
+                </defs>
+                <circle [attr.cx]="node.options.size" [attr.cy]="node.options.size" [attr.r]="node.options.size"
+                  attr.fill="{{'url(#image'+node.value+')'}}" [attr.stroke]="node.options.stroke" stroke-width="20%"
+                  cursor="pointer" />
+              </svg>
+            </ng-template>
+            <ng-template #linkTemplate let-link>
+              <svg:line strokeWidth="1" class="edge" [attr.x1]="link.source.x" [attr.y1]="link.source.y"
+                [attr.x2]="link.target.x" [attr.y2]="link.target.y" [attr.stroke]="link.options.color"
+                attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
+            </ng-template>
+          </ngx-charts-force-directed-graph>
+        </div>
+        <div id="asdasdasd" style="height: 100px;"></div>
+        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from your friends
+        </h2>
+        <div class="piechart-container">
+          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified from your friends"
+            [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient" [labels]="true">
+          </ngx-charts-pie-chart>
+          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from your friends"
+            [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient">
+          </ngx-charts-advanced-pie-chart>
+        </div>
       </div>
       <!-- <div *ngIf="best_friend">
         <h4>Your best-scoring friend</h4>
@@ -242,15 +243,15 @@
           <div class="table-container-2">
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">
-                <div style="display: grid;" >
-                  <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs verified from {{f.screen_name}}</h3>
-                  <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false"
-                    [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
+                <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs verified from {{f.screen_name}}</h3>
+                <div class="piechart-container">
+                  <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
+                    [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
                   </ngx-charts-pie-chart>
-                  <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from {{f.screen_name}}" [view]="[undefined, 200]"
-                     [scheme]="colorScheme" [results]="f.pie_data" [gradient]="gradient">
+                  <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true"
+                    label="URLs verified from {{f.screen_name}}" [view]="[undefined, 200]" [scheme]="colorScheme"
+                    [results]="f.pie_data" [gradient]="gradient">
                   </ngx-charts-advanced-pie-chart>
-                  <!-- <div style="height: 50px;"></div> -->
                 </div>
               </div>
             </div>
@@ -274,13 +275,16 @@
     <div>
       <h3>You against the average user</h3>
       <div>The comparison between your score and the average user score</div>
-      <ngx-charts-bar-horizontal-normalized [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average_multi"
-        legend="true" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared">
-      </ngx-charts-bar-horizontal-normalized>
-      <ngx-charts-bar-horizontal [view]="[1000,150]" [scheme]="colorScheme" [results]="you_vs_average" xScaleMax="100"
-        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
-        [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
-      <div style="height: 200px;"></div>
+      <div class="barchart-container">
+        <ngx-charts-bar-horizontal-normalized [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
+          xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared">
+        </ngx-charts-bar-horizontal-normalized>
+      </div>
+      <div class="barchart-container">
+        <ngx-charts-bar-horizontal [scheme]="colorScheme" [results]="you_vs_average" xScaleMax="100" xAxis="true"
+          showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
+          [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+      </div>
       <div>
         <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i
             class="material-icons md-48">error</i> You
@@ -304,12 +308,12 @@
           {{result_overall.twitter_profiles_cnt}} Twitter profiles.</p>
       </div>
       <!-- overflow: hidden; -->
-      <div style="display: grid;" >
-        <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified"
-          [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
+      <div style="display: grid;">
+        <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified" [scheme]="colorScheme"
+          [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
         </ngx-charts-pie-chart>
         <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified"
-           [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
+          [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
         <!-- <div style="height: 50px;"></div> -->
       </div>
