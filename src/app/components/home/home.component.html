@@ -1,14 +1,14 @@
 <div>
   <h1>MisinfoMe</h1>
   <p>It is hard to distinguish fact from fiction on social media.</p>
-  <p>Assess your Twitter profile, we will verify if your posts contain some detected misinformation.</p>
+  <p>Assess any Twitter profile, we will verify if its tweets contain some misinformation.</p>
   <mat-card>
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <mat-form-field>
         <mat-label for="screen_name">Twitter URL</mat-label>
-        <input matInput placeholder="Twitter URL" required="true" [formControl]="screen_name"
-          pattern="[a-zA-Z0-9_]+" appValidatePrevent>
-          <span matPrefix>twitter.com/</span>
+        <input matInput placeholder="Twitter URL" required="true" [formControl]="screen_name" pattern="[a-zA-Z0-9_]+"
+          appValidatePrevent>
+        <span matPrefix>twitter.com/</span>
         <mat-error *ngIf="!screen_name.valid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
       <button type="submit" mat-raised-button color="accent" [disabled]="!screen_name.valid">Assess</button>
@@ -23,13 +23,13 @@
       <mat-spinner *ngIf="loading_you" class="center"></mat-spinner>
       <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
       <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
-        <h3>You - <a href="https://twitter.com/{{result_you.screen_name}}"
-            target="_blank">@{{result_you.screen_name}}</a></h3>
-        <div>We looked at {{result_you.tweets_cnt}} tweets from your profile.</div>
-        <div *ngIf="result_you.score >= 50" class="good">Your score is good.</div>
-        <div *ngIf="result_you.score < 50" class="bad">Your score is bad.</div>
+        <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a></h3>
+        <div>We looked at {{result_you.tweets_cnt}} tweets from this profile.</div>
+        <div *ngIf="result_you.score >= 50" class="good">The score is {{result_you.score}}/100.</div>
+        <div *ngIf="result_you.score < 50" class="bad">The score is {{result_you.score}}/100.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unverified, 100% is valid)</div> -->
-        <div>This is how the URLs that you shared are classified</div>
+        <div>This is how the URLs that have been shared by <a
+            href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a> are classified</div>
         <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs verified</h2>
         <div class="piechart-container">
           <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme" [results]="pie_data_you"
@@ -110,7 +110,7 @@
       </mat-expansion-panel> -->
 
       <mat-card class="mat-elevation-z5">
-        <h3>Details of the URLs you have shared</h3>
+        <h3>Details of the URLs shared</h3>
 
         <ngx-nestable [(list)]="list" [options]="options" [template]="itemTemplate">
         </ngx-nestable>
@@ -150,12 +150,15 @@
   <p></p>
   <mat-card *ngIf="!loading_you && !error_you && show_you">
     <div>
-      <h3>Your twitter friends network</h3>
-      <p>Your Twitter feed is built with tweets that come from people that you are following. For this reason this tool
-        can analyse the profiles that you are following.</p>
-      <p>You have {{friends_count || "..."}} friends<span *ngIf="friends_analysis_show">,
+      <h3>The network of twitter profiles followed by <a
+          href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a></h3>
+      <p>The Twitter feed of any account is built with tweets that come from people that he is following. For this
+        reason this tool
+        can analyse the profiles that are being followed by the account you choose.</p>
+      <p>{{result_you.screen_name}} is following {{friends_count || "..."}} profiles<span
+          *ngIf="friends_analysis_show">,
           {{result_friends.twitter_profiles_cnt}} of them have already been analysed.</span></p>
-      <p><i>*This is limited to the last 500 people you are following, and this number could be less because of private
+      <p><i>*This is limited to the last 500 people added, and this number could be less because of private
           profiles</i></p>
       <mat-spinner *ngIf="loading_friends" class="center"></mat-spinner>
       <div *ngIf="friends_analysis_show">
@@ -191,13 +194,13 @@
           </ngx-charts-force-directed-graph>
         </div>
         <div id="asdasdasd" style="height: 100px;"></div>
-        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from your friends
+        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from the network
         </h2>
         <div class="piechart-container">
-          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified from your friends"
+          <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs verified from the network"
             [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient" [labels]="true">
           </ngx-charts-pie-chart>
-          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from your friends"
+          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs verified from the network"
             [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient">
           </ngx-charts-advanced-pie-chart>
         </div>
@@ -220,23 +223,24 @@
       <mat-expansion-panel class="mat-elevation-z5">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Your worst-scoring friends
+            The worst-scoring profiles
           </mat-panel-title>
           <mat-panel-description>
             Click to expand
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div>
-          <h3>Your friends have been sorted by their score.</h3>
-          <h4>Maximum number of friends displayed: {{max_worst}} / 30</h4>
+          <h2>The profiles of the network friends have been sorted by their score.</h2>
+          <p>Maximum number of friends displayed: {{max_worst}} / 30</p>
 
           <!-- <mat-form-field ngNativeValidate>
               <mat-label for="max_cnt">How many to show</mat-label>
               <input type="number" min="1" max="20" step="1" matInput [(ngModel)]="max_worst">
             </mat-form-field> -->
           <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst"></mat-slider>
+          <h3>Sorting criterion</h3>
           <mat-form-field>
-            <mat-select placeholder="Sorting criterion" [(ngModel)]="chosen_criterion">
+            <mat-select placeholder="select betweent the avaliable criteria" [(ngModel)]="chosen_criterion">
               <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
                 {{c.name}}
               </mat-option>
@@ -246,7 +250,7 @@
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">
                 <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs verified from {{f.screen_name}}</h3>
-                <div class="piechart-container">
+                <div class="piechart-container-tiny">
                   <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
                     [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
                   </ngx-charts-pie-chart>
@@ -275,8 +279,8 @@
   <p></p>
   <mat-card *ngIf="!loading_overall && !error_overall && !loading_you && !error_you && show_you">
     <div>
-      <h3>You against the average user</h3>
-      <div>The comparison between your score and the average user score</div>
+      <h3>{{result_you.screen_name}} against the average user</h3>
+      <div>The comparison between the score of {{result_you.screen_name}} and the average user</div>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal-normalized [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
           xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared">
@@ -289,11 +293,11 @@
       </div>
       <div>
         <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i
-            class="material-icons md-48">error</i> You
-          have spread more misinformation than the average of our users</p>
+            class="material-icons md-48">error</i> {{result_you.screen_name}} has spread more misinformation than the
+          average of our users</p>
         <p *ngIf="result_you.score > result_overall.score && result_you.score > 50" class="good"><i
             class="material-icons md-24">check_circle</i>
-          You have spread less misinformation than the average of our users</p>
+          {{result_you.screen_name}} has spread less misinformation than the average of our users</p>
       </div>
     </div>
   </mat-card>

@@ -65,23 +65,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   friends_results: Array<CountResultWithPieData>;
   friends_results_sorted: Array<CountResultWithPieData>;
   max_worst = 10;
-  _chosen_criterion = 'bad_percentage';
+  _chosen_criterion = 'bad_cnt';
   get chosen_criterion() {
     return this._chosen_criterion;
   }
   set chosen_criterion(chosen_criterion) {
     this._chosen_criterion = chosen_criterion;
-    this.friends_results_sorted = this.sort_friends()
+    this.friends_results_sorted = this.sort_friends();
   }
   sorting_criteria = [{
     'value': 'bad_cnt',
-    'name': 'Descending count of misinforming URLs'
-  }, {
+    'name': 'Number of misinforming URLs shared'
+  }, /*{ // TODO the bad links count twice or trice
     'value': 'score',
     'name': 'Worst score first, if equal sort by descending count of misinforming URLs'
-  }, {
+  },*/ {
     'value': 'bad_percentage',
-    'name': 'Highest percentage of misinforming URLs'
+    'name': 'Percentage of misinforming URLs'
   }
   ];
   analyse_remaining_disabled: Boolean = true;
@@ -300,7 +300,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private extract_results(json_data: any) {
-
     return [{
       name: 'Valid',
       value: json_data.verified_urls_cnt
@@ -311,7 +310,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Mixed',
       value: json_data.mixed_urls_cnt
     }, {
-      name: 'Not checked',
+      name: 'Unknown',
       value: json_data.unknown_urls_cnt
     }];
   }
@@ -369,7 +368,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.you_vs_average = [
           {
-            'name': 'You',
+            'name': this.state_screen_name,
             'value': result.score
           },
           {
@@ -380,39 +379,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.you_vs_average_multi = [
           {
-            name: 'You',
-            series: [
-              {
-                name: 'Valid',
-                value: result.verified_urls_cnt
-              }, {
-                name: 'Misinformation',
-                value: result.fake_urls_cnt
-              }, {
-                name: 'Mixed',
-                value: result.mixed_urls_cnt
-              }, {
-                name: 'Not checked',
-                value: result.unknown_urls_cnt
-              }
-            ]
+            name: this.state_screen_name,
+            series: this.extract_results(result)
           }, {
             name: 'Overall',
-            series: [
-              {
-                name: 'Valid',
-                value: this.result_overall.verified_urls_cnt
-              }, {
-                name: 'Misinformation',
-                value: this.result_overall.fake_urls_cnt
-              }, {
-                name: 'Mixed',
-                value: this.result_overall.mixed_urls_cnt
-              }, {
-                name: 'Not checked',
-                value: this.result_overall.unknown_urls_cnt
-              }
-            ]
+            series: this.extract_results(this.result_overall)
           }
         ];
       });
