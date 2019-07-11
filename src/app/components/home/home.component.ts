@@ -33,7 +33,7 @@ interface CountResultWithPieData extends CountResult {
 export class HomeComponent implements OnInit, OnDestroy {
 
   state_screen_name: string; // the value that comes from the url parameter
-  screen_name = new FormControl('');
+  screen_name = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+')]);
   score: number;
 
   score_pos: number;

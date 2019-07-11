@@ -40,6 +40,7 @@ import { VennComponent } from './components/venn/venn.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { SourcesComponent } from './components/sources/sources.component';
+import { ValidatePreventDirective } from './directives/validate-prevent.directive';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { SourcesComponent } from './components/sources/sources.component';
     VennComponent,
     ImpactFactcheckingComponent,
     CredibilityComponent,
-    SourcesComponent
+    SourcesComponent,
+    ValidatePreventDirective
   ],
   imports: [
     BrowserModule,
