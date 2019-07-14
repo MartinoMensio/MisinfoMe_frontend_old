@@ -380,10 +380,38 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.you_vs_average_multi = [
           {
             name: this.state_screen_name,
-            series: this.extract_results(result)
+            series: [
+              {
+                name: 'Valid',
+                value: result.verified_urls_cnt
+              }, {
+                name: 'Misinformation',
+                value: result.fake_urls_cnt
+              }, {
+                name: 'Mixed',
+                value: result.mixed_urls_cnt
+              }, {
+                name: 'Unknown',
+                value: result.unknown_urls_cnt
+              }
+            ]
           }, {
             name: 'Overall',
-            series: this.extract_results(this.result_overall)
+            series: [
+              {
+                name: 'Valid',
+                value: this.result_overall.verified_urls_cnt
+              }, {
+                name: 'Misinformation',
+                value: this.result_overall.fake_urls_cnt
+              }, {
+                name: 'Mixed',
+                value: this.result_overall.mixed_urls_cnt
+              }, {
+                name: 'Unknown',
+                value: this.result_overall.unknown_urls_cnt
+              }
+            ]
           }
         ];
       });
