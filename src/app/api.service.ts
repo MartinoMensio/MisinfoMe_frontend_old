@@ -28,6 +28,7 @@ export interface OverallCounts extends CountResult {
 })
 export class APIService {
   API_URL = environment.api_url;
+  CREDIBILITY_URL = environment.credibility_url;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -121,8 +122,8 @@ export class APIService {
     return this.postPath('/tweets_time_distrib', body);
   }
 
-  getCredibilityGraph() {
-    return this.getPath('/credibility');
+  getSourceCredibility(source) {
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/sources/${source}`);
   }
 
 }

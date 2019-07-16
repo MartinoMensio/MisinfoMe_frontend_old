@@ -23,6 +23,7 @@ const routes: Routes = [
   { path: 'about/fact_checking', component: FactCheckingComponent },
   { path: 'impact_factchecking', component: ImpactFactcheckingComponent },
   { path: 'credibility', component: CredibilityComponent },
+  { path: 'credibility/:source', component: CredibilityComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
 

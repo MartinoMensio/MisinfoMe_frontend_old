@@ -3,6 +3,9 @@ import { APIService, CountResult, OverallCounts } from '../../api.service';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as shape from 'd3-shape';
 import * as $ from 'jquery';
+import { FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-credibility',
@@ -11,105 +14,52 @@ import * as $ from 'jquery';
 })
 export class CredibilityComponent implements OnInit {
 
-  credibility_graph: any = null;
+  state_source: string; // the value that comes from the url parameter
+  source = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_.]+')]);
+  private sub: Subscription;
 
-  curve: any = shape.curveBasis;
+  analysis_result: any;
 
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
-
-  graph_force = forceSimulation<any>()
-    .force('charge', forceManyBody().strength(-100)) // repulsion of the nodes
-    .force('x', forceX()) // make them go to the center
-    .force('y', forceY())
-    .alphaDecay(0.1); // decay bigger so stop faster
-  // .force('collide', forceCollide(30))
-  graph_force_link = forceLink<any, any>().distance(100).id(node => node.value); // the desired length of the links
-
-  constructor(private apiService: APIService) { }
+  constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.apiService.getCredibilityGraph().subscribe(result => {
-      this.credibility_graph = this.generateGraph(result);
-      // this.credibility_graph.trick(this.credibility_graph);
+    this.sub = this.route.params.subscribe(params => {
+      this.state_source = params['source'];
+      this.source.setValue(params['source']);
+      console.log('sub called ' + this.source.value);
+      if (this.source.value) {
+        this.analyse();
+      }
     });
   }
 
-  generateGraph(source_graph: any) {
-    const graph = {
-      links: [],
-      nodes: [],
-      overall_move_x: 10,
-      overall_move_y: 10, // the whole graph is translated
-      update_trick_ticks: 50,
-      update_trick_interval: 100, // milliseconds
-      // trick: (g) => {
-      //   // This function is needed because the ngx-charts-force-directed-graph is just animating the links and not the edges,
-      //   // unless the mouse moves on the svg.
-      //   // The trick is simply trigger programmatically clicks every 100ms for 5 secs on the center of the graph in order
-      //   // to trigger the update of the position of the edges.
-      //   setTimeout(() => {
-      //     // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
-      //     g.update_trick_ticks -= 1;
-      //     if (g.update_trick_ticks > 0) {
-      //       g.trick(g);
-      //       const selector = `g.nodes g`;
-      //       // console.log(selector);
-      //       $(selector).get(0).dispatchEvent(new Event('click'));
-      //     }
-      //   }, g.update_trick_interval);
-      // }
-    };
-    //console.log(source_graph.nodes)
-    for (const n_name in source_graph.nodes) {
-      const n = source_graph.nodes[n_name];
-      //console.log(n)
-      graph.nodes.push({
-        id: this.clean(n._id),
-        value: n._id,
-        label: n._id,
-        options: {
-          image: n.avatar,
-          size: 20,
-          fill: this.getColor(n),
-          //stroke: this.getColor(you)
-        }
-      });
-    }
-    // console.log(friends_scores);
-    for (const l of source_graph.links) {
-      graph.links.push({
-        id: `${this.clean(l.from)}-${this.clean(l.to)}`,
-        source: this.clean(l.from),
-        target: this.clean(l.to),
-        options: {
-          //color: this.getColor(friend_score) + '!important'
-        }
-      });
-    }
-    return graph;
-  }
-
-  clean(str) {
-    str = str.replace(/\//g, '');
-    str = str.replace(/:/g, '');
-    str = str.replace(/\./g, '');
-    return str;
-  }
-
-  select_node(event: any) {
-    return;
-  }
-
-  getColor(node: any) {
-    if (node.type === 'source') {
-      return 'rgb(90, 164, 84)';
-    } else if (node.type === 'document') {
-      return 'rgb(161, 10, 40)';
+  getErrorMessage() {
+    if (this.source.hasError('required')) {
+      return 'Source is required';
+    } else if (this.source.hasError('pattern')) {
+      return 'Invalid source. It can only contain letters, numbers dots and underscore';
     } else {
-      return 'grey';
+      console.log(this.source.errors);
+      return 'Invalid';
     }
+  }
+
+  onSubmit() {
+    console.log('submit with ' + this.source.value, ' from ' + this.state_source);
+    if (this.state_source !== this.source.value) {
+      return this.router.navigate(['/credibility', this.source.value]);
+    } else {
+      // reload current page
+      return this.ngOnInit();
+    }
+  }
+
+  analyse() {
+    const domain = this.state_source;
+    this.apiService.getSourceCredibility(domain).subscribe(result => {
+      console.log(result);
+      this.analysis_result = result;
+    });
   }
 
 }
