@@ -351,8 +351,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loading_you = true;
     this.error_you = false;
     console.log('clicked!!!');
-    this.apiService.postUserCounts([this.screen_name.value]).subscribe((results: Array<CountResult>) => {
-      const result = results[0];
+    this.apiService.postUserCount(this.screen_name.value).subscribe((result: CountResult) => {
       this.result_you = result;
       this.pie_data_you = this.extract_results(result);
 
@@ -431,7 +430,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   get_friends_list(screen_name) {
     this.loading_friends = true;
-    this.apiService.getFriends(screen_name).subscribe((friends: Array<any>) => {
+    this.apiService.getFriendsCount(screen_name).subscribe((friends: Array<any>) => {
       // best and worst
       // this.best_friend = null;
       this.worst_friend = null;
@@ -444,24 +443,23 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.friends_count = friends_screen_names.length;
       this.friends_analysis_show = false;
       this.friends_graph = this.generateGraph(this.result_you, []);
-      this.apiService.getUserCounts(friends_screen_names, true, true).subscribe((res: Array<CountResult>) => {
-        res.forEach((el: CountResult) => {
-          if (el.cache === 'miss') {
-            // this is a cache miss, profile not yet evaluated
-            this.friends_screen_names[el.screen_name] = false;
-          } else {
-            // cache hit
-            this.friends_screen_names[el.screen_name] = true;
-            this.update_friends_stat_with_new(el);
-          }
-        });
-        if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
-          this.analyse_remaining_disabled = false;
+
+      friends.forEach((el: CountResult) => {
+        if (el.cache === 'miss') {
+          // this is a cache miss, profile not yet evaluated
+          this.friends_screen_names[el.screen_name] = false;
+        } else {
+          // cache hit
+          this.friends_screen_names[el.screen_name] = true;
+          this.update_friends_stat_with_new(el);
         }
-        this.friends_graph.trick(this.friends_graph);
-        this.loading_friends = false;
-        this.friends_analysis_show = true;
       });
+      if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
+        this.analyse_remaining_disabled = false;
+      }
+      this.friends_graph.trick(this.friends_graph);
+      this.loading_friends = false;
+      this.friends_analysis_show = true;
     });
   }
 
@@ -589,8 +587,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!candidate) {
       return Promise.resolve();
     }
-    return this.apiService.postUserCounts([candidate], true).toPromise().then((results: Array<CountResult>) => {
-      const result = results[0]
+    return this.apiService.postUserCount(candidate, true).toPromise().then((result: CountResult) => {
       this.update_friends_stat_with_new(result);
       this.friends_screen_names[candidate] = true;
       if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
