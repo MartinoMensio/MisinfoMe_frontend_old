@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { AboutComponent } from './components/about/about.component';
 import { DatasetsComponent } from './components/datasets/datasets.component';
-import { SourcesComponent } from './components/sources/sources.component';
+import { OriginsComponent } from './components/origins/origins.component';
 import { DomainsComponent } from './components/domains/domains.component';
 import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
@@ -15,8 +15,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'about/datasets', component: DatasetsComponent },
-  { path: 'about/sources', component: SourcesComponent },
-  { path: 'about/sources/:source_id', component: SourcesComponent },
+  { path: 'about/origins', component: OriginsComponent },
+  { path: 'about/origins/:source_id', component: OriginsComponent },
   // { path: 'about/datasets/:dataset_name', component: DatasetsComponent },
   { path: 'about/domains', component: DomainsComponent },
   // { path: 'about/domains/:domain', component: DomainsComponent },

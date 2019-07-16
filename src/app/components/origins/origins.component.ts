@@ -4,11 +4,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-sources',
-  templateUrl: './sources.component.html',
-  styleUrls: ['./sources.component.css']
+  selector: 'app-origins',
+  templateUrl: './origins.component.html',
+  styleUrls: ['./origins.component.css']
 })
-export class SourcesComponent implements OnInit, OnDestroy {
+export class OriginsComponent implements OnInit, OnDestroy {
 
   sources: Array<any>;
   private sub: Subscription;

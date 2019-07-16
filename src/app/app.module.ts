@@ -39,7 +39,7 @@ import { FactCheckingComponent } from './components/fact-checking/fact-checking.
 import { VennComponent } from './components/venn/venn.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
-import { SourcesComponent } from './components/sources/sources.component';
+import { OriginsComponent } from './components/origins/origins.component';
 import { ValidatePreventDirective } from './directives/validate-prevent.directive';
 
 @NgModule({
@@ -55,7 +55,7 @@ import { ValidatePreventDirective } from './directives/validate-prevent.directiv
     VennComponent,
     ImpactFactcheckingComponent,
     CredibilityComponent,
-    SourcesComponent,
+    OriginsComponent,
     ValidatePreventDirective
   ],
   imports: [
