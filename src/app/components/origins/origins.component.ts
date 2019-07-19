@@ -17,7 +17,7 @@ export class OriginsComponent implements OnInit, OnDestroy {
   constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.apiService.getSources().subscribe((res: Array<any>) => {
+    this.apiService.getSourcesOld().subscribe((res: Array<any>) => {
       this.sources = res.reduce((acc: Array<any>, val) => {
         // just select the datasets that have a name and are used someway
         if (val.name && (val.contains.domain_classification || val.contains.fact_checking_urls || val.contains.url_classification)) {

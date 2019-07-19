@@ -1,0 +1,50 @@
+<div class="mat-elevation-z8">
+    <h2>{{profileAssessment.itemReviewed}}</h2>
+    <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
+        <!-- first column: general info and aggregated indicator -->
+        <div>
+            <h3>Computed credibility</h3>
+            <div>
+                <p>Value: {{profileAssessment.credibility.value}}</p>
+                <p>Confidence: {{profileAssessment.credibility.confidence}}</p>
+                <div *ngIf='profileAssessment.credibility.confidence == 0'>
+                    <p>Unknown!!!</p>
+                </div>
+            </div>
+            <div></div>
+        </div>
+        <!-- second column: details and source assessments -->
+        <div>
+            <h3>The sources used in the tweets</h3>
+            <div>
+                <div *ngIf="!profileAssessment.assessments.length">
+                    <p>We don't have any information about the sources used!</p>
+                </div>
+                <div style="max-height: 500px; overflow-y:scroll;">
+                    <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                    <div *ngFor="let assessment of profileAssessment.assessments">
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <div>
+                                <h4>{{assessment.itemReviewed}}</h4>
+                                <p>What is this source?</p>
+
+                            </div>
+                            <div>
+                                <p>Why should I trust this source?</p>
+                                <p>How much weight has this source?</p>
+                            </div>
+                            <div>
+                                <p><a [href]="assessment.url" >See details for this source</a></p>
+                            </div>
+                            <div>
+                                <p>Value: {{assessment.credibility.value}}</p>
+                                <p>Confidence: {{assessment.credibility.confidence}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

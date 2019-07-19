@@ -7,7 +7,10 @@ import { OriginsComponent } from './components/origins/origins.component';
 import { DomainsComponent } from './components/domains/domains.component';
 import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
+import { CredibilitySourcesComponent } from './components/credibility-sources/credibility-sources.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
+import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
+import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
 
 const routes: Routes = [
   { path: 'analyse/:screen_name', component: HomeComponent },
@@ -23,7 +26,11 @@ const routes: Routes = [
   { path: 'about/fact_checking', component: FactCheckingComponent },
   { path: 'impact_factchecking', component: ImpactFactcheckingComponent },
   { path: 'credibility', component: CredibilityComponent },
-  { path: 'credibility/:source', component: CredibilityComponent },
+  { path: 'credibility/sources', component: CredibilitySourcesComponent },
+  { path: 'credibility/sources/:source', component: CredibilitySourcesComponent },
+  { path: 'credibility/origins', component: CredibilityOriginsComponent },
+  { path: 'credibility/profiles', component: CredibilityProfilesComponent },
+  { path: 'credibility/profiles/:screen_name', component: CredibilityProfilesComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
 

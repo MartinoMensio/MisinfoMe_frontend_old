@@ -1,0 +1,21 @@
+<div>
+    <div>
+        <mat-card>
+            <form #main_form="ngForm" (ngSubmit)="onSubmit()">
+                <mat-form-field>
+                    <mat-label for="screen_name">Twitter URL</mat-label>
+                    <input matInput placeholder="Twitter URL" required="true" [formControl]="screen_name"
+                        pattern="[a-zA-Z0-9_]+" appValidatePrevent>
+                    <span matPrefix>twitter.com/</span>
+                    <mat-error *ngIf="!screen_name.valid">{{getErrorMessage()}}</mat-error>
+                </mat-form-field>
+                <button type="submit" mat-raised-button color="accent" [disabled]="!screen_name.valid">Assess</button>
+                <p>Input the screen name (the part after the '@', e.g. <i>realDonaldTrump</i>)</p>
+                <p>You can even paste the URL to the profile (e.g. <i>https://twitter.com/realDonaldTrump)</i></p>
+            </form>
+        </mat-card>
+        <div *ngIf="analysis_result">
+                <app-profile-card [profileAssessment]="analysis_result"></app-profile-card>
+        </div>
+    </div>
+</div>

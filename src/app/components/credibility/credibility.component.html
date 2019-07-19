@@ -1,18 +1,14 @@
 <div>
-  <h2>News sources credibility</h2>
-  <p>Here you can check your sources and see how they are assessed.</p>
-  <form #main_form="ngForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <mat-label for="source">Source</mat-label>
-      <input matInput placeholder="e.g. snopes.com" required="true" [formControl]="source" pattern="[a-zA-Z0-9_.]+">
-      <mat-error *ngIf="!source.valid">{{getErrorMessage()}}</mat-error>
-    </mat-form-field>
-    <button type="submit" mat-raised-button color="accent" [disabled]="!source.valid">Check</button>
-  </form>
-  <div>
-    <div *ngIf='analysis_result'>
-      <app-source-card [sourceAssessment]="analysis_result"></app-source-card>
-    </div>
-  </div>
+    <h1>The credibility model</h1>
+    <p>Our analysis is based on the "Credibility Model"</p>
+    <p>TODO description</p>
 
+    <app-credibility-origins></app-credibility-origins>
+
+    <p>This model can be applied to different types of analysis:</p>
+    <ul>
+        <li><a [routerLink]="[ '/credibility/sources' ]">Sources</a></li>
+        <li><a [routerLink]="[ '/credibility/profiles' ]">Profiles</a></li>
+        <li>???</li>
+    </ul>
 </div>

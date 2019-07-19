@@ -56,8 +56,8 @@ export class APIService {
     return this.getPath(`/entities`);
   }
 
-  getSources() {
-    return this.getPath('/entities/sources');
+  getSourcesOld() {
+    return this.getPath('/entities/origins');
   }
 
   getDomains() {
@@ -99,6 +99,14 @@ export class APIService {
 
   getSourceCredibility(source) {
     return this.httpClient.get(`${this.CREDIBILITY_URL}/sources/${source}`);
+  }
+
+  getCredibilityOrigins() {
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/origins`);
+  }
+
+  getUserCredibility(screen_name) {
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/users/?screen_name=${screen_name}`);
   }
 
 }

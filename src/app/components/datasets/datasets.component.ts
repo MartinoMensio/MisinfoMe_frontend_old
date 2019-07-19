@@ -14,7 +14,7 @@ export class DatasetsComponent implements OnInit {
   constructor(private apiService: APIService) { }
 
   ngOnInit() {
-    this.apiService.getSources().subscribe((res: Array<any>) => {
+    this.apiService.getSourcesOld().subscribe((res: Array<any>) => {
       this.datasets = res.reduce((acc: Array<any>, val) => {
         // just select the datasets that have a name and are used someway
         if (val.name && (val.contains.domain_classification || val.contains.fact_checking_urls || val.contains.url_classification)) {

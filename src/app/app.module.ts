@@ -38,10 +38,14 @@ import { DomainsComponent } from './components/domains/domains.component';
 import { FactCheckingComponent } from './components/fact-checking/fact-checking.component';
 import { VennComponent } from './components/venn/venn.component';
 import { ImpactFactcheckingComponent } from './components/impact-factchecking/impact-factchecking.component';
-import { CredibilityComponent } from './components/credibility/credibility.component';
+import { CredibilitySourcesComponent } from './components/credibility-sources/credibility-sources.component';
 import { OriginsComponent } from './components/origins/origins.component';
 import { ValidatePreventDirective } from './directives/validate-prevent.directive';
 import { SourceCardComponent } from './components/source-card/source-card.component';
+import { ProfileCardComponent } from './components/profile-card/profile-card.component';
+import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
+import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
+import { CredibilityComponent } from './components/credibility/credibility.component';
 
 @NgModule({
   declarations: [
@@ -55,10 +59,14 @@ import { SourceCardComponent } from './components/source-card/source-card.compon
     FactCheckingComponent,
     VennComponent,
     ImpactFactcheckingComponent,
-    CredibilityComponent,
+    CredibilitySourcesComponent,
     OriginsComponent,
     ValidatePreventDirective,
-    SourceCardComponent
+    SourceCardComponent,
+    ProfileCardComponent,
+    CredibilityProfilesComponent,
+    CredibilityOriginsComponent,
+    CredibilityComponent
   ],
   imports: [
     BrowserModule,
