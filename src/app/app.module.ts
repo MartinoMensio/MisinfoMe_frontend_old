@@ -41,6 +41,7 @@ import { ImpactFactcheckingComponent } from './components/impact-factchecking/im
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { OriginsComponent } from './components/origins/origins.component';
 import { ValidatePreventDirective } from './directives/validate-prevent.directive';
+import { SourceCardComponent } from './components/source-card/source-card.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ValidatePreventDirective } from './directives/validate-prevent.directiv
     ImpactFactcheckingComponent,
     CredibilityComponent,
     OriginsComponent,
-    ValidatePreventDirective
+    ValidatePreventDirective,
+    SourceCardComponent
   ],
   imports: [
     BrowserModule,

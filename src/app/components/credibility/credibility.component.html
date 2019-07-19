@@ -10,12 +10,8 @@
     <button type="submit" mat-raised-button color="accent" [disabled]="!source.valid">Check</button>
   </form>
   <div>
-    <div *ngIf='analysis_result && analysis_result.credibility.confidence != 0'>
-      <p>Credibility {{analysis_result.credibility.value}}</p>
-      <p>Confidence {{analysis_result.credibility.confidence}}</p>
-    </div>
-    <div *ngIf='analysis_result && analysis_result.credibility.confidence == 0'>
-      <p>Unknown!!!</p>
+    <div *ngIf='analysis_result'>
+      <app-source-card [sourceAssessment]="analysis_result"></app-source-card>
     </div>
   </div>
 
