@@ -23,6 +23,10 @@ export interface OverallCounts extends CountResult {
   twitter_profiles_cnt: number;
 }
 
+export enum LoadStates {
+  None, Loading, Loaded, Error
+}
+
 @Injectable({
   providedIn: 'root'
 })

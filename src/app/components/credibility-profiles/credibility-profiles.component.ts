@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { APIService } from 'src/app/api.service';
+import { APIService, LoadStates } from 'src/app/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -14,6 +14,11 @@ export class CredibilityProfilesComponent implements OnInit {
   state_screen_name: string; // the value that comes from the url parameter
   screen_name = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+')]);
   private sub: Subscription;
+
+  // state management
+  loadStates = LoadStates;
+  main_profile_state = LoadStates.None;
+  error_detail_profile: string;
 
   analysis_result: any;
 
@@ -53,9 +58,14 @@ export class CredibilityProfilesComponent implements OnInit {
 
   analyse() {
     const screen_name = this.state_screen_name;
+    this.main_profile_state = LoadStates.Loading;
     this.apiService.getUserCredibility(screen_name).subscribe(result => {
       console.log(result);
       this.analysis_result = result;
+      this.main_profile_state = LoadStates.Loaded;
+    }, (error) => {
+      this.main_profile_state = LoadStates.Error;
+      this.error_detail_profile = error.error.detail;
     });
   }
 

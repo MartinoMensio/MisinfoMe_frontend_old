@@ -46,6 +46,7 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
 import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
 import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { CredibilityComponent } from './components/credibility/credibility.compo
     ProfileCardComponent,
     CredibilityProfilesComponent,
     CredibilityOriginsComponent,
-    CredibilityComponent
+    CredibilityComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

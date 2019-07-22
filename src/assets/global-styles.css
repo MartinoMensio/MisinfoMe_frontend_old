@@ -2,3 +2,7 @@
 .advanced-pie-legend {
     line-height: 32px;
 }
+
+.center {
+    margin: 0 auto;
+}

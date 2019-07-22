@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { APIService, CountResult, OverallCounts } from '../../api.service';
+import { APIService, CountResult, OverallCounts, LoadStates } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
@@ -47,14 +47,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   result_you: CountResult;
   pie_data_you = [];
-  loading_you: Boolean = false;
-  show_you: Boolean = false;
-  error_you: Boolean = false;
+
+  // state management
+  loadStates = LoadStates;
+  main_profile_state = LoadStates.None; // for show_you, loading_you, error_you
+  error_detail_profile: string;
+  overall_state = LoadStates.None; // for (if result_overall), loading_overall, error_overall
+  error_detail_overall: string;
 
   pie_data_overall = [];
   result_overall: OverallCounts;
-  loading_overall: Boolean = false;
-  error_overall: Boolean = false;
 
   loading_friends: Boolean = false;
   friends_count: number;
@@ -277,16 +279,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   update_overall() {
-    this.loading_overall = true;
-    this.error_overall = false;
+    this.overall_state = LoadStates.Loading;
     return this.apiService.getOverallCounts().subscribe((results: OverallCounts) => {
       this.result_overall = results;
       this.pie_data_overall = this.extract_results(results);
+      this.overall_state = LoadStates.Loaded;
     }, (error) => {
       console.log(error);
-      this.error_overall = true;
-    }).add(() => {
-      this.loading_overall = false;
+      this.overall_state = LoadStates.Error;
+      this.error_detail_overall = error.error.detail;
     });
   }
 
@@ -347,9 +348,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   analyse() {
-    this.show_you = true;
-    this.loading_you = true;
-    this.error_you = false;
+    this.main_profile_state = LoadStates.Loading;
     console.log('clicked!!!');
     this.apiService.postUserCount(this.screen_name.value).subscribe((result: CountResult) => {
       this.result_you = result;
@@ -420,11 +419,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.friends_results_sorted = [];
       this.pie_data_friends = this.default_pie_data();
       this.get_friends_list(this.screen_name.value);
+
+      this.main_profile_state = LoadStates.Loaded;
     }, (error) => {
       console.log(error);
-      this.error_you = true;
-    }).add(() => {
-      this.loading_you = false;
+      this.main_profile_state = LoadStates.Error;
+      this.error_detail_profile = error.error.detail;
     });
   }
 
@@ -641,6 +641,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
           g.update_trick_ticks -= 1;
+          return;
           if (g.update_trick_ticks > 0) {
             g.trick(g);
             const selector = `g.nodes g`;

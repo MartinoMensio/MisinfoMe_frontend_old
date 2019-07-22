@@ -1,6 +1,7 @@
 <div>
   <h2>News sources credibility</h2>
-  <p>Here you can check your sources and see how they are assessed by the <a [routerLink]="['/credibility/origins']">origins</a> we are considering.</p>
+  <p>Here you can check your sources and see how they are assessed by the <a
+      [routerLink]="['/credibility/origins']">origins</a> we are considering.</p>
   <form #main_form="ngForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label for="source">Source</mat-label>
@@ -10,7 +11,9 @@
     <button type="submit" mat-raised-button color="accent" [disabled]="!source.valid">Check</button>
   </form>
   <div>
-    <div *ngIf='analysis_result'>
+    <mat-spinner *ngIf="source_loading_state == loadStates.Loading" class="center"></mat-spinner>
+    <app-error *ngIf="source_loading_state == loadStates.Error" [message]='error_detail_source'></app-error>
+    <div *ngIf='source_loading_state == loadStates.Loaded'>
       <app-source-card [sourceAssessment]="analysis_result"></app-source-card>
     </div>
   </div>

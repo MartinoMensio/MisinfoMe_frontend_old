@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService, CountResult, OverallCounts } from '../../api.service';
+import { APIService, CountResult, OverallCounts, LoadStates } from '../../api.service';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as shape from 'd3-shape';
 import * as $ from 'jquery';
@@ -17,6 +17,11 @@ export class CredibilitySourcesComponent implements OnInit {
   state_source: string; // the value that comes from the url parameter
   source = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_.]+')]);
   private sub: Subscription;
+
+  // state management
+  loadStates = LoadStates;
+  source_loading_state = LoadStates.None;
+  error_detail_source: string;
 
   analysis_result: any;
 
@@ -56,9 +61,13 @@ export class CredibilitySourcesComponent implements OnInit {
 
   analyse() {
     const domain = this.state_source;
+    this.source_loading_state = LoadStates.Loading;
     this.apiService.getSourceCredibility(domain).subscribe(result => {
       console.log(result);
       this.analysis_result = result;
+      this.source_loading_state = LoadStates.Loaded;
+    }, (error) => {
+      this.source_loading_state = LoadStates.Error;
     });
   }
 

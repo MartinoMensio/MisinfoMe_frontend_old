@@ -13,10 +13,6 @@ mat-form-field {
     color: rgb(199, 180, 44);
 }
 
-.center {
-    margin: 0 auto;
-}
-
 .table-container-2 {
     max-height: 400px;
     overflow-y: scroll;

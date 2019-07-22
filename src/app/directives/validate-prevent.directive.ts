@@ -43,7 +43,7 @@ export class ValidatePreventDirective {
           pasteData = pasteData.substring(pasteData.indexOf(this.unwanted_prefix) + this.unwanted_prefix.length);
         }
         // and then remove all the invalid characters
-        pasteData = pasteData.replace(/[^A-Za-z ]/g, '').replace(/\s/g, '');
+        pasteData = pasteData.replace(/[^A-Za-z_0-9 ]/g, '').replace(/\s/g, '');
 
         // this clear+set is needed in order to have the filed validation work as expected
         this.el.nativeElement.value = '';

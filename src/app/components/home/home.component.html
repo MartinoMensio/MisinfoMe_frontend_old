@@ -18,11 +18,11 @@
   </mat-card>
   <p></p>
   <!-- <app-graph [data]="data_for_graph"></app-graph> -->
-  <div *ngIf="show_you">
+  <mat-spinner *ngIf="main_profile_state == loadStates.Loading" class="center"></mat-spinner>
+  <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
+  <div *ngIf="main_profile_state == loadStates.Loaded">
     <mat-card>
-      <mat-spinner *ngIf="loading_you" class="center"></mat-spinner>
-      <div *ngIf="error_you">Error! Something is wrong in the communication with the backend!</div>
-      <div *ngIf="!loading_you && !error_you" [@enterAnimation]>
+      <div *ngIf="main_profile_state == loadStates.Loaded" [@enterAnimation]>
         <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a></h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from this profile.</div>
         <div *ngIf="result_you.score >= 50" class="good">The score is {{result_you.score}}/100.</div>
@@ -42,72 +42,7 @@
       </div>
     </mat-card>
     <p></p>
-    <div *ngIf="!error_you && !loading_you">
-      <!-- <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title class="bad">
-            <i class="material-icons md-24">error</i>These tweets have been identified as linked to misinformation
-          </mat-panel-title>
-          <mat-panel-description>
-            Click to expand
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <p>The URLs may have been fact-checked or come from domains that typically share false content.</p>
-
-        <app-table-tweets [data]="table_data_bad"></app-table-tweets>
-
-      </mat-expansion-panel>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title class="mixed">
-            <i class="material-icons md-24">error</i>These tweets have been identified as linked to not completely true
-            content
-          </mat-panel-title>
-          <mat-panel-description>
-            Click to expand
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <p>The URLs may have been fact-checked and TODO.</p>
-
-        <app-table-tweets [data]="table_data_mixed"></app-table-tweets>
-
-      </mat-expansion-panel>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title class="good">
-            <i class="material-icons md-24">check_circle</i>These tweets have been identified as linked to verified
-            content
-          </mat-panel-title>
-          <mat-panel-description>
-            Click to expand
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <p>The URLs may have been fact-checked or come from domains that typically share verified content.</p>
-
-        <app-table-tweets [data]="table_data_good"></app-table-tweets>
-
-      </mat-expansion-panel> -->
-      <!-- <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <i class="material-icons md-24">info</i>These tweets have been identified as linked to controversial
-            content
-          </mat-panel-title>
-          <mat-panel-description>
-            Click to expand
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <p>For these URLs we cannot assert their truthiness but some of our datasets suggest different points of view
-          so that you get a more complete idea of the problems discussed.</p>
-
-        <app-table-tweets [data]="table_data_rebuttals"></app-table-tweets>
-
-
-      </mat-expansion-panel> -->
+    <div>
 
       <mat-card class="mat-elevation-z5">
         <h3>Details of the URLs shared</h3>
@@ -148,7 +83,7 @@
     </div>
   </div>
   <p></p>
-  <mat-card *ngIf="!loading_you && !error_you && show_you">
+  <mat-card *ngIf="main_profile_state == loadStates.Loaded">
     <div>
       <h3>The network of twitter profiles followed by <a
           href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a></h3>
@@ -277,7 +212,7 @@
     </div>
   </mat-card>
   <p></p>
-  <mat-card *ngIf="!loading_overall && !error_overall && !loading_you && !error_you && show_you">
+  <mat-card *ngIf="overall_state == loadStates.Loaded && main_profile_state == loadStates.Loaded">
     <div>
       <h3>{{result_you.screen_name}} against the average user</h3>
       <div>The comparison between the score of {{result_you.screen_name}} and the average user</div>
@@ -302,10 +237,10 @@
     </div>
   </mat-card>
   <p></p>
-  <mat-card>
-    <mat-spinner *ngIf="loading_overall && !result_friends" class="center"></mat-spinner>
-    <div *ngIf="error_overall">Error! Something is wrong in the communication with the backend!</div>
-    <div *ngIf="!error_overall && (result_friends || !loading_overall)">
+  <mat-spinner *ngIf="overall_state == loadStates.Loading" class="center"></mat-spinner>
+  <app-error *ngIf="overall_state == loadStates.Error" [message]='error_detail_overall'></app-error>
+  <mat-card *ngIf="overall_state == loadStates.Loaded">
+    <div>
       <h3>How our assessment works</h3>
       <div>
         <p>We look at your Twitter profile. For those tweets with URLs, we verify whether they have been already

@@ -14,8 +14,10 @@
                 <p>You can even paste the URL to the profile (e.g. <i>https://twitter.com/realDonaldTrump)</i></p>
             </form>
         </mat-card>
-        <div *ngIf="analysis_result">
-                <app-profile-card [profileAssessment]="analysis_result"></app-profile-card>
+        <mat-spinner *ngIf="main_profile_state == loadStates.Loading" class="center"></mat-spinner>
+        <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
+        <div *ngIf="main_profile_state == loadStates.Loaded">
+            <app-profile-card [profileAssessment]="analysis_result"></app-profile-card>
         </div>
     </div>
 </div>
