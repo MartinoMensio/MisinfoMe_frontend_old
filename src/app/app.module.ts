@@ -47,6 +47,7 @@ import { CredibilityProfilesComponent } from './components/credibility-profiles/
 import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { ErrorComponent } from './components/error/error.component';
+import { CredibilityMeterComponent } from './components/credibility-meter/credibility-meter.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { ErrorComponent } from './components/error/error.component';
     CredibilityProfilesComponent,
     CredibilityOriginsComponent,
     CredibilityComponent,
-    ErrorComponent
+    ErrorComponent,
+    CredibilityMeterComponent
   ],
   imports: [
     BrowserModule,
