@@ -1,0 +1,11 @@
+<div style="padding: 5px; width: 150px;">
+    <div *ngIf='credibility.confidence == 0'>
+        <p>Unknown!!!</p>
+    </div>
+
+    <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min"
+        [label]="gaugeLabel" [append]="gaugeAppendText" [thresholds]="thresholdConfig">
+    </ngx-gauge>
+    <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
+    <mat-progress-bar [value]="credibility.confidence * 100"></mat-progress-bar>
+</div>

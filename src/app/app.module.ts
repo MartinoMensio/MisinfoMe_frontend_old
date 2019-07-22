@@ -25,6 +25,7 @@ import { NgxTweetModule } from 'ngx-tweet';
 import { NestableModule } from 'ngx-nestable';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxGaugeModule } from 'ngx-gauge';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -101,7 +102,8 @@ import { CredibilityMeterComponent } from './components/credibility-meter/credib
     NgxTweetModule,
     NestableModule,
     FlexLayoutModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    NgxGaugeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

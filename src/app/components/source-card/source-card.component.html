@@ -4,19 +4,12 @@
         <!-- first column: general info and aggregated indicator -->
         <div>
             <h3>Computed credibility</h3>
-            <div>
-                <p>Value: {{sourceAssessment.credibility.value}}</p>
-                <p>Confidence: {{sourceAssessment.credibility.confidence}}</p>
-                <div *ngIf='sourceAssessment.credibility.confidence == 0'>
-                    <p>Unknown!!!</p>
-                </div>
-            </div>
-            <div></div>
+            <app-credibility-meter [credibility]='sourceAssessment.credibility' [size]="150"></app-credibility-meter>
         </div>
         <!-- second column: details and source assessments -->
         <div>
             <h3>The existing assessments</h3>
-            <div>
+            <div fxLayout="column" fxLayoutGap="10px">
                 <div *ngIf="!sourceAssessment.assessments.length">
                     <p>We don't have any information about this source!</p>
                 </div>
@@ -31,13 +24,9 @@
                             <p>Why should I trust this origin?</p>
                             <p>How much weight has this origin?</p>
                         </div>
-                        <div>
-                            <p><a [href]="assessment.url" target="_blank">See the original</a></p>
-                        </div>
-                        <div>
-                            <p>Value: {{assessment.credibility.value}}</p>
-                            <p>Confidence: {{assessment.credibility.confidence}}</p>
-                        </div>
+                        <a mat-raised-button matTooltip="See the assessment" [href]="assessment.url" target="_blank">
+                            <app-credibility-meter [credibility]='assessment.credibility'></app-credibility-meter>
+                        </a>
                     </div>
                 </div>
             </div>

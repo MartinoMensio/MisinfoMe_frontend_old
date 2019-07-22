@@ -21,8 +21,11 @@
   <mat-spinner *ngIf="main_profile_state == loadStates.Loading" class="center"></mat-spinner>
   <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
   <div *ngIf="main_profile_state == loadStates.Loaded">
-    <mat-card>
-      <div *ngIf="main_profile_state == loadStates.Loaded" [@enterAnimation]>
+    <mat-card [@enterAnimation]>
+      <div>
+        <a [routerLink]="[ '/credibility/profiles', result_you.screen_name ]">&rarr; See the new evaluation &larr;</a>
+      </div>
+      <div>
         <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a></h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from this profile.</div>
         <div *ngIf="result_you.score >= 50" class="good">The score is {{result_you.score}}/100.</div>
