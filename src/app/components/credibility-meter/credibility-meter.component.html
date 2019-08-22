@@ -4,7 +4,7 @@
     </div>
 
     <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min"
-        [label]="gaugeLabel" [append]="gaugeAppendText" [thresholds]="thresholdConfig">
+        [label]="gaugeLabel" [append]="gaugeAppendText" [backgroundColor]="backgroundColor" [foregroundColor]="foregroundColor">
     </ngx-gauge>
     <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
     <mat-progress-bar [value]="credibility.confidence * 100"></mat-progress-bar>

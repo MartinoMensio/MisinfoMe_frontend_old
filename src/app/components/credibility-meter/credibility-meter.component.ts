@@ -24,18 +24,8 @@ export class CredibilityMeterComponent implements OnInit {
   min = -1;
   max = 1;
   gaugeAppendText = '';
-  thresholdConfig: any; /*{
-    '-1': {color: `rgb(255,0,0)`},
-    '-0.8': {color: `rgb(204,0,0)`},
-    '-0.6': {color: `rgb(153,0,0)`},
-    '-0.4': {color: `rgb(102,0,0)`},
-    '-0.2': {color: 'orange'},
-    '0.2': {color: 'green'},
-    '0.4': {color: `rgb(150,255,0)`},
-    '0.6': {color: `rgb(100,255,0)`},
-    '0.8': {color: `rgb(50,255,0)`},
-    '1': {color: `rgb(0,255,0)`},
-  };*/
+  foregroundColor = 'rgba(0, 0, 0, 0.1)';
+  backgroundColor = 'rgba(0, 0, 0, 0.1)';
 
   constructor() { }
 
@@ -44,10 +34,12 @@ export class CredibilityMeterComponent implements OnInit {
     const green = this._confidence_fade_to_grey(this._green_quantity(this.credibility.value), this.credibility.confidence);
     const blue = this._confidence_fade_to_grey(0, this.credibility.confidence, true);
     const rgb_str = `rgb(${red},${green},${blue})`;
-    console.log(rgb_str)
-    this.thresholdConfig = {
-      '-1': {'color': rgb_str}
-    };
+    console.log(rgb_str);
+    if (this.credibility.value < 0) {
+      this.backgroundColor = rgb_str;
+    } else {
+      this.foregroundColor = rgb_str;
+    }
   }
 
   _red_quantity(credibility_value) {
