@@ -1,36 +1,66 @@
-<div class="mat-elevation-z8">
+<mat-card class="mat-elevation-z8">
     <h2>{{sourceAssessment.itemReviewed}}</h2>
     <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
         <!-- first column: general info and aggregated indicator -->
         <div>
             <h3>Computed credibility</h3>
-            <app-credibility-meter [credibility]='sourceAssessment.credibility' [size]="150"></app-credibility-meter>
+            <app-credibility-meter [credibility]='sourceAssessment.credibility' [size]="250"></app-credibility-meter>
         </div>
         <!-- second column: details and source assessments -->
         <div>
-            <h3>The existing assessments</h3>
-            <div fxLayout="column" fxLayoutGap="10px">
-                <div *ngIf="!sourceAssessment.assessments.length">
-                    <p>We don't have any information about this source!</p>
-                </div>
-                <div *ngFor="let assessment of sourceAssessment.assessments">
-                    <div fxLayout="row" fxLayoutGap="20px">
-                        <div>
-                            <h4>{{assessment.origin_id}}</h4>
-                            <p>What is this origin?</p>
+            <div>
+                <h3>Source-level assessments</h3>
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div *ngIf="!sourceAssessment.assessments.length">
+                        <p>We don't have any information about this source!</p>
+                    </div>
+                    <div *ngFor="let assessment of sourceAssessment.assessments">
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <div>
+                                <h4>{{assessment.origin_id}}</h4>
+                                <p>What is this origin?</p>
 
+                            </div>
+                            <div>
+                                <p>Why should I trust this origin?</p>
+                                <p>How much weight has this origin?</p>
+                            </div>
+                            <a mat-raised-button matTooltip="See the assessment" [href]="assessment.url"
+                                target="_blank">
+                                <app-credibility-meter [credibility]='assessment.credibility'></app-credibility-meter>
+                            </a>
                         </div>
-                        <div>
-                            <p>Why should I trust this origin?</p>
-                            <p>How much weight has this origin?</p>
-                        </div>
-                        <a mat-raised-button matTooltip="See the assessment" [href]="assessment.url" target="_blank">
-                            <app-credibility-meter [credibility]='assessment.credibility'></app-credibility-meter>
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
+        <div>
+            <h3>Factuality analysis</h3>
+            <p>How many times claims belonging to this source have been fact-checked</p>
+            <div *ngIf="!factcheckingReports">No factchecks found for this source!</div>
+            <div fxLayout="row" *ngIf="factcheckingReports">
+                <a mat-raised-button matTooltip="See the assessment" target="_blank">
+                    <!-- [href]="factcheckingReports.url" -->
+                    <app-credibility-meter [credibility]='factcheckingReports.credibility' [size]="200"></app-credibility-meter>
+                </a>
+                <div>
+                    <ngx-charts-bar-horizontal-stacked [results]="chartData" [scheme]="colorScheme" [view]="[700,500]"
+                        [yAxis]="true" [xAxis]="true" [legend]="true"></ngx-charts-bar-horizontal-stacked>
+                </div>
+                <!-- <div>
+                        <p>Negative result: {{factcheckingReports.original.overall.negative?.length}}</p>
+                        <p>Neutral result: {{factcheckingReports.original.overall.neutral?.length}}</p>
+                        <p>Positive result: {{factcheckingReports.original.overall.positive?.length}}</p>
+                        <p>Unknown result: {{factcheckingReports.original.overall.unknown?.length}}</p>
+                    </div> -->
+                <!-- <div>
+                        <p>These factcheckers have produced the reports</p>
+                        <div *ngFor="let fc of byFactchecker">
+                              <p>{{fc.origin_id}}</p>
+                          </div>
+                    </div> -->
+            </div>
+        </div>
     </div>
 
-</div>
+</mat-card>
