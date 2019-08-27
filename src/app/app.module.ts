@@ -49,6 +49,7 @@ import { CredibilityOriginsComponent } from './components/credibility-origins/cr
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { ErrorComponent } from './components/error/error.component';
 import { CredibilityMeterComponent } from './components/credibility-meter/credibility-meter.component';
+import { ImgFallbackDirective } from './directives/img-fallback.directive';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { CredibilityMeterComponent } from './components/credibility-meter/credib
     CredibilityOriginsComponent,
     CredibilityComponent,
     ErrorComponent,
-    CredibilityMeterComponent
+    CredibilityMeterComponent,
+    ImgFallbackDirective
   ],
   imports: [
     BrowserModule,

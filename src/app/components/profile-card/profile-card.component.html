@@ -1,36 +1,49 @@
 <mat-card class="mat-elevation-z8">
-    <h2>{{profileAssessment.itemReviewed}}</h2>
-    <p>This is an analysis based on the sources used in the tweets</p>
-    <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
-        <!-- first column: general info and aggregated indicator -->
-        <div>
-            <h3>Computed credibility</h3>
-            <app-credibility-meter [credibility]='profileAssessment.credibility' [size]="150"></app-credibility-meter>
-        </div>
-        <!-- second column: details and source assessments -->
-        <div>
-            <h3>The list of sources used</h3>
+    <h2>Analysis of (TODO get profile info){{profileAssessment.itemReviewed}}</h2>
+    <div>
+        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
+            <!-- first column: general info and aggregated indicator -->
             <div>
-                <div *ngIf="!profileAssessment.assessments.length">
-                    <p>We don't have any information about the sources used!</p>
-                </div>
-                <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px">
-                    <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
-                    <div *ngFor="let assessment of profileAssessment.assessments">
-                        <div fxLayout="row" fxLayoutGap="20px">
-                            <div>
-                                <h4>{{assessment.itemReviewed}}</h4>
-                                <p>What is this source?</p>
-
+                <h3>Computed credibility</h3>
+                <app-credibility-meter [credibility]='profileAssessment.credibility' [size]="150">
+                </app-credibility-meter>
+            </div>
+            <!-- second column: details and source assessments -->
+            <div>
+                <!-- <div>
+                    <h3>The debunked stories that you shared</h3>
+                    <p>TODO here we will show matches with article/claim level</p>
+                    <p>This is very bad!!!</p>
+                </div> -->
+                <div>
+                    <h3>The list of sources used</h3>
+                    <div>
+                        <div *ngIf="!profileAssessment.assessments.length">
+                            <p>We don't have any information about the sources used!</p>
+                        </div>
+                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px">
+                            <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                            <div *ngFor="let assessment of profileAssessment.assessments">
+                                <div fxLayout="row" fxLayoutGap="20px">
+                                    <div>
+                                        <mat-card>
+                                            <h4>{{assessment.itemReviewed}}</h4>
+                                            <!-- <p>What is this source?</p> -->
+                                            <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
+                                                appImgFallback>
+                                        </mat-card>
+                                    </div>
+                                    <div>
+                                        <p>Weight for this source? {{assessment.weights.final_weight}}</p>
+                                        <p>Using this source: {{assessment.tweets_containing.length}} tweets</p>
+                                    </div>
+                                    <button mat-raised-button matTooltip="See details for this source"
+                                        [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
+                                        <app-credibility-meter [credibility]='assessment.credibility'>
+                                        </app-credibility-meter>
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <p>Used weight for this source?</p>
-                                <p>Times mentioned this source? (Tweets)</p>
-                            </div>
-                            <button mat-raised-button matTooltip="See details for this source"
-                                [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
-                                <app-credibility-meter [credibility]='assessment.credibility'></app-credibility-meter>
-                            </button>
                         </div>
                     </div>
                 </div>
