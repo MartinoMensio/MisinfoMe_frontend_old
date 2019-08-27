@@ -17,6 +17,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
@@ -50,6 +51,7 @@ import { CredibilityComponent } from './components/credibility/credibility.compo
 import { ErrorComponent } from './components/error/error.component';
 import { CredibilityMeterComponent } from './components/credibility-meter/credibility-meter.component';
 import { ImgFallbackDirective } from './directives/img-fallback.directive';
+import { SearchUserComponent } from './components/search-user/search-user.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,8 @@ import { ImgFallbackDirective } from './directives/img-fallback.directive';
     CredibilityComponent,
     ErrorComponent,
     CredibilityMeterComponent,
-    ImgFallbackDirective
+    ImgFallbackDirective,
+    SearchUserComponent
   ],
   imports: [
     BrowserModule,
@@ -99,6 +102,7 @@ import { ImgFallbackDirective } from './directives/img-fallback.directive';
     MatTooltipModule,
     MatSelectModule,
     MatSliderModule,
+    MatAutocompleteModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule,

@@ -35,17 +35,6 @@ export class CredibilityProfilesComponent implements OnInit {
     });
   }
 
-  getErrorMessage() {
-    if (this.screen_name.hasError('required')) {
-      return 'Screen name is required';
-    } else if (this.screen_name.hasError('pattern')) {
-      return 'Invalid screen name. It can only contain letters and numbers';
-    } else {
-      console.log(this.screen_name.errors);
-      return 'Invalid';
-    }
-  }
-
   onSubmit() {
     console.log('submit with ' + this.screen_name.value, ' from ' + this.state_screen_name);
     if (this.state_screen_name !== this.screen_name.value) {
