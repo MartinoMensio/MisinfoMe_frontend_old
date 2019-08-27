@@ -16,14 +16,15 @@
                     </div>
                     <div *ngFor="let assessment of sourceAssessment.assessments">
                         <div fxLayout="row" fxLayoutGap="20px">
-                            <div>
-                                <h4>{{assessment.origin_id}}</h4>
-                                <p>What is this origin?</p>
+                            <div fxFlex="250px">
+                                <h4>{{assessment.origin.name}}</h4>
+                                <p>{{assessment.origin.description}}</p>
 
                             </div>
                             <div>
                                 <p>Why should I trust this origin?</p>
                                 <p>How much weight has this origin?</p>
+                                <p>{{assessment.weights.final_weight}}</p>
                             </div>
                             <a mat-raised-button matTooltip="See the assessment" [href]="assessment.url"
                                 target="_blank">

@@ -1,14 +1,27 @@
 <div>
-    <h2>These are the origins used in our assessments</h2>
+    <mat-card>
+        <h2>These are the origins used in our assessments</h2>
 
-    <div style="max-height: 250px; overflow-y: scroll;">
-        <div>
-            <div *ngFor="let origin of origins">
-                <p>Id: {{origin.id}}</p>
-                <p>Weight: {{origin.weight}}</p>
-                <p>Homepage: {{origin.homepage}}</p>
-                <p>Number of assessments: {{origin.assessments_count}}</p>
+        <div style="max-height: 80vh; overflow-y: scroll;">
+            <div>
+                <div *ngFor="let origin of origins">
+                    <!-- <p>Id: {{origin.id}}</p> -->
+                    <h4>{{origin.name}}</h4>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div>
+                            <p><a href="{{origin.homepage}}">Homepage</a></p>
+                            <p>Weight: {{origin.weight}}</p>
+                        </div>
+                        <div>
+
+                            <p>Number of assessments: {{origin.assessments_count}}</p>
+                        </div>
+                        <div fxFlex="400px">
+                            <p>Description: {{origin.description}}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+</mat-card>
 </div>

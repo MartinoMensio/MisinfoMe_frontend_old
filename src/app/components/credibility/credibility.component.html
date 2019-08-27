@@ -1,14 +1,26 @@
 <div>
     <h1>The credibility model</h1>
-    <p>Our analysis is based on the "Credibility Model"</p>
-    <p>TODO description</p>
-
-    <app-credibility-origins></app-credibility-origins>
+    <div>
+        <p>We take existing assessments from different organisations and we combine them together.</p>
+        <p>For a detailed description, look at <a href="http://oro.open.ac.uk/62771/" target="_blank;"><em> News Source
+                    Credibility in the Eyes of
+                    Different Assessors.</em> In Conference for Truth and Trust Online (TTO 2019)</a>
+        </p>
+    </div>
 
     <p>This model can be applied to different types of analysis:</p>
-    <ul>
-        <li><a [routerLink]="[ '/credibility/sources' ]">Sources</a></li>
-        <li><a [routerLink]="[ '/credibility/profiles' ]">Profiles</a></li>
-        <li>???</li>
-    </ul>
+    <div fxLayout="row" fxLayoutGap="20px">
+        <a mat-raised-button [routerLink]="[ '/credibility/sources' ]">
+            <h3>Sources</h3>
+            <p>Analyse the sources, such as web domains.</p>
+        </a>
+        <a mat-raised-button [routerLink]="[ '/credibility/profiles' ]">
+            <h3>Profiles</h3>
+            <p>Analyse twitter profiles, looking at which sources they use.</p>
+        </a>
+        <!-- <li>???</li> -->
+    </div>
+    <p></p>
+    <app-credibility-origins></app-credibility-origins>
+
 </div>
