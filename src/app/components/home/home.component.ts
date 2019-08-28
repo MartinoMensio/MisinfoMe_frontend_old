@@ -141,6 +141,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  formatPercent(val) {
+    return val + '%';
+  }
+
   group_tweets_hierarchically(tweets: Array<any>) {
     const result = tweets.reduce((acc: any, curr: any) => {
       const label = curr.score.label;
@@ -397,20 +401,20 @@ export class HomeComponent implements OnInit, OnDestroy {
               }
             ]
           }, {
-            name: 'Overall',
+            name: 'Average',
             series: [
               {
                 name: 'Valid',
-                value: this.result_overall.verified_urls_cnt
+                value: this.result_overall.verified_urls_cnt / this.result_overall.twitter_profiles_cnt
               }, {
                 name: 'Misinformation',
-                value: this.result_overall.fake_urls_cnt
+                value: this.result_overall.fake_urls_cnt / this.result_overall.twitter_profiles_cnt
               }, {
                 name: 'Mixed',
-                value: this.result_overall.mixed_urls_cnt
+                value: this.result_overall.mixed_urls_cnt / this.result_overall.twitter_profiles_cnt
               }, {
                 name: 'Unknown',
-                value: this.result_overall.unknown_urls_cnt
+                value: this.result_overall.unknown_urls_cnt / this.result_overall.twitter_profiles_cnt
               }
             ]
           }

@@ -209,16 +209,23 @@
   <mat-card *ngIf="overall_state == loadStates.Loaded && main_profile_state == loadStates.Loaded">
     <div>
       <h3>{{result_you.screen_name}} vs the average user</h3>
-      <p>With "average user" we mean the profiles that have already been analysed by this tool.</p>
+      <p>The sample for the "average user" is the set of profiles that have already been analysed by this tool.</p>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal-normalized [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
-        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs by category">
-      </ngx-charts-bar-horizontal-normalized>
-    </div>
+          xAxis="true" [xAxisTicks]="[0, 25, 50, 75, 100]" showDataLabel="true" yAxis="true" showXAxisLabel="true"
+          xAxisLabel="URLs by category normalised" [xAxisTickFormatting]="formatPercent">
+        </ngx-charts-bar-horizontal-normalized>
+      </div>
+      <div class="barchart-container" style="height: 200px;">
+          <ngx-charts-bar-horizontal-2d [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
+            xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true"
+            xAxisLabel="URLs by category absolute">
+          </ngx-charts-bar-horizontal-2d>
+        </div>
       <div class="barchart-container">
-        <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average" xScaleMax="100" xAxis="true"
-          showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
-          [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
+        <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average"
+          xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
+          [xAxisTicks]="[0, 25, 50, 75, 100]" legend="true"></ngx-charts-bar-horizontal>
       </div>
       <div>
         <p *ngIf="result_you.score < result_overall.score && result_you.score < 50" class="bad"><i
