@@ -44,6 +44,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
+  colorSchemeLinear = {
+    domain: ['#A10A28', '#C7B42C', '#5AA454']
+  };
 
   result_you: CountResult;
   pie_data_you = [];

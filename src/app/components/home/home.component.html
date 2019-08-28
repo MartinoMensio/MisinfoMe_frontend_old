@@ -208,15 +208,15 @@
   <p></p>
   <mat-card *ngIf="overall_state == loadStates.Loaded && main_profile_state == loadStates.Loaded">
     <div>
-      <h3>{{result_you.screen_name}} against the average user</h3>
-      <div>The comparison between the score of {{result_you.screen_name}} and the average user</div>
+      <h3>{{result_you.screen_name}} vs the average user</h3>
+      <p>With "average user" we mean the profiles that have already been analysed by this tool.</p>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal-normalized [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
-          xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs shared">
-        </ngx-charts-bar-horizontal-normalized>
-      </div>
+        xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs by category">
+      </ngx-charts-bar-horizontal-normalized>
+    </div>
       <div class="barchart-container">
-        <ngx-charts-bar-horizontal [scheme]="colorScheme" [results]="you_vs_average" xScaleMax="100" xAxis="true"
+        <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average" xScaleMax="100" xAxis="true"
           showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
           [xAxisTicks]="[0, 25, 50, 75, 100]"></ngx-charts-bar-horizontal>
       </div>
