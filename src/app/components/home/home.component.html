@@ -82,21 +82,11 @@
       <h3>The network of twitter profiles followed by <a
           href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a></h3>
       <p>The Twitter feed of any account is built with tweets that come from people that he is following. For this
-        reason this tool
-        can analyse the profiles that are being followed by the account you choose.</p>
-      <p>{{result_you.screen_name}} is following {{friends_count || "..."}} profiles<span
-          *ngIf="friends_analysis_show">,
-          {{result_friends.twitter_profiles_cnt}} of them have already been analysed.</span></p>
-      <p><i>*This is limited to the last 500 people added, and this number could be less because of private
-          profiles</i></p>
-      <mat-spinner *ngIf="loading_friends" class="center"></mat-spinner>
-      <div *ngIf="friends_analysis_show">
-        <mat-progress-bar [value]="result_friends.twitter_profiles_cnt / friends_count * 100"></mat-progress-bar>
-        <p></p>
-        <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
-          (click)="analyse_remaining()">Analyse
-          remaining</button>
-        <div class="graph-container" [style.height.px]="getGraphHeight()">
+        reason this tool can analyse the profiles that are being followed by the account you choose.</p>
+      <app-graph [main_profile]="result_you" (new_friend_emitter)="update_friends_stat_with_new($event)"></app-graph>
+      <div >
+        <!-- *ngIf="friends_analysis_show" -->
+        <!-- <div class="graph-container" [style.height.px]="getGraphHeight()">
           <ngx-charts-force-directed-graph class="chart-container" [legend]="false" [links]="friends_graph.links"
             [animations]="true" (legendLabelClick)="onLegendLabelClick($event)" [nodes]="friends_graph.nodes"
             [scheme]="colorScheme" [tooltipDisabled]="false" (select)="select_node($event)" [force]="graph_force"
@@ -121,7 +111,7 @@
                 attr.transform="translate({{friends_graph.overall_move_x}}, {{friends_graph.overall_move_y}})" />
             </ng-template>
           </ngx-charts-force-directed-graph>
-        </div>
+        </div> -->
         <div id="asdasdasd" style="height: 100px;"></div>
         <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs verified from the network
         </h2>
@@ -217,11 +207,10 @@
         </ngx-charts-bar-horizontal-normalized>
       </div>
       <div class="barchart-container" style="height: 200px;">
-          <ngx-charts-bar-horizontal-2d [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
-            xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true"
-            xAxisLabel="URLs by category absolute">
-          </ngx-charts-bar-horizontal-2d>
-        </div>
+        <ngx-charts-bar-horizontal-2d [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true" xAxis="true"
+          showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs by category absolute">
+        </ngx-charts-bar-horizontal-2d>
+      </div>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average"
           xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"

@@ -6,3 +6,15 @@
 .center {
     margin: 0 auto;
 }
+
+.padded {
+    padding: 15px;
+}
+
+/* https://github.com/swimlane/ngx-graph/issues/110 blocking scroll  */
+ngx-graph {
+    pointer-events: none;
+}
+svg .nodes {
+    pointer-events: auto;
+}

@@ -1,31 +1,54 @@
-<div style="height: 800px">
-  <!-- TODO https://medium.com/netscape/visualizing-data-with-angular-and-d3-209dde784aeb -->
-  <ngx-graph class="chart-container" [view]="" [links]="links" [nodes]="nodes" [curve]="curve_fn" [autoZoom]="true" [autoCenter]="true" [draggingEnabled]="false">
-    <ng-template #defsTemplate>
-      <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-        <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-      </svg:marker>
-    </ng-template>
+<div class="mat-elevation-z8 padded">
+  <mat-progress-bar [value]="already_analysed / total_friends * 100"></mat-progress-bar>
+  <p>{{already_analysed}} out of {{total_friends}} have already been analysed</p>
+  <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
+    (click)="analyse_remaining()">Analyse
+    remaining</button>
+  <mat-progress-spinner color="accent" mode="indeterminate"
+    *ngIf="analyse_remaining_disabled && (already_analysed !== total_friends)"></mat-progress-spinner>
 
-    <ng-template #nodeTemplate let-node>
-      <svg:g class="node" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'" [tooltipTitle]="node.label">
-        <svg:rect [attr.width]="node.width" [attr.height]="node.height" [attr.fill]="get_colour(node.score) || node.options.color" />
-        <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.height / 2">{{node.label}}</svg:text>
-      </svg:g>
-    </ng-template>
 
-    <ng-template #linkTemplate let-link>
-      <svg:g class="edge">
-        <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
-        </svg:path>
-        <svg:text class="edge-label" text-anchor="middle">
-          <textPath style="fill: #666;" class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
-            {{link.label}}
-            <!-- not visible -->
-          </textPath>
-        </svg:text>
-      </svg:g>
-    </ng-template>
+  <div *ngIf="friends_graph" class="graph-container" [style.height]="getGraphHeight() + 'px'">
+    <ngx-graph [links]="friends_graph.links" [nodes]="friends_graph.nodes" [layout]="layout" [curve]="curve"
+      [draggingEnabled]="draggingEnabled" [panningEnabled]="panningEnabled" [enableZoom]="zoomEnabled"
+      [zoomSpeed]="zoomSpeed" [minZoomLevel]="minZoomLevel" [maxZoomLevel]="maxZoomLevel" [panOnZoom]="panOnZoom"
+      [autoZoom]="autoZoom" [autoCenter]="autoCenter" [update$]="update$" [center$]="center$" [zoomToFit$]="zoomToFit$"
+      [layoutSettings]="layoutSettings">
 
-  </ngx-graph>
+      <ng-template #defsTemplate>
+        <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+          <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+        </svg:marker>
+      </ng-template>
+
+      <ng-template #nodeTemplate let-node>
+        <svg:g class="node">
+          <svg:defs>
+            <svg:pattern attr.id="{{'image' + node.label}}" patternUnits="userSpaceOnUse" [attr.height]="50"
+              [attr.width]="50">
+              <svg:image [attr.height]="50" [attr.width]="50" attr.xlink:href="{{node.options.image}}"></svg:image>
+            </svg:pattern>
+          </svg:defs>
+          <svg:a (click)="select_node(node)">
+            <svg:circle attr.fill="{{'url(#image'+node.label+')'}}" [attr.cx]="25" [attr.cy]="25" [attr.r]="25"
+              [attr.stroke]="node.options.stroke" stroke-width="8" cursor="pointer" />
+          </svg:a>
+        </svg:g>
+      </ng-template>
+
+      <ng-template #linkTemplate let-link>
+        <svg:g class="edge">
+          <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+          </svg:path>
+          <svg:text class="edge-label" text-anchor="middle">
+            <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline"
+              startOffset="50%">
+              {{link.label}}
+            </textPath>
+          </svg:text>
+        </svg:g>
+      </ng-template>
+
+    </ngx-graph>
+  </div>
 </div>

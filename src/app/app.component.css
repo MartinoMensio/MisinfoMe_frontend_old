@@ -1,8 +1,7 @@
 .container {
     max-width: 1000px;
     margin: auto;
-    padding: 0 25px;
-    margin-bottom: 25px;
+    padding: 0 25px 25px 25px;
 }
 
 .background {

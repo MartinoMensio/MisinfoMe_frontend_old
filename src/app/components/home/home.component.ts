@@ -89,16 +89,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     'name': 'Percentage of misinforming URLs'
   }
   ];
-  analyse_remaining_disabled: Boolean = true;
-
-  friends_graph: { links: any[]; nodes: any[]; trick: any; update_trick_ticks: number };
-  graph_force = forceSimulation<any>()
-    .force('charge', forceManyBody().strength(-600)) // repulsion of the nodes
-    .force('x', forceX()) // make them go to the center
-    .force('y', forceY())
-    .alphaDecay(0.1); // decay bigger so stop faster
-  // .force('collide', forceCollide(30))
-  graph_force_link = forceLink<any, any>().distance(100).id(node => node.value); // the desired length of the links
 
   // best_friend: CountResult;
   // best_friend_pie_data = [];
@@ -437,38 +427,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   get_friends_list(screen_name) {
     this.loading_friends = true;
-    this.apiService.getFriendsCount(screen_name).subscribe((friends: Array<any>) => {
-      // best and worst
-      // this.best_friend = null;
-      this.worst_friend = null;
+    // this.apiService.getFriendsCount(screen_name).subscribe((friends: Array<any>) => {
+    //   // best and worst
+    //   // this.best_friend = null;
+    //   this.worst_friend = null;
 
-      const friends_screen_names = friends.reduce((acc, curr) => {
-        acc.push(curr.screen_name);
-        return acc;
-      }, []);
-      this.friends_screen_names = {};
-      this.friends_count = friends_screen_names.length;
-      this.friends_analysis_show = false;
-      this.friends_graph = this.generateGraph(this.result_you, []);
+    //   const friends_screen_names = friends.reduce((acc, curr) => {
+    //     acc.push(curr.screen_name);
+    //     return acc;
+    //   }, []);
+    //   this.friends_screen_names = {};
+    //   this.friends_count = friends_screen_names.length;
+    //   this.friends_analysis_show = false;
+    //   this.friends_graph = this.generateGraph(this.result_you, []);
 
-      friends.forEach((el: CountResult) => {
-        if (el.cache === 'miss') {
-          // this is a cache miss, profile not yet evaluated
-          this.friends_screen_names[el.screen_name] = false;
-        } else {
-          // cache hit
-          this.friends_screen_names[el.screen_name] = true;
-          this.update_friends_stat_with_new(el);
-        }
-      });
-      if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
-        this.analyse_remaining_disabled = false;
-      }
-      this.friends_graph.trick(this.friends_graph);
-      this.loading_friends = false;
-      this.friends_analysis_show = true;
-    });
+    //   friends.forEach((el: CountResult) => {
+    //     if (el.cache === 'miss') {
+    //       // this is a cache miss, profile not yet evaluated
+    //       this.friends_screen_names[el.screen_name] = false;
+    //     } else {
+    //       // cache hit
+    //       this.friends_screen_names[el.screen_name] = true;
+    //       //this.update_friends_stat_with_new(el);
+    //     }
+    //   });
+    //   if (this.result_friends.twitter_profiles_cnt < this.friends_count) {
+    //     this.analyse_remaining_disabled = false;
+    //   }
+    //   this.friends_graph.trick(this.friends_graph);
+    //   this.loading_friends = false;
+    //   this.friends_analysis_show = true;
+    // });
   }
+
+  // updateFriends(event: Array<CountResult>) {
+  //   this.friends_results = event;
+  // }
 
   update_friends_stat_with_new(friend: CountResult) {
     this.result_friends.tweets_cnt += friend.tweets_cnt;
@@ -482,24 +476,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.friends_analysis_show = true;
 
-    /*
-    // check best and worse
-    if (!this.best_friend) {
-      this.best_friend = friend;
-    }
-    // first compare the score, then if equal the comparison is on the number of fake urls shared
-    if (friend.score > this.best_friend.score) {
-      this.best_friend = friend;
-    } else if (friend.score === this.best_friend.score) {
-      if (friend.fake_urls_cnt < this.best_friend.fake_urls_cnt) {
-        this.best_friend = friend;
-      } else if (friend.fake_urls_cnt === this.best_friend.fake_urls_cnt) {
-        if (friend.verified_urls_cnt > this.best_friend.verified_urls_cnt) {
-          this.best_friend = friend;
-        }
-      }
-    }
-    */
+
     if (!this.worst_friend) {
       this.worst_friend = friend;
     }
@@ -516,9 +493,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.friends_results.push({
       ...friend, pie_data: this.extract_results(friend)
     });
-    this.friends_results_sorted = this.sort_friends()
-    // this.updateGraphWithFriend(this.friends_graph, this.result_you, friend);
-    this.friends_graph = this.generateGraph(this.result_you, this.friends_results);
+    this.friends_results_sorted = this.sort_friends();
   }
 
   sort_friends() {
@@ -564,115 +539,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
   }
 
-  analyse_remaining() {
-    this.analyse_remaining_disabled = true;
-    const candidate = this.get_candidate();
-    this.analyse_candidate(candidate).then(res => {
-      this.update_overall();
-    });
-    /*Object.keys(this.friends_screen_names).forEach((el: string) => {
-      if (!this.friends_screen_names[el]) {
-        // not already analysed
-        // TODO manage wait observable call
-        this.apiService.getUserCounts([el], true).subscribe((results: CountResult) => {
-          this.update_friends_stat_with_new(results);
-          if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
-            // update sometimes
-            this.update_overall();
-          }
-          this.friends_graph.trick(this.friends_graph);
-        });
-      }
-    });*/
-  }
 
-  get_candidate() {
-    return Object.keys(this.friends_screen_names).find(el => !this.friends_screen_names[el]);
-  }
 
-  analyse_candidate(candidate: string): Promise<any> {
-    if (!candidate) {
-      return Promise.resolve();
-    }
-    return this.apiService.postUserCount(candidate, true).toPromise().then((result: CountResult) => {
-      this.update_friends_stat_with_new(result);
-      this.friends_screen_names[candidate] = true;
-      if (this.result_friends.twitter_profiles_cnt % 10 === 0) {
-        // update sometimes
-        this.update_overall();
-      }
-      this.friends_graph.trick(this.friends_graph);
-      const next = this.get_candidate();
-      return this.analyse_candidate(next);
-    }, error => {
-      this.friends_screen_names[candidate] = true;
-      const next = this.get_candidate();
-      return this.analyse_candidate(next);
-    });
-  }
-
-  updateGraphWithFriend(graph, you, friend_score) {
-    graph.nodes.push({
-      value: friend_score.screen_name,
-      // x: -100,
-      // y: 0,
-      options: {
-        image: friend_score.profile_image_url,
-        size: 20,
-        fill: this.getColor(friend_score),
-        stroke: this.getColor(friend_score)
-      }
-    });
-    graph.links.push({
-      source: you.screen_name,
-      target: friend_score.screen_name,
-      options: {
-        color: this.getColor(friend_score) + '!important'
-      }
-    });
-  }
-
-  generateGraph(you: CountResult, friends_scores: Array<CountResult>) {
-    const graph = {
-      links: [],
-      nodes: [],
-      overall_move_x: 20,
-      overall_move_y: 20, // the whole graph is translated
-      update_trick_ticks: 50,
-      update_trick_interval: 100, // milliseconds
-      trick: (g) => {
-        // This function is needed because the ngx-charts-force-directed-graph is just animating the links and not the edges,
-        // unless the mouse moves on the svg.
-        // The trick is simply trigger programmatically clicks every 100ms for 5 secs on the center of the graph in order
-        // to trigger the update of the position of the edges.
-        setTimeout(() => {
-          // console.log(`i am a trick ${g} at ${g.update_trick_ticks}`);
-          g.update_trick_ticks -= 1;
-          return;
-          if (g.update_trick_ticks > 0) {
-            g.trick(g);
-            const selector = `g.nodes g`;
-            // console.log(selector);
-            $(selector).get(0).dispatchEvent(new Event('click'));
-          }
-        }, g.update_trick_interval);
-      }
-    };
-    graph.nodes.push({
-      value: you.screen_name,
-      options: {
-        image: you.profile_image_url,
-        size: 20,
-        fill: this.getColor(you),
-        stroke: this.getColor(you)
-      }
-    });
-    // console.log(friends_scores);
-    for (const f of friends_scores) {
-      this.updateGraphWithFriend(graph, you, f);
-    }
-    return graph;
-  }
 
   getColor(counts: CountResult) {
     if (counts.score > 50) {
@@ -690,16 +558,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     const max_height = 1000;
     const max_friends = 500;
     return min_height + (this.result_friends.twitter_profiles_cnt) * (max_height - min_height) / max_friends;
-  }
-
-  select_node(event: any) {
-    // console.log('node selected');
-    // console.log(event);
-    const screen_name = event.name;
-    // console.log(screen_name);
-    this.friends_graph.update_trick_ticks = 0;
-    this.router.navigate(['/analyse', screen_name]);
-    return;
   }
 
 }
