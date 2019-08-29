@@ -37,11 +37,11 @@
                                         <p>Weight for this source? {{assessment.weights.final_weight}}</p>
                                         <p>Using this source: {{assessment.tweets_containing.length}} tweets</p>
                                     </div>
-                                    <button mat-raised-button matTooltip="See details for this source"
+                                    <a mat-raised-button matTooltip="See details for this source"
                                         [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
                                         <app-credibility-meter [credibility]='assessment.credibility'>
                                         </app-credibility-meter>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

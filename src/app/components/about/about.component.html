@@ -4,11 +4,13 @@
     <p>Logo</p>
     <p>This tool performs an analysis of twitter profiles and the accounts followed, with the goal to measure the
       influence of misinformation in the life of the citizens.</p>
+    <p>This tool has been developed as part of the <a href="https://coinform.eu/">Co-Inform EU project</a>.</p>
   </mat-card>
   <p></p>
   <mat-card>
-    <h2>The evaluation process</h2>
-    <p>How the evaluation process works</p>
+    <h2>How does it work?</h2>
+    <p>MisinfoMe is connected to Twitter and to fact-checkers, in order to provide to you insights about the credibility of tweets.</p>
+    <p>A diagram here high level</p>
     <ul>
       <li>Retrieval of the tweets</li>
       <li>Comparison with the knowledge base</li>
@@ -17,7 +19,7 @@
   </mat-card>
   <p></p>
   <mat-card>
-    <h2>Transparency / questioning</h2>
+    <h2>How are the scores computed?</h2>
     <p>Maybe here a representation of the concepts/flow</p>
     <table>
       <tr>
@@ -35,7 +37,9 @@
       <tr>
         <td>Why this source is labeled like that?</td>
         <td>1. These origin rated it in this way (original assessment), we translated using these mappings <br>2. This
-          source has been fact-checked several times, x positive y negative</td>
+          source has been fact-checked several times, x positive y negative<br>
+          You can see a detailed analysis by clicking on the score, or by entering it <a [routerLink]="[ '/credibility/sources' ]">here</a>
+        </td>
       </tr>
       <tr>
         <td>Why should I trust this origin of assessment?</td>
