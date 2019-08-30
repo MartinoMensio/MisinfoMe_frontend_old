@@ -7,7 +7,9 @@
     <mat-divider [vertical]="true"></mat-divider>
     <a mat-button [routerLink]="['/about']">About</a>
   </mat-toolbar>
-  <div class="container">
-    <router-outlet></router-outlet>
+  <div class="outer-container">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

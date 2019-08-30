@@ -1,10 +1,29 @@
 .container {
     max-width: 1000px;
+    padding: 25px;
     margin: auto;
-    padding: 0 25px 25px 25px;
+}
+.outer-container {
+    position: absolute;
+    overflow: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 64px;
+}
+@media(max-width: 599px) {
+    /* follow the stupid resize of the mat-toolbar */
+    .outer-container {
+        top: 56px;
+    }
 }
 
 .background {
     background-color: whitesmoke;
     min-height: 100%;
+}
+
+mat-toolbar {
+    position: fixed;
+    z-index: 1;
 }
