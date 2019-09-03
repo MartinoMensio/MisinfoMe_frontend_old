@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Known provider of misinforming content',
+          'label': 'Domain with a negative credibility score',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -202,7 +202,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Known provider of mixed content',
+          'label': 'Domain with a mixed credibility score',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -236,7 +236,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'domain_match',
-          'label': 'Known provider of verified content',
+          'label': 'Domain with a positive credibility score',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -316,7 +316,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   prepare_table_data(raw_urls_data: Array<any>) {
     // TODO first aggregate by tweet_id
     return raw_urls_data.reduce((acc, curr) => {
-      const fact_checked_count = curr.score.factchecking_stats && curr.score.factchecking_stats.fake && curr.score.factchecking_stats.fake.length || 0
+      const fact_checked = {
+        'fake': curr.score.factchecking_stats && curr.score.factchecking_stats.fake || [],
+        'true': curr.score.factchecking_stats && curr.score.factchecking_stats.true || [],
+        'mixed': curr.score.factchecking_stats && curr.score.factchecking_stats.mixed || [],
+      };
       acc.push({
         tweet_id: curr.found_in_tweet,
         tweet_text: curr.tweet_text,
@@ -326,9 +330,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         retweet: curr.retweet,
         label: curr.score.label,
         rebuttals: curr.rebuttals,
-        fact_checked_count: fact_checked_count,
-        domain: curr.domain,
-        fact_checking: fact_checked_count && curr.score.factchecking_stats.fake || []
+        fact_checked: fact_checked,
+        domain: curr.domain
       });
       return acc;
     }, []);

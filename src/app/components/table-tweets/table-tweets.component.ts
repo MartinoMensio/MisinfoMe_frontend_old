@@ -63,11 +63,11 @@ export class TableTweetsComponent implements OnInit {
         }
       case 'domain_match':
         if (label === 'fake') {
-          return 'comes from a domain that is known to provide misinforming content';
+          return 'comes from a domain with a negative credibility score';
         } else if (label === 'mixed') {
-          return 'comes from a domain that is known to provide mixed content';
+          return 'comes from a domain with a mixed credibility score';
         } else {
-          return 'comes from a domain that is known to provide verified content';
+          return 'comes from a domain with a positive credibility score';
         }
       case 'fact_checker':
         if (label === 'fake') {
