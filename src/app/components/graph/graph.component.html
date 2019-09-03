@@ -22,7 +22,7 @@
       </ng-template>
 
       <ng-template #nodeTemplate let-node>
-        <svg:g class="node">
+        <svg:g class="node" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'" [tooltipTitle]="node.label">
           <svg:defs>
             <svg:pattern attr.id="{{'image' + node.label}}" patternUnits="userSpaceOnUse" [attr.height]="50"
               [attr.width]="50">
