@@ -1,0 +1,96 @@
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+/* For use in src/lib/core/theming/_palette.scss */
+
+// Palettes generated using http://mcg.mbitson.com/ with the Co-Inform colours (primary:#693C5E, accent:#6BBBAE)
+$md-primary: (
+    50 : #ede8ec,
+    100 : #d2c5cf,
+    200 : #b49eaf,
+    300 : #96778e,
+    400 : #805976,
+    500 : #693c5e,
+    600 : #613656,
+    700 : #562e4c,
+    800 : #4c2742,
+    900 : #3b1a31,
+    A100 : #ff7dd7,
+    A200 : #ff4ac7,
+    A400 : #ff17b7,
+    A700 : #fc00ae,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+$md-accent: (
+    50 : #edf7f5,
+    100 : #d2eae6,
+    200 : #b4ddd6,
+    300 : #96cfc6,
+    400 : #80c4b9,
+    500 : #69baad,
+    600 : #61b3a6,
+    700 : #56ab9c,
+    800 : #4ca393,
+    900 : #3b9483,
+    A100 : #e4fffa,
+    A200 : #b1fff0,
+    A400 : #7effe6,
+    A700 : #64ffe1,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+
+
+
+$coinform-app-primary: mat-palette($md-primary);
+// $coinform-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$coinform-app-accent:  mat-palette($md-accent);
+
+// The warn palette is optional (defaults to red).
+$coinform-app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$coinform-app-theme: mat-light-theme($coinform-app-primary, $coinform-app-accent, $coinform-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($coinform-app-theme);

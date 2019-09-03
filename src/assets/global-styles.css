@@ -5,6 +5,7 @@
 
 .center {
     margin: 0 auto;
+    display: block;
 }
 
 .padded {
@@ -17,4 +18,11 @@ ngx-graph {
 }
 svg .nodes {
     pointer-events: auto;
+}
+
+/* useful for images */
+.proper-size {
+    width: 95%;
+    max-width: 400px;
+    /* padding: 0 10%; */
 }

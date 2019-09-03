@@ -1,15 +1,20 @@
 <div class="background">
-  <mat-toolbar color="primary">
-    <a mat-button [routerLink]="['/']">Home</a>
-    <mat-divider [vertical]="true"></mat-divider>
-    <!-- <a mat-button [routerLink]="['/impact_factchecking']">Impact of fact-checking</a> -->
-    <a mat-button [routerLink]="['/credibility/sources']">Check your sources</a>
-    <mat-divider [vertical]="true"></mat-divider>
-    <a mat-button [routerLink]="['/about']">About</a>
-  </mat-toolbar>
-  <div class="outer-container">
-    <div class="container">
-      <router-outlet></router-outlet>
+  <div class="width-limit">
+    <mat-toolbar color="primary">
+      <a mat-button [routerLink]="['/']">
+        <img src="assets/symbol_transparent.png" alt="logo" height="50px">
+        <b> Home</b>
+        </a>
+        <mat-divider [vertical]="true"></mat-divider>
+        <!-- <a mat-button [routerLink]="['/impact_factchecking']">Impact of fact-checking</a> -->
+        <a mat-button [routerLink]="['/credibility/sources']">Check your sources</a>
+        <mat-divider [vertical]="true"></mat-divider>
+        <a mat-button [routerLink]="['/about']">About</a>
+    </mat-toolbar>
+    <div class="outer-container">
+      <div class="container">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>
