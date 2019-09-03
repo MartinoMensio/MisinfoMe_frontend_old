@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { APIService, CountResult } from 'src/app/api.service';
 import { Subject } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation, forceCenter } from 'd3-force';
@@ -29,14 +29,11 @@ export class GraphComponent implements OnInit {
   autoZoom = false;
   autoCenter = false;
 
-  update$ = null; //Subject<boolean> = new Subject();
-  center$ = null;// Subject<boolean> = new Subject();
-  zoomToFit$ = null; // Subject<boolean> = new Subject();
+  update$ = null; // : Subject<boolean> = new Subject();
+  center$ = null; // : Subject<boolean> = new Subject();
+  zoomToFit$ = null; // : Subject<boolean> = new Subject();
 
-  // @ViewChild(container) container : ElementRef;
-  // this.container.nativeElement.offsetWidth / 2
-
-  layoutSettings: any;
+  layoutSettings: any = null;
 
 
 
@@ -71,37 +68,58 @@ export class GraphComponent implements OnInit {
     return this._main_profile;
   }
 
+
+  graphHeight: number;
+  graphWidth: number;
+
+
   @Output()
   new_friend_emitter = new EventEmitter<CountResult>();
 
   constructor(private apiService: APIService, private router: Router) { }
 
   ngOnInit() {
-    console.log('on init graph');
-    setTimeout(() => {
-      const el = $('.panning-rect');
-      // console.log(el);
-      // panning-rect is preventing the scroll!!!!
-      el.remove();
-    });
+    this.fitGraph();
+  }
 
-    this.layoutSettings = {
-      // force: forceSimulation<any>()
-        // .force('charge', forceManyBody().strength(-150))
-        // .force('collide', forceCollide(5)),
-      force: forceSimulation<any>()
-      .force('charge', forceManyBody().strength(-1000)) // repulsion of the nodes
-      // .force('center', forceCenter(600, 500))
-      .force('x', forceX(300)) // make them go to the center
-      .force('y', forceY(this.getGraphHeight() / 2)),
-      // .alphaDecay(0.1), // decay bigger so stop faster
-      // forceLink: forceLink<any, any>()
-      //   .id(node => node.id)
-      //   .distance(() => 100)
-      forceLink: forceLink<any, any>()
-      .distance(100)
-      .id(node => node.value),
-    };
+  onResize(event) {
+    this.fitGraph(0);
+  }
+
+  fitGraph(time=2000) {
+    console.log('fitting the graph');
+    setTimeout(() => {
+      // panning-rect is preventing the scroll!!!!
+      // const el = $('.panning-rect');
+      // el.remove();
+      this.graphHeight = $('ngx-graph').height();
+      this.graphWidth = $('ngx-graph').width(); // if panning-rect is not removed, the graph position is relative to it
+      console.log(`size: ${this.graphWidth}x${this.graphHeight}`);
+
+      this.layoutSettings = {
+        // force: forceSimulation<any>()
+          // .force('charge', forceManyBody().strength(-150))
+          // .force('collide', forceCollide(5)),
+        force: forceSimulation<any>()
+        .force('charge', forceManyBody().strength(-1000)) // repulsion of the nodes
+        // .force('center', forceCenter(600, 500))
+        .force('x', forceX(this.graphWidth / 2)) // make them go to the center
+        .force('y', forceY(this.graphHeight / 2))
+        // tried to add bounding box force, but does not work
+        // .alphaDecay(0.1) // decay bigger so stop faster
+        ,
+        // forceLink: forceLink<any, any>()
+        //   .id(node => node.id)
+        //   .distance(() => 100)
+        forceLink: forceLink<any, any>()
+        .distance(100)
+        .id(node => node.value),
+      };
+      // setTimeout(() => {
+      //   console.log('delayed')
+      //   this.zoomToFit$.next(true);
+      // }, 10000)
+    }, time);
   }
 
   create_graph() {
@@ -129,7 +147,7 @@ export class GraphComponent implements OnInit {
         this.analyse_remaining_disabled = true;
       }
       console.log(this.friends_graph);
-      this.ngOnInit();
+      this.fitGraph();
     });
 
   }
@@ -164,7 +182,6 @@ export class GraphComponent implements OnInit {
     for (const f of friends_scores) {
       this.updateGraphWithFriend(graph, you, f);
     }
-    console.log(graph);
     return graph;
   }
 
@@ -202,8 +219,8 @@ export class GraphComponent implements OnInit {
   }
   getGraphHeight() {
     // a proportional value to the friends, between the two extremes
-    const min_height = 400;
-    const max_height = 1000;
+    const min_height = 500;
+    const max_height = 1200;
     const max_friends = 500;
     return min_height + (this.already_analysed) * (max_height - min_height) / max_friends;
   }
@@ -226,12 +243,14 @@ export class GraphComponent implements OnInit {
       this.update_friends_stat_with_new(result);
       this.friends_screen_names[candidate] = true;
       const next = this.get_candidate();
-      this.ngOnInit();
       return this.analyse_candidate(next);
     }, error => {
+      console.log(`error: ${error}`);
       this.friends_screen_names[candidate] = true;
       const next = this.get_candidate();
       return this.analyse_candidate(next);
+    }).finally(() => {
+      this.fitGraph();
     });
   }
 

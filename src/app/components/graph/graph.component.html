@@ -1,14 +1,16 @@
-<div class="mat-elevation-z8 padded">
+<div class="mat-elevation-z8 padded" (window:resize)="onResize($event)">
   <mat-progress-bar [value]="already_analysed / total_friends * 100"></mat-progress-bar>
   <p>{{already_analysed}} out of {{total_friends}} have already been analysed</p>
-  <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
+  <div fxLayout="row" fxLayoutGap="20px">
+    <button mat-button mat-raised-button color="accent" [disabled]="analyse_remaining_disabled"
     (click)="analyse_remaining()">Analyse
     remaining</button>
-  <mat-progress-spinner color="accent" mode="indeterminate"
+    <mat-progress-spinner color="accent" mode="indeterminate" [diameter]="40"
     *ngIf="analyse_remaining_disabled && (already_analysed !== total_friends)"></mat-progress-spinner>
+  </div>
 
 
-  <div *ngIf="friends_graph" class="graph-container" [style.height]="getGraphHeight() + 'px'">
+  <div *ngIf="friends_graph" class="graph-container" [style.height]="getGraphHeight() + 'px'" style="display: grid">
     <ngx-graph [links]="friends_graph.links" [nodes]="friends_graph.nodes" [layout]="layout" [curve]="curve"
       [draggingEnabled]="draggingEnabled" [panningEnabled]="panningEnabled" [enableZoom]="zoomEnabled"
       [zoomSpeed]="zoomSpeed" [minZoomLevel]="minZoomLevel" [maxZoomLevel]="maxZoomLevel" [panOnZoom]="panOnZoom"
@@ -40,12 +42,12 @@
         <svg:g class="edge">
           <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
           </svg:path>
-          <svg:text class="edge-label" text-anchor="middle">
+          <!-- <svg:text class="edge-label" text-anchor="middle">
             <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline"
               startOffset="50%">
               {{link.label}}
             </textPath>
-          </svg:text>
+          </svg:text> -->
         </svg:g>
       </ng-template>
 
