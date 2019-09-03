@@ -12,7 +12,7 @@ export class DomainsComponent implements OnInit {
   domain_datasets = {};
   domain_datasets_list: Array<any> = [];
   domains: Array<any> = [];
-  displayedColumns: Array<String> = ['domain', 'label', 'factchecked_false', 'factchecked_true'];
+  displayedColumns: Array<String> = ['domain', 'credibility', 'label', 'factchecked_false', 'factchecked_true'];
 
   domain_sets: Array<VennSet> = [];
 
