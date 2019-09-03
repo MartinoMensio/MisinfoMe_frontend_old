@@ -5,7 +5,7 @@
   <form #main_form="ngForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label for="source">Source</mat-label>
-      <input matInput placeholder="e.g. snopes.com" required="true" [formControl]="source" pattern="[a-zA-Z0-9_.]+">
+      <input matInput placeholder="e.g. snopes.com" required="true" [formControl]="source" pattern="[a-zA-Z0-9_.-]+">
       <mat-error *ngIf="!source.valid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
     <button type="submit" mat-raised-button color="accent" [disabled]="!source.valid">Check</button>
