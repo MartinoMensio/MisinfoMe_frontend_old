@@ -48,8 +48,8 @@
           <!-- <button mat-icon-button [ngxNestableDragHandle]="row">
             <mat-icon>drag_handle</mat-icon>
           </button> -->
-          <div fxLayout="column" style="width: 100%;">
-            <div [ngxNestableExpandCollapse]="row" fxLayout="row" style="width: 100%;">
+          <div fxLayout="column" class="full-width">
+            <div [ngxNestableExpandCollapse]="row" fxLayout="row" class="full-width">
               <button mat-icon-button *ngIf="row.item.children && row.item.children.length; else empty_item">
                 <mat-icon>{{row.item.$$expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
                 </mat-icon>
@@ -62,7 +62,7 @@
               <span fxFlex></span>
               <div>{{row.item.count}}</div>
             </div>
-            <div *ngIf="!row.item.children" style="width: 100%">
+            <div *ngIf="!row.item.children" class="full-width">
               <!-- display content for leaf nodes -->
               <app-table-tweets [data]="row.item.tweets" fxFlex="100%"></app-table-tweets>
             </div>
@@ -150,28 +150,30 @@
         </mat-expansion-panel-header>
         <div>
           <h2>The profiles of the network friends have been sorted by their score.</h2>
-          <p>Maximum number of friends displayed: {{max_worst}} / 30</p>
-
-          <!-- <mat-form-field ngNativeValidate>
-              <mat-label for="max_cnt">How many to show</mat-label>
-              <input type="number" min="1" max="20" step="1" matInput [(ngModel)]="max_worst">
-            </mat-form-field> -->
-          <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst"></mat-slider>
-          <h3>Sorting criterion</h3>
-          <mat-form-field>
-            <mat-select placeholder="select betweent the avaliable criteria" [(ngModel)]="chosen_criterion">
-              <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
-                {{c.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="table-container-2">
+          <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
+              <!-- configuration -->
+            <div class="full-width">
+              <h3>Maximum number of friends displayed: {{max_worst}} / 30</h3>
+              <mat-slider min="1" max="30" step="1" [thumbLabel]="true" [(value)]="max_worst" class="full-width"></mat-slider>
+            </div>
+            <div class="full-width">
+              <h3>Sorting criterion</h3>
+              <mat-form-field>
+                <mat-select placeholder="select betweent the avaliable criteria" [(ngModel)]="chosen_criterion">
+                  <mat-option *ngFor="let c of sorting_criteria" [value]="c.value">
+                    {{c.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <mat-card class="table-container-2 mat-elevation-z5">
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">
                 <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs verified from {{f.screen_name}}</h3>
                 <div class="piechart-container-tiny">
                   <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
-                    [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
+                    [results]="f.pie_data" [gradient]="gradient" [labels]="true">
                   </ngx-charts-pie-chart>
                   <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true"
                     label="URLs verified from {{f.screen_name}}" [view]="[undefined, 200]" [scheme]="colorScheme"
@@ -180,7 +182,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </mat-card>
         </div>
 
       </mat-expansion-panel>

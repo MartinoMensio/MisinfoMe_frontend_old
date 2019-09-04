@@ -12,6 +12,16 @@
     padding: 15px;
 }
 
+.full-width {
+    width: 100%;
+}
+.mat-table {
+    width: 100%;
+}
+mat-form-field {
+    width: 100%;
+}
+
 /* https://github.com/swimlane/ngx-graph/issues/110 blocking scroll  */
 ngx-graph {
     pointer-events: none;
