@@ -1,5 +1,5 @@
 <div>
-    <div fxLayout="row">
+    <div fxLayout="row" fxLayout.lt-sm="column">
         <mat-form-field>
             <mat-label for="screen_name">Twitter URL</mat-label>
             <input matInput placeholder="Twitter URL" required="true" [formControl]="formField" pattern="[a-zA-Z0-9_]+"
