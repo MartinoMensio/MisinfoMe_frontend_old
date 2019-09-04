@@ -13,7 +13,7 @@
 }
 
 .full-width {
-    width: 100%;
+    width: 100% !important;
 }
 .mat-table {
     width: 100%;
