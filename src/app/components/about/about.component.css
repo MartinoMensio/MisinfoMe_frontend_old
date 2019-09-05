@@ -3,3 +3,8 @@
     display: grid;
     height: 200px;
 }
+
+.chart-container-vertical {
+    display: grid;
+    max-height: 500px;
+}

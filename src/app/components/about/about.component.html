@@ -11,13 +11,17 @@
     <h2>How does it work?</h2>
     <p>MisinfoMe is connected to Twitter and to fact-checkers, in order to provide to you insights about the credibility
       of the tweets that you see.</p>
-    <div class="chart-container">
-      <ngx-graph [layout]="'dagre'" [autoZoom]="true" [autoCenter]="true" [links]="diagram_graph.links" [nodes]="diagram_graph.nodes"
-        [draggingEnabled]="false" [panningEnabled]="false" [enableZoom]="false" [animate]="true">
+    <!-- normal layout for large screen  fxShow.xs="false" fxShow.gt-xs="true" -->
+    <div class="chart-container" >
+      <ngx-graph [layout]="'dagre'" [autoZoom]="true" [autoCenter]="true" [links]="diagram_graph.links"
+        [nodes]="diagram_graph.nodes" [draggingEnabled]="false" [panningEnabled]="false" [enableZoom]="false"
+        [animate]="true">
         <ng-template #nodeTemplate let-node>
           <svg:g class="node">
-            <svg:rect width="170" height="50" [attr.fill]="node.data.colour" rx="8" />
-            <svg:text dominant-baseline="middle" text-anchor="middle" x="85" y="25" [attr.fill]="node.data.textColour || 'black'">
+            <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+              [attr.fill]="node.data.colour" rx="8" />
+            <svg:text dominant-baseline="middle" text-anchor="middle" [attr.x]="node.dimension.width / 2"
+              [attr.y]="node.dimension.height / 2" [attr.fill]="node.data.textColour || 'black'" font-size="30">
               {{node.label}}
             </svg:text>
           </svg:g>
@@ -31,6 +35,30 @@
         </ng-template>
       </ngx-graph>
     </div>
+    <!-- with vertical layout for small screens -->
+    <!-- <div class="chart-container-vertical" fxShow.xs="true" fxShow.gt-xs="false">
+      <ngx-graph [layout]="'dagre'" [autoZoom]="true" [autoCenter]="true" [links]="diagram_graph.links"
+        [nodes]="diagram_graph.nodes" [draggingEnabled]="false" [panningEnabled]="false" [enableZoom]="false"
+        [animate]="true" [layoutSettings]="layoutSettingsVertical">
+        <ng-template #nodeTemplate let-node>
+          <svg:g class="node">
+            <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+              [attr.fill]="node.data.colour" rx="8" />
+            <svg:text dominant-baseline="middle" text-anchor="middle" [attr.x]="node.dimension.width / 2"
+              [attr.y]="node.dimension.height / 2" [attr.fill]="node.data.textColour || 'black'" font-size="30">
+              {{node.label}}
+            </svg:text>
+          </svg:g>
+        </ng-template>
+        <ng-template #linkTemplate let-link>
+          <svg:g class="edge">
+            <svg:path class="line" stroke-width="2"></svg:path>
+            <svg:text class="edge-label" text-anchor="middle">
+            </svg:text>
+          </svg:g>
+        </ng-template>
+      </ngx-graph>
+    </div> -->
     <div>
       <p>This application performs the following steps:</p>
       <ul>
@@ -39,7 +67,9 @@
         <li>The account is assigned a score, by evaluating the URLs against the <i>Credibility Model</i>, which means:
           <ul>
             <li>looking for exact matches with URLs that have been analysed by fact-checkers</li>
-            <li>looking at the sources that are behind the URLs and getting <a [routerLink]="[ '/credibility/sources' ]">how they are scored by external assessments</a> </li>
+            <li>looking at the sources that are behind the URLs and getting <a
+                [routerLink]="[ '/credibility/sources' ]">how
+                they are scored by external assessments</a> </li>
           </ul>
         </li>
       </ul>
