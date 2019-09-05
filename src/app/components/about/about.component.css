@@ -1,0 +1,5 @@
+/* this makes the chart size dynamic in width but fixed in height https://github.com/swimlane/ngx-charts/issues/147#issuecomment-492959081 */
+.chart-container {
+    display: grid;
+    height: 200px;
+}
