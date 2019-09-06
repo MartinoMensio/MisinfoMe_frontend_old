@@ -17,21 +17,15 @@
       [autoZoom]="autoZoom" [autoCenter]="autoCenter" [update$]="update$" [center$]="center$" [zoomToFit$]="zoomToFit$"
       [layoutSettings]="layoutSettings">
 
-      <ng-template #defsTemplate>
-        <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-          <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-        </svg:marker>
-      </ng-template>
-
       <ng-template #nodeTemplate let-node>
-        <svg:g class="node" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'" [tooltipTitle]="node.label">
+        <svg:g class="node" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'" [tooltipTitle]="node.label + ' - click for details'">
           <svg:defs>
             <svg:pattern attr.id="{{'image' + node.label}}" patternUnits="userSpaceOnUse" [attr.height]="50"
               [attr.width]="50">
               <svg:image [attr.height]="50" [attr.width]="50" attr.xlink:href="{{node.options.image}}"></svg:image>
             </svg:pattern>
           </svg:defs>
-          <svg:a (click)="select_node(node)">
+          <svg:a (mousedown)="mousedown($event)" (mouseup)="mouseup($event, node)">
             <svg:circle attr.fill="{{'url(#image'+node.label+')'}}" [attr.cx]="25" [attr.cy]="25" [attr.r]="25"
               [attr.stroke]="node.options.stroke" stroke-width="8" cursor="pointer" />
           </svg:a>
@@ -40,7 +34,7 @@
 
       <ng-template #linkTemplate let-link>
         <svg:g class="edge">
-          <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+          <svg:path class="line" stroke-width="2" stroke="#693C5E">
           </svg:path>
           <!-- <svg:text class="edge-label" text-anchor="middle">
             <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline"

@@ -68,6 +68,9 @@ export class GraphComponent implements OnInit {
     return this._main_profile;
   }
 
+  // For differentiate drag and click
+  last_event: any = null;
+
 
   graphHeight: number;
   graphWidth: number;
@@ -163,9 +166,7 @@ export class GraphComponent implements OnInit {
   generateGraph(you: CountResult, friends_scores: Array<CountResult>) {
     const graph = {
       links: [],
-      nodes: [],
-      overall_move_x: 20,
-      overall_move_y: 20, // the whole graph is translated
+      nodes: []
     };
     graph.nodes.push({
       value: you.screen_name,
@@ -261,5 +262,18 @@ export class GraphComponent implements OnInit {
     // console.log(screen_name);
     this.router.navigate(['/analyse', screen_name]);
     return;
+  }
+
+  // https://www.w3.org/TR/SVG11/interact.html no drag support, and just using click captures also the drag
+  // therefore we need to compare the position of the events
+  mousedown(event) {
+    console.log(`down ${event.clientX} ${event.clientY}`);
+    this.last_event = event;
+  }
+  mouseup(event, node) {
+    console.log(`up ${event.clientX} ${event.clientY}`);
+    if (event.clientX === this.last_event.clientX && event.clientY === this.last_event.clientY) {
+      this.select_node(node);
+    }
   }
 }
