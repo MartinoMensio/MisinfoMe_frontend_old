@@ -102,7 +102,7 @@ export class APIService {
   }
 
   getSourceCredibility(source) {
-    return this.httpClient.get(`${this.CREDIBILITY_URL}/sources/${source}`);
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/sources/?source=${source}`);
   }
 
   getCredibilityOrigins() {

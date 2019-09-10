@@ -4,15 +4,15 @@
         <!-- first column: general info and aggregated indicator -->
         <div>
             <h3>Computed credibility</h3>
-            <app-credibility-meter [credibility]='sourceAssessment.credibility' [size]="250"></app-credibility-meter>
+            <app-credibility-meter [credibility]='sourceAssessment.credibility' [size]="200"></app-credibility-meter>
         </div>
         <!-- second column: details and source assessments -->
-        <div>
+        <div style="max-width: calc(100% - 200px - 10px);">
             <div>
                 <h3>Source-level assessments</h3>
                 <div fxLayout="column" fxLayoutGap="10px">
                     <div *ngIf="!sourceAssessment.assessments.length">
-                        <p>We don't have any information about this source!</p>
+                        <p>No one rated this source directly.</p>
                     </div>
                     <div *ngFor="let assessment of sourceAssessment.assessments">
                         <div fxLayout="row" fxLayoutGap="20px">
@@ -35,31 +35,68 @@
                 </div>
             </div>
         </div>
-        <div>
-            <h3>Factuality analysis</h3>
+        <div class="full-width">
+            <h3>Fact-check analysis</h3>
             <p>How many times claims belonging to this source have been fact-checked</p>
             <div *ngIf="!factcheckingReports">No factchecks found for this source!</div>
-            <div fxLayout="row" *ngIf="factcheckingReports">
-                <a mat-raised-button matTooltip="See the assessment" target="_blank">
-                    <!-- [href]="factcheckingReports.url" -->
-                    <app-credibility-meter [credibility]='factcheckingReports.credibility' [size]="200"></app-credibility-meter>
-                </a>
-                <div>
-                    <ngx-charts-bar-horizontal-stacked [results]="chartData" [scheme]="colorScheme" [view]="[700,500]"
-                        [yAxis]="true" [xAxis]="true" [legend]="true"></ngx-charts-bar-horizontal-stacked>
+            <div *ngIf="factcheckingReports">
+                <div fxLayout="row">
+                    <a mat-raised-button matTooltip="See the assessment" target="_blank">
+                        <!-- [href]="factcheckingReports.url" -->
+                        <app-credibility-meter [credibility]='factcheckingReports.credibility' [size]="150">
+                        </app-credibility-meter>
+                    </a>
+                    <div class="chart-container full-width">
+                        <ngx-charts-bar-horizontal-stacked [results]="chartData" [scheme]="colorScheme" [yAxis]="true"
+                            [xAxis]="true" [legend]="true"></ngx-charts-bar-horizontal-stacked>
+                    </div>
                 </div>
-                <!-- <div>
-                        <p>Negative result: {{factcheckingReports.original.overall.negative?.length}}</p>
-                        <p>Neutral result: {{factcheckingReports.original.overall.neutral?.length}}</p>
-                        <p>Positive result: {{factcheckingReports.original.overall.positive?.length}}</p>
-                        <p>Unknown result: {{factcheckingReports.original.overall.unknown?.length}}</p>
-                    </div> -->
-                <!-- <div>
-                        <p>These factcheckers have produced the reports</p>
-                        <div *ngFor="let fc of byFactchecker">
-                              <p>{{fc.origin_id}}</p>
-                          </div>
-                    </div> -->
+                <div>
+                    <mat-expansion-panel class="mat-elevation-z5">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Details of fact-checking report
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Click to expand
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div>
+                            <h2>These are reports published by fact-checkers</h2>
+
+                            <mat-card class="table-container-2 mat-elevation-z5">
+                                <div *ngFor=" let d of byFactchecker; let i=index">
+                                    <div *ngIf="d.origin_id">
+                                        {{d.origin_id}}:
+                                        <ul>
+                                            <li *ngIf="d.negative">
+                                                {{d.negative.length}} times as fake:
+                                                <a *ngFor="let fc of d.negative; let i = index" href="{{fc}}"
+                                                    target="_blank">[{{i+1}}]</a>
+                                            </li>
+                                            <li *ngIf="d.positive">
+                                                {{d.positive.length}} times as true:
+                                                <a *ngFor="let fc of d.positive; let i = index" href="{{fc}}"
+                                                    target="_blank">[{{i+1}}]</a>
+                                            </li>
+                                            <li *ngIf="d.mixed">
+                                                {{d.mixed.length}} times as mixed:
+                                                <a *ngFor="let fc of d.mixed; let i = index" href="{{fc}}"
+                                                    target="_blank">[{{i+1}}]</a>
+                                            </li>
+                                            <li *ngIf="d.unknown">
+                                                {{d.unknown.length}} times as unknown:
+                                                <a *ngFor="let fc of d.unknown; let i = index" href="{{fc}}"
+                                                    target="_blank">[{{i+1}}]</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+
+                    </mat-expansion-panel>
+                </div>
             </div>
         </div>
     </div>

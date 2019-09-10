@@ -1,52 +1,143 @@
-<mat-card class="mat-elevation-z8">
-    <h2>Analysis of (TODO get profile info){{profileAssessment.itemReviewed}}</h2>
+<mat-card>
+    <h2>Analysis of {{screen_name}}</h2>
     <div>
-        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
+        <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="10px" fxLayoutAlign="start stretch">
             <!-- first column: general info and aggregated indicator -->
             <div>
                 <h3>Computed credibility</h3>
-                <app-credibility-meter [credibility]='profileAssessment.credibility' [size]="150">
+                <app-credibility-meter [credibility]='profileAssessment.credibility' [size]="250">
                 </app-credibility-meter>
             </div>
             <!-- second column: details and source assessments -->
-            <div>
-                <!-- <div>
-                    <h3>The debunked stories that you shared</h3>
-                    <p>TODO here we will show matches with article/claim level</p>
-                    <p>This is very bad!!!</p>
-                </div> -->
-                <div>
-                    <h3>The list of sources used</h3>
+            <div style="max-width: calc(100% - 250px - 10px);">
+                <mat-card class="mat-elevation-z8">
+                    <!-- TODO ngIf validated as a source -->
+                    <h3>{{screen_name}} as a source</h3>
+                    <p>This shows the reports about {{screen_name}} as a source of claims</p>
+                    <p>This component of the score comes from established Fact-Checkers.</p>
+                    <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01">
+                        <app-source-card [sourceAssessment]="profileAssessment.profile_as_source_credibility">
+                        </app-source-card>
+                    </div>
+                    <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence <= 0.01">
+                        {{screen_name}} has not been reviewed directly!
+                    </div>
+                </mat-card>
+                <p></p>
+                <mat-card class="mat-elevation-z8">
+                    <h3>The URLs {{screen_name}} shared in tweets</h3>
                     <div>
-                        <div *ngIf="!profileAssessment.assessments.length">
-                            <p>We don't have any information about the sources used!</p>
+                        <div *ngIf="!profileAssessment.urls_credibility.assessments.length">
+                            <p>The URLs shared don't match with the ones that we know about.</p>
                         </div>
-                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px">
-                            <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
-                            <div *ngFor="let assessment of profileAssessment.assessments">
-                                <div fxLayout="row" fxLayoutGap="20px">
+                        <div *ngIf="profileAssessment.urls_credibility.assessments.length" fxLayout="row"
+                            fxLayoutGap="20px">
+                            <div>
+                                <app-credibility-meter [credibility]='profileAssessment.urls_credibility.credibility'>
+                                </app-credibility-meter>
+                            </div>
+                            <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px" class="mat-elevation-z8">
+                                <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                                <div *ngFor="let assessment of profileAssessment.urls_credibility.assessments">
                                     <div>
-                                        <mat-card>
-                                            <h4>{{assessment.itemReviewed}}</h4>
-                                            <!-- <p>What is this source?</p> -->
-                                            <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
-                                                appImgFallback>
-                                        </mat-card>
+                                        <p>
+                                            <a href="{{assessment.itemReviewed}}" target="_blank;">
+                                                {{ (assessment.itemReviewed.length>30)? (assessment.itemReviewed | slice:0:30)+'..':(assessment.itemReviewed) }}</a>
+                                            matched (TODO who reviewed the claim?)
+                                        </p>
                                     </div>
-                                    <div>
-                                        <p>Weight for this source? {{assessment.weights.final_weight}}</p>
-                                        <p>Using this source: {{assessment.tweets_containing.length}} tweets</p>
+                                    <div fxLayout="row" fxLayoutGap="20px">
+                                        <div>
+                                            <a mat-raised-button matTooltip="See details for this URL">
+                                                <app-credibility-meter [credibility]='assessment.credibility'>
+                                                </app-credibility-meter>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <mat-expansion-panel class="mat-elevation-z5"
+                                                (opened)="assessment.show_tweets = true"
+                                                (closed)="assessment.show_tweets = false">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{assessment.tweets_containing.length}} Tweets with this URL
+                                                    </mat-panel-title>
+                                                    <mat-panel-description>
+                                                        Click to expand
+                                                    </mat-panel-description>
+                                                </mat-expansion-panel-header>
+                                                <div *ngIf="assessment.show_tweets">
+                                                    <div *ngFor="let t_id of assessment.tweets_containing">
+                                                        <ngx-tweet tweetId="{{t_id}}" width="500"></ngx-tweet>
+                                                    </div>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </div>
+                                        <!-- TODO link [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]" -->
                                     </div>
-                                    <a mat-raised-button matTooltip="See details for this source"
-                                        [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
-                                        <app-credibility-meter [credibility]='assessment.credibility'>
-                                        </app-credibility-meter>
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </mat-card>
+                <p></p>
+                <mat-card class="mat-elevation-z8">
+                    <h3>The sources {{screen_name}} uses in tweets</h3>
+                    <div>
+                        <div *ngIf="!profileAssessment.sources_credibility.assessments.length">
+                            <p>This profile doesn't use known sources.</p>
+                        </div>
+                        <div *ngIf="profileAssessment.sources_credibility.assessments.length" fxLayout="row"
+                            fxLayoutGap="20px">
+                            <div>
+                                <app-credibility-meter
+                                    [credibility]='profileAssessment.sources_credibility.credibility'>
+                                </app-credibility-meter>
+                            </div>
+                            <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px" class="mat-elevation-z8">
+                                <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                                <div *ngFor="let assessment of profileAssessment.sources_credibility.assessments">
+                                    <div fxLayout="row" fxLayoutGap="20px">
+                                        <div>
+                                            <mat-card>
+                                                <h4>{{assessment.itemReviewed}}</h4>
+                                                <!-- <p>What is this source?</p> -->
+                                                <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
+                                                    appImgFallback>
+                                            </mat-card>
+                                        </div>
+                                        <div>
+                                            <p>Weight for this source? {{assessment.weights.final_weight}}</p>
+                                            <mat-expansion-panel class="mat-elevation-z5"
+                                                (opened)="assessment.show_tweets = true"
+                                                (closed)="assessment.show_tweets = false">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{assessment.tweets_containing.length}} Tweets using this source
+                                                    </mat-panel-title>
+                                                    <mat-panel-description>
+                                                        Click to expand
+                                                    </mat-panel-description>
+                                                </mat-expansion-panel-header>
+                                                <div *ngIf="assessment.show_tweets">
+                                                    <div *ngFor="let t_id of assessment.tweets_containing; let i=index">
+                                                        <!-- {{t_id}} -->
+                                                        <!-- TODO make a collapsable div with ngIf (to avoid creating it) -->
+                                                        <ngx-tweet tweetId="{{t_id}}" width="250"></ngx-tweet>
+                                                    </div>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </div>
+                                        <a mat-raised-button matTooltip="See details for this source"
+                                            [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
+                                            <app-credibility-meter [credibility]='assessment.credibility'>
+                                            </app-credibility-meter>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
             </div>
         </div>
     </div>

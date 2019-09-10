@@ -9,7 +9,7 @@
         <mat-spinner *ngIf="main_profile_state == loadStates.Loading" class="center"></mat-spinner>
         <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
         <div *ngIf="main_profile_state == loadStates.Loaded">
-            <app-profile-card [profileAssessment]="analysis_result"></app-profile-card>
+            <app-profile-card [profileAssessment]="analysis_result" [screen_name]="state_screen_name"></app-profile-card>
         </div>
         <p></p>
         <mat-card>
