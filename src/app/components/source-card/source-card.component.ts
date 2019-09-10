@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Optional, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Source } from 'webpack-sources';
 
 @Component({
   selector: 'app-source-card',
@@ -61,7 +63,12 @@ export class SourceCardComponent implements OnInit {
     return this._sourceAssessment;
   }
 
-  constructor() { }
+  constructor(@Optional() public dialogRef: MatDialogRef<SourceCardComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
+      if (data) {
+        this.sourceAssessment = data;
+      }
+    }
 
   ngOnInit() {
   }

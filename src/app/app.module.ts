@@ -52,6 +52,8 @@ import { ErrorComponent } from './components/error/error.component';
 import { CredibilityMeterComponent } from './components/credibility-meter/credibility-meter.component';
 import { ImgFallbackDirective } from './directives/img-fallback.directive';
 import { SearchUserComponent } from './components/search-user/search-user.component';
+import { ScoringInfoComponent } from './components/scoring-info/scoring-info.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,8 @@ import { SearchUserComponent } from './components/search-user/search-user.compon
     ErrorComponent,
     CredibilityMeterComponent,
     ImgFallbackDirective,
-    SearchUserComponent
+    SearchUserComponent,
+    ScoringInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +106,7 @@ import { SearchUserComponent } from './components/search-user/search-user.compon
     MatSelectModule,
     MatSliderModule,
     MatAutocompleteModule,
+    MatDialogModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule,
@@ -112,6 +116,7 @@ import { SearchUserComponent } from './components/search-user/search-user.compon
     NgxGaugeModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [SourceCardComponent]
 })
 export class AppModule { }

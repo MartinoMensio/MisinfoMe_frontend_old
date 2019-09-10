@@ -3,11 +3,11 @@
     <div>
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
             <!-- first column: general info and aggregated indicator -->
-            <div>
+            <a (click)="openScoringDialog()" matTooltip="Why?" class="pointer">
                 <h3>Computed credibility</h3>
                 <app-credibility-meter [credibility]='profileAssessment.credibility' [size]="200">
                 </app-credibility-meter>
-            </div>
+            </a>
             <!-- second column: details and source assessments -->
             <div fxLayout="column" fxFlex="100%">
                 <mat-card class="mat-elevation-z8">
@@ -101,7 +101,7 @@
                                     <h4>{{assessment.itemReviewed}}</h4>
                                     <div fxLayout="row" fxLayoutGap="20px">
                                         <a matTooltip="See details for this source"
-                                            [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]">
+                                        (click)="openSourceDialog(assessment)" class="pointer">
                                             <mat-card class="mat-elevation-z4">
                                                 <!-- <p>What is this source?</p> -->
                                                 <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"

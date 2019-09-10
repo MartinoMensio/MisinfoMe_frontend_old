@@ -11,6 +11,7 @@ import { CredibilitySourcesComponent } from './components/credibility-sources/cr
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
 import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
+import { ScoringInfoComponent } from './components/scoring-info/scoring-info.component';
 
 const routes: Routes = [
   { path: 'analyse/:screen_name', component: HomeComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'about/domains', component: DomainsComponent },
   // { path: 'about/domains/:domain', component: DomainsComponent },
   { path: 'about/fact_checking', component: FactCheckingComponent },
+  { path: 'about/scoring', component: ScoringInfoComponent },
   { path: 'impact_factchecking', component: ImpactFactcheckingComponent },
   { path: 'credibility', component: CredibilityComponent },
   { path: 'credibility/sources', component: CredibilitySourcesComponent },

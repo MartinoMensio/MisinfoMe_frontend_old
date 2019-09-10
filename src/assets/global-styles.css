@@ -36,3 +36,7 @@ svg .nodes {
     max-width: 450px;
     /* padding: 0 10%; */
 }
+
+.pointer {
+    cursor: pointer;
+}

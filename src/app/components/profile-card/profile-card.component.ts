@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ScoringInfoComponent } from '../scoring-info/scoring-info.component';
+import { SourceCardComponent } from '../source-card/source-card.component';
 
 @Component({
   selector: 'app-profile-card',
@@ -27,9 +30,32 @@ export class ProfileCardComponent implements OnInit {
     return this._profileAssessment;
   }
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  openScoringDialog(): void {
+    const dialogRef = this.dialog.open(ScoringInfoComponent, {
+      // width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The scoring dialog was closed');
+    });
+  }
+
+  openSourceDialog(sourceAssessment): void {
+    console.log(sourceAssessment)
+    const dialogRef = this.dialog.open(SourceCardComponent, {
+      // width: '250px',
+      maxHeight: '90vh',
+      data: sourceAssessment
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The source dialog was closed');
+    });
   }
 
 }
