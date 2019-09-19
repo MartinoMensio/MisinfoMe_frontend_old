@@ -2,7 +2,7 @@
   <img src="assets/MisinfoMe-improved-screen-res-03.png" alt="logo" class="center proper-size">
   <mat-card>
     <p>It is hard to distinguish fact from fiction on social media.</p>
-    <p>Assess any Twitter profile, we will verify if its tweets contain some misinformation.</p>
+    <p>Insert the Twitter screen name, we will verify how its tweets are related to known misinformation.</p>
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <app-search-user [formField]="screen_name"></app-search-user>
     </form>
@@ -14,7 +14,7 @@
   <div *ngIf="main_profile_state == loadStates.Loaded">
     <mat-card [@enterAnimation]>
       <div>
-        <a [routerLink]="[ '/credibility/profiles', result_you.screen_name ]">&rarr; See the new evaluation &larr;</a>
+        <a mat-raised-button color="primary" [routerLink]="[ '/credibility/profiles', result_you.screen_name ]">&rarr; See the new evaluation &larr;</a>
       </div>
       <div>
         <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a></h3>
@@ -203,17 +203,22 @@
     <div>
       <h3>{{result_you.screen_name}} vs the average user</h3>
       <p>The sample for the "average user" is the set of profiles that have already been analysed by this tool.</p>
+      <p>The chart below shows a comparison of the category of the tweets, <em>in percentages</em>.</p>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal-normalized [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true"
           xAxis="true" [xAxisTicks]="[0, 25, 50, 75, 100]" showDataLabel="true" yAxis="true" showXAxisLabel="true"
-          xAxisLabel="URLs by category normalised" [xAxisTickFormatting]="formatPercent">
+          xAxisLabel="URLs by category - percentage" [xAxisTickFormatting]="formatPercent">
         </ngx-charts-bar-horizontal-normalized>
       </div>
+      <p></p>
+      <p>The chart below shows a comparison of the category of the tweets, <em>in absolute values</em>.</p>
       <div class="barchart-container" style="height: 200px;">
         <ngx-charts-bar-horizontal-2d [scheme]="colorScheme" [results]="you_vs_average_multi" legend="true" xAxis="true"
-          showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs by category absolute">
+          showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="URLs by category - absolute">
         </ngx-charts-bar-horizontal-2d>
       </div>
+      <p></p>
+      <p>The chart below shows a comparison of the final score. 0 corresponds to only sharing misinforming URLs, 100 to only verified URLs.</p>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average"
           xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"

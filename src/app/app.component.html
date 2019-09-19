@@ -1,16 +1,20 @@
 <div class="background">
   <div class="width-limit">
     <!-- fxLayoutAlign="center center" -->
-    <mat-toolbar color="primary" >
+    <mat-toolbar color="primary">
       <a mat-button [routerLink]="['/']">
-        <img src="assets/MisinfoMe-icon-whiter.png" alt="logo" height="50px">
-        <b> Home</b>
+        <img src="assets/MisinfoMe-icon-whiter.png" alt="logo" height="50px" style="padding-right: 20px;">
+        <span>Home</span>
       </a>
       <mat-divider [vertical]="true"></mat-divider>
       <!-- <a mat-button [routerLink]="['/impact_factchecking']">Impact of fact-checking</a> -->
-      <a mat-button [routerLink]="['/credibility/sources']">Check your sources</a>
+      <a mat-button [routerLink]="['/credibility/sources']">
+        <span style="vertical-align: middle;">Check your sources</span>
+      </a>
       <mat-divider [vertical]="true"></mat-divider>
-      <a mat-button [routerLink]="['/about']">About</a>
+      <a mat-button [routerLink]="['/about']">
+        <span style="vertical-align: middle;">About</span>
+      </a>
     </mat-toolbar>
     <div class="outer-container">
       <div class="container">

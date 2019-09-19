@@ -180,7 +180,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Other datasets',
+          'label': 'Assessments from other sources',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -208,7 +208,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Other datasets',
+          'label': 'Assessments from other sources',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
@@ -242,7 +242,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           'children': [{ 'tweets': [] }]
         }, {
           'id': 'full_url_match',
-          'label': 'Other datasets',
+          'label': 'Assessments from other sources',
           'expanded': false,
           'count': 0,
           'children': [{ 'tweets': [] }]
