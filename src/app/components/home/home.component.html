@@ -22,8 +22,8 @@
       <div>
         <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a></h3>
         <div>We looked at {{result_you.tweets_cnt}} tweets from this profile.</div>
-        <div *ngIf="result_you.score >= 50" class="good">The score is {{result_you.score}}/100.</div>
-        <div *ngIf="result_you.score < 50" class="bad">The score is {{result_you.score}}/100.</div>
+        <div *ngIf="result_you.score >= 50" class="good">The score is {{result_you.score| number : '1.2-2'}}/100.</div>
+        <div *ngIf="result_you.score < 50" class="bad">The score is {{result_you.score| number : '1.2-2'}}/100.</div>
         <!-- <div>Your score is: {{result_you.score | number : '1.2-2'}}% (0% is linked to misinformation, 50% is unknown, 100% is valid)</div> -->
         <div>This is how the URLs that have been shared by <a
             href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a> are classified</div>
