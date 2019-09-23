@@ -128,7 +128,13 @@ export class APIService {
     return this.httpClient.get(`${this.API_URL}/jobs/status/${status_id}`);
   }
   getUserCredibilityWithUpdates(screen_name) {
-    return this.createJobCredibilityProfile(screen_name).pipe(
+    return this.keepWatchingJobStatus(this.createJobCredibilityProfile(screen_name));
+  }
+  postUserCountWithUpdate(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
+    return this.keepWatchingJobStatus(this.createJobAnalysisProfile(screen_name));
+  }
+  private keepWatchingJobStatus(o: Observable<Object>) {
+    return o.pipe(
       // switch to a new observable
       switchMap((job_create_res: any) => {
         const job_id = job_create_res.internal_task_id;
@@ -147,31 +153,14 @@ export class APIService {
               console.log(val.state);
               // turn the failure into an exception
               if (val.state === 'FAILURE') {
-                throwError(val.state);
+                // the subscriber will receive an error in the error subscriber
+                // throwError will notify the subscribers
+                throwError(val);
+                throw val; // return false wasn't enough (strange EmptyErrorImpl)
+                // and the interval will stop to run
               }
               return val.state !== 'SUCCESS';
             }, true) // the inclusive flag lets also the false condition to get emitted (completed)
-          );
-      })
-    );
-  }
-  postUserCountWithUpdate(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
-    // same as getUserCredibilityWithUpdates, but with a different createJob function
-    return this.createJobAnalysisProfile(screen_name).pipe(
-      switchMap((job_create_res: any) => {
-        const job_id = job_create_res.internal_task_id;
-        console.log(job_id);
-        return interval(2000)
-          .pipe(
-            switchMap(() => {
-              console.log('inside switchMap');
-              return this.getJobStatus(job_id);
-            }),
-            takeWhile((val: any) => {
-              console.log('checking the status of the job');
-              console.log(val.state);
-              return val.state !== 'SUCCESS';
-            }, true) // the inclusive flag lets also the false condition to get emitted
           );
       })
     );
