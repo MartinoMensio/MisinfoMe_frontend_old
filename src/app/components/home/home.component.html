@@ -9,7 +9,10 @@
   </mat-card>
   <p></p>
   <!-- <app-graph [data]="data_for_graph"></app-graph> -->
-  <mat-spinner *ngIf="main_profile_state == loadStates.Loading" class="center"></mat-spinner>
+  <div *ngIf="main_profile_state == loadStates.Loading">
+    <mat-spinner class="center"></mat-spinner>
+    <p style="text-align:center;" class="primary-color">{{loading_str}}</p>
+  </div>
   <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
   <div *ngIf="main_profile_state == loadStates.Loaded">
     <mat-card [@enterAnimation]>

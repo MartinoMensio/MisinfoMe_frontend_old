@@ -6,6 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as $ from 'jquery';
+import { map, first } from 'rxjs/operators';
 
 interface CountResultWithPieData extends CountResult {
   pie_data: Array<any>;
@@ -71,6 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   friends_results_sorted: Array<CountResultWithPieData>;
   max_worst = 10;
   _chosen_criterion = 'bad_cnt';
+  loading_str: '';
   get chosen_criterion() {
     return this._chosen_criterion;
   }
@@ -350,8 +352,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse() {
     this.main_profile_state = LoadStates.Loading;
     console.log('clicked!!!');
-    this.apiService.postUserCount(this.screen_name.value).subscribe((result: CountResult) => {
+    this.apiService.postUserCountWithUpdate(this.screen_name.value).pipe(
+      map(result_update => {
+        console.log(result_update);
+        // update the message
+        this.loading_str = result_update.state;
+        return result_update;
+      }),
+      // wait until success
+      first((res: any) => res.state === 'SUCCESS'),
+      // then unwrap the result
+      map((result_ok: any) => result_ok.result)
+    ).subscribe((result: CountResult) => {
       this.result_you = result;
+      this.loading_str = '';
       this.pie_data_you = this.extract_results(result);
 
       this.table_data_bad = this.prepare_table_data(result.fake_urls);

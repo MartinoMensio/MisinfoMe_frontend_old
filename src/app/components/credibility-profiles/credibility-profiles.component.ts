@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { APIService, LoadStates } from 'src/app/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { map, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-credibility-profiles',
@@ -17,6 +18,7 @@ export class CredibilityProfilesComponent implements OnInit {
 
   // state management
   loadStates = LoadStates;
+  loading_str = '';
   main_profile_state = LoadStates.None;
   error_detail_profile: string;
 
@@ -48,9 +50,21 @@ export class CredibilityProfilesComponent implements OnInit {
   analyse() {
     const screen_name = this.state_screen_name;
     this.main_profile_state = LoadStates.Loading;
-    this.apiService.getUserCredibility(screen_name).subscribe(result => {
+    this.apiService.getUserCredibilityWithUpdates(screen_name).pipe(
+      map(result_update => {
+        console.log(result_update);
+        // update the message
+        this.loading_str = result_update.state;
+        return result_update;
+      }),
+      // wait until success
+      first((res: any) => res.state === 'SUCCESS'),
+      // then unwrap the result
+      map((result_ok: any) => result_ok.result)
+    ).subscribe(result => {
       console.log(result);
       this.analysis_result = result;
+      this.loading_str = '';
       this.main_profile_state = LoadStates.Loaded;
     }, (error) => {
       this.main_profile_state = LoadStates.Error;

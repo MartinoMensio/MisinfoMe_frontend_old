@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { Observable, timer, interval, throwError } from 'rxjs';
+import { switchMap, takeWhile, map, startWith, filter, first, takeUntil } from 'rxjs/operators';
 
 export interface CountResult {
   screen_name: string;
@@ -111,6 +113,68 @@ export class APIService {
 
   getUserCredibility(screen_name) {
     return this.httpClient.get(`${this.CREDIBILITY_URL}/users/?screen_name=${screen_name}`);
+  }
+
+  createJobCredibilityProfile(screen_name) {
+    console.log(`creating job for ${screen_name}`);
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/users/?screen_name=${screen_name}&wait=false`);
+  }
+  createJobAnalysisProfile(screen_name) {
+    console.log(`creating job for ${screen_name}`);
+    return this.postPath(`/analysis/twitter_accounts?screen_name=${screen_name}&wait=false`, {});
+  }
+  getJobStatus(status_id) {
+    console.log(`getting status ${status_id}`)
+    return this.httpClient.get(`${this.API_URL}/jobs/status/${status_id}`);
+  }
+  getUserCredibilityWithUpdates(screen_name) {
+    return this.createJobCredibilityProfile(screen_name).pipe(
+      // switch to a new observable
+      switchMap((job_create_res: any) => {
+        const job_id = job_create_res.internal_task_id;
+        console.log(job_id);
+        // every 2 seconds
+        return interval(2000)
+          .pipe(
+            // get the result of the job
+            switchMap(() => {
+              console.log('inside switchMap');
+              return this.getJobStatus(job_id);
+            }),
+            // and keep propagating the values while it's not completed
+            takeWhile((val: any) => {
+              console.log('checking the status of the job');
+              console.log(val.state);
+              // turn the failure into an exception
+              if (val.state === 'FAILURE') {
+                throwError(val.state);
+              }
+              return val.state !== 'SUCCESS';
+            }, true) // the inclusive flag lets also the false condition to get emitted (completed)
+          );
+      })
+    );
+  }
+  postUserCountWithUpdate(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
+    // same as getUserCredibilityWithUpdates, but with a different createJob function
+    return this.createJobAnalysisProfile(screen_name).pipe(
+      switchMap((job_create_res: any) => {
+        const job_id = job_create_res.internal_task_id;
+        console.log(job_id);
+        return interval(2000)
+          .pipe(
+            switchMap(() => {
+              console.log('inside switchMap');
+              return this.getJobStatus(job_id);
+            }),
+            takeWhile((val: any) => {
+              console.log('checking the status of the job');
+              console.log(val.state);
+              return val.state !== 'SUCCESS';
+            }, true) // the inclusive flag lets also the false condition to get emitted
+          );
+      })
+    );
   }
 
 }
