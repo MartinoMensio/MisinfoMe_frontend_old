@@ -1,18 +1,13 @@
 <div>
-  <h2>News sources credibility</h2>
-  <p>Here you can check your sources and see how they are assessed by the <a
-      [routerLink]="['/credibility/origins']">origins</a> we are considering.</p>
+  <h2>Credibility check</h2>
   <mat-card>
+    <div>
+      <p>Assess the credibility of your information source according to
+        <!-- reputable fact-checking institutions -->
+        <a [routerLink]="['/credibility/origins']">reputable assessors</a>.</p>
+    </div>
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
-      <div fxLayout="row" fxLayout.lt-sm="column">
-        <mat-form-field>
-          <mat-label for="source">Source</mat-label>
-          <input matInput placeholder="e.g. snopes.com" required="true" [formControl]="source"
-            pattern="[a-zA-Z0-9_.-]+">
-          <mat-error *ngIf="!source.valid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
-        <button type="submit" mat-raised-button color="accent" [disabled]="!source.valid">Check</button>
-      </div>
+      <app-search-source [formField]="source" (prefix_change)="source_prefix = $event"></app-search-source>
     </form>
   </mat-card>
   <p></p>

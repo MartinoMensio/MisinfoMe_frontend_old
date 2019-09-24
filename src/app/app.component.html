@@ -9,11 +9,25 @@
       <mat-divider [vertical]="true"></mat-divider>
       <!-- <a mat-button [routerLink]="['/impact_factchecking']">Impact of fact-checking</a> -->
       <a mat-button [routerLink]="['/credibility/sources']">
-        <span style="vertical-align: middle;">Check your sources</span>
+        <span style="vertical-align: middle;">Credibility check</span>
       </a>
+      <a mat-button [routerLink]="['/credibility/profiles']">
+        <span style="vertical-align: middle;">Twitter analysis</span>
+      </a>
+      <!-- <a mat-button [routerLink]="['/claims']">
+        <span style="vertical-align: middle;">Claim virality</span>
+      </a> -->
       <mat-divider [vertical]="true"></mat-divider>
+
+      <!-- This fills the remaining space of the current row -->
+      <span style="flex: 1 1 auto;"></span>
+
       <a mat-button [routerLink]="['/about']">
         <span style="vertical-align: middle;">About</span>
+      </a>
+
+      <a mat-button [routerLink]="['/settings']">
+        <fa-icon icon="cog"></fa-icon>
       </a>
     </mat-toolbar>
     <div class="outer-container">

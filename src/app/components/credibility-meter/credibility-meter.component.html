@@ -2,10 +2,31 @@
     <div *ngIf='credibility.confidence == 0'>
         <p>Unknown!!!</p>
     </div>
-
-    <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min"
+    <div id="wrapper" *ngIf="credibility_meter_type === 'thumb'">
+        <!-- {{credibility.value}} -->
+        <fa-icon icon="thumbs-up" symbol="thumb{{nonce}}"
+            [styles]="{'stroke': rgb_value, 'color': rgb_value, 'transform': rotate_value}"></fa-icon>
+        <svg id="meter" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="grad-vertical" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgb(255, 0, 0);stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:rgb(255, 255, 0);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgb(0, 255, 0);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g fill-opacity="0" stroke-width="20">
+                <path d="M10 50 a40 40 0 1 1 80 0" stroke="url(#grad-vertical)" />
+            </g>
+            <g [attr.transform]="'rotate('+ rotate_angle + ' 50 50) translate(25 25) scale(0.5)'">
+                <use attr.xlink:href="#thumb{{nonce}}"></use>
+            </g>
+        </svg>
+    </div>
+    <div *ngIf="credibility_meter_type === 'gauge'">
+        <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min"
         [label]="gaugeLabel" [append]="gaugeAppendText" [backgroundColor]="backgroundColor" [foregroundColor]="foregroundColor">
     </ngx-gauge>
-    <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
-    <mat-progress-bar [value]="credibility.confidence * 100"></mat-progress-bar>
+    <!-- <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
+    <mat-progress-bar [value]="credibility.confidence * 100"></mat-progress-bar> -->
+    </div>
 </div>

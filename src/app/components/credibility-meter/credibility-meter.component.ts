@@ -26,6 +26,10 @@ export class CredibilityMeterComponent implements OnInit {
   gaugeAppendText = '';
   foregroundColor = 'rgba(0, 0, 0, 0.1)';
   backgroundColor = 'rgba(0, 0, 0, 0.1)';
+  rgb_value = null;
+  rotate_angle = 0;
+  nonce = null;
+  credibility_meter_type = localStorage.getItem('credibility_meter_type') || 'thumb';
 
   constructor() { }
 
@@ -34,6 +38,9 @@ export class CredibilityMeterComponent implements OnInit {
     const green = this._confidence_fade_to_grey(this._green_quantity(this.credibility.value), this.credibility.confidence);
     const blue = this._confidence_fade_to_grey(0, this.credibility.confidence, true);
     const rgb_str = `rgb(${red},${green},${blue})`;
+    this.rgb_value = rgb_str;
+    this.nonce = Math.random();
+    this.rotate_angle = this.credibility.value * 90;
     console.log(rgb_str);
     if (this.credibility.value < 0) {
       this.backgroundColor = rgb_str;

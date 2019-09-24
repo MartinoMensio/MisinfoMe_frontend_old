@@ -12,6 +12,7 @@ import { CredibilityComponent } from './components/credibility/credibility.compo
 import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
 import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
 import { ScoringInfoComponent } from './components/scoring-info/scoring-info.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
   { path: 'analyse/:screen_name', component: HomeComponent },
@@ -33,6 +34,7 @@ const routes: Routes = [
   { path: 'credibility/origins', component: CredibilityOriginsComponent },
   { path: 'credibility/profiles', component: CredibilityProfilesComponent },
   { path: 'credibility/profiles/:screen_name', component: CredibilityProfilesComponent },
+  { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
 

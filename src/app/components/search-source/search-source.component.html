@@ -1,0 +1,31 @@
+<div>
+    <div fxLayout="row" fxLayout.lt-sm="column">
+        <div>
+            <label>Type: </label>
+            <mat-radio-group [formControl]="source_type" >
+                <mat-radio-button value="webpage">Webpage</mat-radio-button>
+                <mat-radio-button value="twitter">Twitter</mat-radio-button>
+                <mat-radio-button value="facebook">Facebook</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <mat-form-field>
+            <mat-label for="source">Source</mat-label>
+            <input matInput placeholder="e.g. snopes.com" required="true" [formControl]="formField"
+                pattern="[a-zA-Z0-9_.-]+">
+            <mat-error *ngIf="!formField.valid">{{getErrorMessage()}}</mat-error>
+            <span matPrefix>https://{{form_prefix}}</span>
+        </mat-form-field>
+        <!-- #auto="matAutocomplete" [displayWith]="displayFn" -->
+        <!-- <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+            <ng-container *ngIf="!isLoading">
+                <mat-option *ngFor="let result of results" [value]="result.screen_name">
+                    <span><b>{{result.name}}</b> - ({{result.screen_name}})</span>
+                </mat-option>
+            </ng-container>
+        </mat-autocomplete> -->
+        <button type="submit" mat-raised-button color="accent" [disabled]="!formField.valid">Check</button>
+    </div>
+    <p>A {{source_type.value}} source is something like <i>https://{{form_prefix}}{{example}}</i></p>
+    <!-- <p>You can even paste the URL to the profile (e.g. <i>https://twitter.com/realDonaldTrump)</i></p> -->
+</div>

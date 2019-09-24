@@ -18,6 +18,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
@@ -54,6 +57,9 @@ import { ImgFallbackDirective } from './directives/img-fallback.directive';
 import { SearchUserComponent } from './components/search-user/search-user.component';
 import { ScoringInfoComponent } from './components/scoring-info/scoring-info.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SearchSourceComponent } from './components/search-source/search-source.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -79,7 +85,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     CredibilityMeterComponent,
     ImgFallbackDirective,
     SearchUserComponent,
-    ScoringInfoComponent
+    ScoringInfoComponent,
+    SearchSourceComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -107,6 +115,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSliderModule,
     MatAutocompleteModule,
     MatDialogModule,
+    MatRadioModule,
+    MatSnackBarModule,
+    FontAwesomeModule,
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule,
@@ -119,4 +130,8 @@ import { MatDialogModule } from '@angular/material/dialog';
   bootstrap: [AppComponent],
   entryComponents: [SourceCardComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas);
+  }
+}

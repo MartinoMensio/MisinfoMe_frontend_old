@@ -8,7 +8,12 @@
         </div>
         <!-- second column: details and source assessments -->
         <div fxFlex="100%">
-            <div>
+            <div *ngIf="sourceAssessment.credibility.confidence < 0.1">
+                <p>This source has not been evaluated yet!</p>
+                <!-- TODO do this automatically -->
+                <p>If this is a Twitter account, try to <a [routerLink]="[ '/credibility/profiles' ]">Analyse the content that has been shared in the tweets!</a></p>
+            </div>
+            <div *ngIf="sourceAssessment.credibility.confidence > 0.1">
                 <h3>Source-level assessments</h3>
                 <div fxLayout="column" fxLayoutGap="10px">
                     <div *ngIf="!sourceAssessment.assessments.length">
@@ -21,33 +26,33 @@
                                     <mat-card class="mat-elevation-z4">
                                         <app-credibility-meter [credibility]='assessment.credibility'>
                                         </app-credibility-meter>
-                                        <p>Weight: {{assessment.weights.final_weight | number:'1.2-2'}}</p>
+                                        <!-- <p>Weight: {{assessment.weights.final_weight | number:'1.2-2'}}</p> -->
                                     </mat-card>
                                 </a>
                                 <div fxFlex="100% 250px 100%">
                                     <h4>{{assessment.origin.name}}</h4>
-                                    <p>{{assessment.origin.description}}</p>
+                                    <p><i>"{{assessment.origin.description}}"</i></p>
                                 </div>
                             </div>
                             <p></p>
                         </div>
                     </div>
                 </div>
-            </div>
+            <!-- </div>
         </div>
     </div>
-    <div class="full-width">
+    <div class="full-width"> -->
         <h3>Fact-check analysis</h3>
         <p>How many times claims belonging to this source have been fact-checked</p>
         <div *ngIf="!factcheckingReports">No factchecks found for this source!</div>
         <div *ngIf="factcheckingReports">
             <div fxLayout="row" fxLayout.lt-sm="column">
-                <div>
+                <!-- <div>
                     <mat-card class="mat-elevation-z4">
                         <app-credibility-meter [credibility]='factcheckingReports.credibility' [size]="100">
                         </app-credibility-meter>
                     </mat-card>
-                </div>
+                </div> -->
                 <div class="chart-container" fxFlex="90%">
                     <ngx-charts-bar-horizontal-stacked [results]="chartData" [scheme]="colorScheme" [yAxis]="true"
                         [xAxis]="true" [legend]="true"></ngx-charts-bar-horizontal-stacked>
@@ -99,6 +104,8 @@
 
                 </mat-expansion-panel>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 

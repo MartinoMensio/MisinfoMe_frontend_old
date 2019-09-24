@@ -16,6 +16,7 @@ export class CredibilitySourcesComponent implements OnInit {
 
   state_source: string; // the value that comes from the url parameter
   source = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_.-]+')]);
+  private source_prefix = '';
   private sub: Subscription;
 
   // state management
@@ -50,9 +51,10 @@ export class CredibilitySourcesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('submit with ' + this.source.value, ' from ' + this.state_source);
+    const final_value = this.source_prefix + this.source.value;
+    console.log('submit with ' + final_value, ' from ' + this.state_source);
     if (this.state_source !== this.source.value) {
-      return this.router.navigate(['/credibility/sources', this.source.value]);
+      return this.router.navigate(['/credibility/sources', final_value]);
     } else {
       // reload current page
       return this.ngOnInit();
