@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-search-source',
@@ -31,7 +33,12 @@ export class SearchSourceComponent implements OnInit {
   };
   source_type: FormControl = new FormControl();
 
-  constructor() { }
+  // autocomplete
+  results = [];
+  isLoading = false;
+  errorMsg = '';
+
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
     this.source_type.valueChanges.subscribe((value) => {
@@ -70,6 +77,28 @@ export class SearchSourceComponent implements OnInit {
         }
       }
     });
+    this.formField.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.errorMsg = '';
+          this.results = [];
+          this.isLoading = true;
+        }),
+        switchMap(value => this.httpClient.get(`https://idir.uta.edu/claimportal/api/v1/users?keyword=${value}`)
+          .pipe(
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+        )
+      )
+      .subscribe((data: Array<any>) => {
+        this.errorMsg = '';
+        this.results = data;
+
+        console.log(this.results);
+      });
     this.formField.setValue(this.formField.value);
   }
 
