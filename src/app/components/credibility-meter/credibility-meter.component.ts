@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { SettingsService, CredibilityMeterType } from 'src/app/services/settings.service';
 
 export interface Credibility {
   value: number;
@@ -29,11 +30,12 @@ export class CredibilityMeterComponent implements OnInit {
   rgb_value = null;
   rotate_angle = 0;
   nonce = null;
-  credibility_meter_type = localStorage.getItem('credibility_meter_type') || 'thumb';
+  credibility_meter_type: string;
 
-  constructor() { }
+  constructor(private settingsService: SettingsService) { }
 
   ngOnInit() {
+    this.credibility_meter_type = this.settingsService.credibilityMeterType;
     const red = this._confidence_fade_to_grey(this._red_quantity(this.credibility.value), this.credibility.confidence);
     const green = this._confidence_fade_to_grey(this._green_quantity(this.credibility.value), this.credibility.confidence);
     const blue = this._confidence_fade_to_grey(0, this.credibility.confidence, true);

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { APIService, CountResult, OverallCounts, LoadStates } from '../../api.service';
 import { trigger, style, transition, animate, keyframes, query, stagger, state } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
@@ -7,6 +6,7 @@ import { Subscription, Observable } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as $ from 'jquery';
 import { map, first } from 'rxjs/operators';
+import { CountResult, LoadStates, OverallCounts, APIService } from 'src/app/services/api.service';
 
 interface CountResultWithPieData extends CountResult {
   pie_data: Array<any>;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { Observable, timer, interval, throwError } from 'rxjs';
 import { switchMap, takeWhile, map, startWith, filter, first, takeUntil } from 'rxjs/operators';
 
@@ -93,7 +93,7 @@ export class APIService {
   getFactcheckingByFactchecker() {
     return this.getPath(`/entities/factchecking_reviews`);
   }
-  //getFactcheckingShareByFactchecker()
+  // getFactcheckingShareByFactchecker()
 
   getTimeDistribution(tweet_ids, time_granularity) {
     const body = {
@@ -124,7 +124,7 @@ export class APIService {
     return this.postPath(`/analysis/twitter_accounts?screen_name=${screen_name}&wait=false`, {});
   }
   getJobStatus(status_id) {
-    console.log(`getting status ${status_id}`)
+    console.log(`getting status ${status_id}`);
     return this.httpClient.get(`${this.API_URL}/jobs/status/${status_id}`);
   }
   getUserCredibilityWithUpdates(screen_name) {

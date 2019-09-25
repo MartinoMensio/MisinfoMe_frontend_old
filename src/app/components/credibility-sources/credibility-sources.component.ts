@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService, CountResult, OverallCounts, LoadStates } from '../../api.service';
+import { APIService, CountResult, OverallCounts, LoadStates } from 'src/app/services/api.service';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation } from 'd3-force';
 import * as shape from 'd3-shape';
 import * as $ from 'jquery';

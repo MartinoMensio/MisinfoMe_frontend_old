@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { APIService, LoadStates } from 'src/app/api.service';
+import { APIService, LoadStates } from 'src/app/services/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map, first } from 'rxjs/operators';
 

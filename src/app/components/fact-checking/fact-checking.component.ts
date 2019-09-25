@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from 'src/app/api.service';
+import { APIService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-fact-checking',

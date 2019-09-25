@@ -1,24 +1,50 @@
-<div>
-    <!-- TODO <mat-form-field>
-        <mat-label>Evaluation type</mat-label>
-        <mat-select [(value)]="evaluation_type">
-            <mat-option *ngFor="let o of evaluation_type_options" [value]="o.id">
-                {{o.name}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field> -->
+<mat-card>
+    <h2>Settings</h2>
+    <div>
+        <h3>Visualisation</h3>
+        <p>Personalise the visualisation.</p>
 
-    <mat-form-field>
-        <mat-label>How you want to see the credibility indicator</mat-label>
-        <mat-select [(value)]="credibility_meter_type">
-            <mat-option *ngFor="let o of credibility_meter_type_options" [value]="o.id">
-                {{o.name}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+        <mat-form-field>
+            <mat-label>How you want to see the credibility indicator</mat-label>
+            <mat-select [(value)]="credibility_meter_type">
+                <mat-option *ngFor="let o of credibility_meter_type_options" [value]="o.id">
+                    {{o.name}} ({{o.description}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <h3>Credibility settings</h3>
+        <p>Customise the behaviour of the model</p>
+        <mat-form-field>
+            <mat-label>Evaluation type</mat-label>
+            <mat-select [(value)]="evaluation_type">
+                <mat-option *ngFor="let o of evaluation_type_options" [value]="o.id">
+                    {{o.name}} ({{o.description}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-card *ngIf="evaluation_type === 'credibility'">
+            <p>Customise the credibility model</p>
+            <!-- Weights (TODO this needs to be done also server-side) -->
+            <p class="accent-color"><i>This is under implementation!! Modifying the values has no effect!!</i></p>
+            <mat-form-field>
+                <mat-label>Use only fact-checks coming from IFCN</mat-label>
+                <mat-select [(value)]="only_ifcn_factchecks">
+                    <mat-option [value]="true">Yes, I just want fact-checks from IFCN signatories</mat-option>
+                    <mat-option [value]="false">No, show me all the fact-checks</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <p>Customise the weights of the origins</p>
+            <table>
+                <tr><th>Origin</th><th>weight</th></tr>
+                <tr *ngFor="let o of credibility_weights"><td>{{o.name}}</td><td>{{o.weight}}</td></tr>
+            </table>
+        </mat-card>
+    </div>
 
-    <!-- Weights (TODO this needs to be done also server-side) -->
+    <p></p>
 
     <button mat-button color="accent" mat-raised-button (click)="clearSettings()">Reset</button>
     <button mat-button color="primary" mat-raised-button (click)="save()">Save</button>
-</div>
+</mat-card>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { SettingsService, EvaluationType, CredibilityMeterType } from 'src/app/services/settings.service';
+import { APIService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-settings',
@@ -9,55 +11,38 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class SettingsComponent implements OnInit {
   evaluation_type: string;
   credibility_meter_type: string;
+  only_ifcn_factchecks: boolean;
+  credibility_weights: Array<any>;
 
-  // TODO this needs to be removed, only new evaluation has sense
-  evaluation_type_options = [{
-    name: 'Credibility model',
-    id: 'credibility'
-  }, {
-    name: 'Legacy model',
-    id: 'legacy'
-  }
-  ];
+  evaluation_type_options: Array<EvaluationType>;
+  credibility_meter_type_options: Array<CredibilityMeterType>;
 
-  credibility_meter_type_options = [
-    {
-      name: 'Thumb indicator (shows a thumb going from up to down)',
-      id: 'thumb'
-    }, {
-      name: 'Gauge indicator (shows a horizontal gauge)',
-      id: 'gauge'
-    }
-  ];
-
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(private _snackBar: MatSnackBar, private settingsService: SettingsService, private apiService: APIService) { }
 
   ngOnInit() {
+    this.evaluation_type_options = this.settingsService.evaluationTypes;
+    this.credibility_meter_type_options = this.settingsService.credibilityMeterTypes;
+    this.only_ifcn_factchecks = true;
     this.initForm();
   }
 
   initForm() {
-    this.evaluation_type = localStorage.getItem('evaluation_type') || 'credibility';
-    this.credibility_meter_type = localStorage.getItem('credibility_meter_type') || 'thumb';
+    this.evaluation_type = this.settingsService.evaluationType;
+    this.credibility_meter_type = this.settingsService.credibilityMeterType;
+    this.apiService.getCredibilityOrigins().subscribe((res: any) => {
+      this.credibility_weights = res;
+    });
   }
 
   clearSettings() {
-    localStorage.clear();
+    this.settingsService.clearSettings();
     this.initForm();
     this._snackBar.open('Settings have been cleared!', 'OK', {duration: 3000});
   }
 
-  setEvaluationType(type) {
-    localStorage.setItem('evaluation_type', type);
-  }
-
-  setCredibilityMeterType(type) {
-    localStorage.setItem('credibility_meter_type', type);
-  }
-
   save() {
-    this.setEvaluationType(this.evaluation_type);
-    this.setCredibilityMeterType(this.credibility_meter_type);
+    this.settingsService.evaluationType = this.evaluation_type;
+    this.settingsService.credibilityMeterType = this.credibility_meter_type;
     this._snackBar.open('Settings have been saved!', 'OK', {duration: 3000});
   }
 

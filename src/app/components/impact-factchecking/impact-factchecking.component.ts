@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from '../../api.service';
 import { select } from 'd3';
+import { APIService } from 'src/app/services/api.service';
 
 export interface Food {
   value: string;

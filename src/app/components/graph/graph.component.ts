@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { APIService, CountResult } from 'src/app/api.service';
 import { Subject } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation, forceCenter } from 'd3-force';
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
 import { Edge, Node, ClusterNode } from '@swimlane/ngx-graph';
 import * as shape from 'd3-shape';
+import { CountResult, APIService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-graph',
