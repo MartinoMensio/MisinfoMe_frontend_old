@@ -16,7 +16,7 @@ export class CredibilitySourcesComponent implements OnInit {
 
   state_source: string; // the value that comes from the url parameter
   source = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_.-]+')]);
-  private source_prefix = '';
+  source_prefix = '';
   private sub: Subscription;
 
   // state management
