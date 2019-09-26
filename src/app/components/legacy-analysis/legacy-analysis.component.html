@@ -1,5 +1,10 @@
 <div *ngIf="result_you">
     <mat-card>
+        <div *ngIf="evaluation_type === 'credibility'">
+            <a mat-raised-button color="primary"
+                [routerLink]="[ '/credibility/profiles', result_you.screen_name ]">&rarr; See the new evaluation
+                &larr;</a>
+        </div>
         <div>
             <h3><a href="https://twitter.com/{{result_you.screen_name}}" target="_blank">{{result_you.screen_name}}</a>
             </h3>

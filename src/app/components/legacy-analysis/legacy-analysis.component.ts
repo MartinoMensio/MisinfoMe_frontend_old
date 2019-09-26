@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CountResult } from 'src/app/services/api.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-legacy-analysis',
@@ -42,9 +43,14 @@ export class LegacyAnalysisComponent implements OnInit {
   table_data_good = [];
   table_data_rebuttals = [];
 
-  constructor() { }
+  // for now, the default view on the homepage is the legacy, so could be that the evaluation type is both
+  // TODO remove legacy on homepage
+  evaluation_type: string;
+
+  constructor(private settingsService: SettingsService) { }
 
   ngOnInit() {
+    this.evaluation_type = this.settingsService.evaluationType;
   }
 
   private extract_results(json_data: any) {

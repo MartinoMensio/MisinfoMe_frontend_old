@@ -137,7 +137,7 @@ export class APIService {
     return o.pipe(
       // switch to a new observable
       switchMap((job_create_res: any) => {
-        const job_id = job_create_res.internal_task_id;
+        const job_id = job_create_res.job_id;
         console.log(job_id);
         // every 2 seconds
         return interval(2000)
