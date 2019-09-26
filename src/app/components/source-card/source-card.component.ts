@@ -19,6 +19,7 @@ export class SourceCardComponent implements OnInit {
   _sourceAssessment: any;
   @Input()
   set sourceAssessment(sourceAssessments) {
+    sourceAssessments.assessments_without_fc = [];
     sourceAssessments.assessments.forEach((element, index) => {
       if (element.origin_id === 'factchecking_report') {
         this.factcheckingReports = element;
@@ -29,7 +30,7 @@ export class SourceCardComponent implements OnInit {
             this.byFactchecker.push(value);
           }
         });
-        sourceAssessments.assessments.splice(index, 1);
+        // sourceAssessments.assessments.splice(index, 1);
 
         this.chartData = this.byFactchecker.reduce((prev: Array<any>, curr) => {
           prev.push({
@@ -55,6 +56,8 @@ export class SourceCardComponent implements OnInit {
           return prev;
         }, [])
         console.log(this.chartData)
+      } else {
+        sourceAssessments.assessments_without_fc.push(element);
       }
     });
     this._sourceAssessment = sourceAssessments;

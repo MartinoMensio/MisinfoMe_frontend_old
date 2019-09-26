@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
+import { debounceTime, tap, switchMap, finalize, filter, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -85,19 +85,32 @@ export class SearchSourceComponent implements OnInit {
           this.results = [];
           this.isLoading = true;
         }),
+        filter((value: string) => {
+          if (this.source_type.value === 'twitter') {
+            return true;
+          } else {
+            this.isLoading = false;
+            return false;
+          }
+        }),
+        // map((value:string) => value.replace('twitter.com/', '')),
         switchMap(value => this.httpClient.get(`https://idir.uta.edu/claimportal/api/v1/users?keyword=${value}`)
           .pipe(
             finalize(() => {
               this.isLoading = false;
             }),
           )
-        )
+        ),
+        finalize(() => {
+          this.isLoading = false;
+        })
       )
       .subscribe((data: Array<any>) => {
         this.errorMsg = '';
         this.results = data;
 
         console.log(this.results);
+        console.log(this.isLoading);
       });
     this.formField.setValue(this.formField.value);
   }

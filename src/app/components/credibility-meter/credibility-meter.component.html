@@ -1,7 +1,7 @@
-<div style="padding: 5px;" [style.width]="size + 'px'">
-    <div *ngIf='credibility.confidence == 0'>
+<div style="padding: 5px;" [style.width]="size + 'px'" class="center">
+    <!-- <div *ngIf='credibility.confidence == 0'>
         <p>Unknown!!!</p>
-    </div>
+    </div> -->
     <div id="wrapper" *ngIf="credibility_meter_type === 'thumb'">
         <!-- {{credibility.value}} -->
         <fa-icon icon="thumbs-up" symbol="thumb{{nonce}}"
