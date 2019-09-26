@@ -1,4 +1,5 @@
 <div>
+    <h2>Credibility check on Twitter</h2>
     <div>
         <mat-card>
             <form #main_form="ngForm" (ngSubmit)="onSubmit()">
@@ -8,12 +9,17 @@
         <p></p>
         <div *ngIf="main_profile_state == loadStates.Loading">
             <mat-spinner class="center"></mat-spinner>
-            <p style="text-align:center;" class="primary-color" >{{loading_str}}</p>
+            <p style="text-align:center;" class="primary-color">{{loading_str}}</p>
         </div>
         <app-error *ngIf="main_profile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
         <div *ngIf="main_profile_state == loadStates.Loaded">
-            <app-profile-card [profileAssessment]="analysis_result" [screen_name]="state_screen_name">
-            </app-profile-card>
+            <div *ngIf="evaluation_type === 'credibility'">
+                <app-profile-card [profileAssessment]="analysis_result" [screen_name]="state_screen_name">
+                </app-profile-card>
+            </div>
+            <div *ngIf="evaluation_type === 'legacy'">
+                <app-legacy-analysis [result_you]="analysis_result"></app-legacy-analysis>
+            </div>
         </div>
         <p></p>
         <mat-card>

@@ -50,7 +50,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
   result_you: CountResult;
-  pie_data_you = [];
 
   // state management
   loadStates = LoadStates;
@@ -102,17 +101,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   you_vs_average_multi = [];
 
 
-  table_data_bad = [];
-  table_data_mixed = [];
-  table_data_good = [];
-  table_data_rebuttals = [];
-
-  options = {
-    fixedDepth: true,
-    disableDrag: true
-  };
-  list = [];
-
   private sub: Subscription;
 
   constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
@@ -137,134 +125,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     return val + '%';
   }
 
-  group_tweets_hierarchically(tweets: Array<any>) {
-    const result = tweets.reduce((acc: any, curr: any) => {
-      const label = curr.score.label;
-      const reason = curr.reason;
-      let by_label_group = acc[label];
-      if (!by_label_group) {
-        // new label
-        by_label_group = {};
-        acc[label] = by_label_group;
-      }
-      let by_reason_group = by_label_group[reason];
-      if (!by_reason_group) {
-        // new reason
-        by_reason_group = [];
-        by_label_group[reason] = by_reason_group;
-      }
-      by_reason_group.push(curr);
-      return acc;
-    }, {});
-    return result;
-  }
 
-  create_nested_list(grouped) {
-    this.list = [{
-      'id': 'fake',
-      'label': 'These tweets have been identified as linked to misinforming URLs',
-      'icon': 'error',
-      'class': 'bad',
-      'expanded': false,
-      'count': 0,
-      'children': [
-        {
-          'id': 'fact_checking',
-          'label': 'Classified as "fake" by fact-checking agencies',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'domain_match',
-          'label': 'Domain with a negative credibility score',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'full_url_match',
-          'label': 'Assessments from other sources',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }
-      ]
-    }, {
-      'id': 'mixed',
-      'label': 'These tweets have been identified as linked to mixed URLs',
-      'icon': 'error',
-      'class': 'mixed',
-      'expanded': false,
-      'count': 0,
-      'children': [
-        {
-          'id': 'fact_checking',
-          'label': 'Classified as "mixed" by fact-checking agencies',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'domain_match',
-          'label': 'Domain with a mixed credibility score',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'full_url_match',
-          'label': 'Assessments from other sources',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }
-      ]
-    }, {
-      'id': 'true',
-      'label': 'These tweets have been identified as linked to verified URLs',
-      'icon': 'check_circle',
-      'class': 'good',
-      'expanded': false,
-      'count': 0,
-      'children': [
-        {
-          'id': 'fact_checking',
-          'label': 'Classified as "true" by fact-checking agencies',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'fact_checker',
-          'label': 'URLs pointing to fact-checking agencies',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'domain_match',
-          'label': 'Domain with a positive credibility score',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }, {
-          'id': 'full_url_match',
-          'label': 'Assessments from other sources',
-          'expanded': false,
-          'count': 0,
-          'children': [{ 'tweets': [] }]
-        }
-      ]
-    }];
-    Object.keys(grouped).forEach((label) => {
-      const l0 = this.list.find((el) => el.id === label);
-      let tot_cnt = 0;
-      Object.keys(grouped[label]).forEach((reason) => {
-        const l1 = l0.children.find((el) => el.id === reason);
-        const tweets = grouped[label][reason];
-        const prepared_table = this.prepare_table_data(tweets);
-        l1.children[0]['tweets'] = prepared_table;
-        l1.count = tweets.length;
-        tot_cnt += tweets.length;
-      });
-      l0.count = tot_cnt;
-    });
-  }
 
   getErrorMessage() {
     if (this.screen_name.hasError('required')) {
@@ -315,30 +176,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }];
   }
 
-  prepare_table_data(raw_urls_data: Array<any>) {
-    // TODO first aggregate by tweet_id
-    return raw_urls_data.reduce((acc, curr) => {
-      const fact_checked = {
-        'fake': curr.score.factchecking_stats && curr.score.factchecking_stats.fake || [],
-        'true': curr.score.factchecking_stats && curr.score.factchecking_stats.true || [],
-        'mixed': curr.score.factchecking_stats && curr.score.factchecking_stats.mixed || [],
-      };
-      acc.push({
-        tweet_id: curr.found_in_tweet,
-        tweet_text: curr.tweet_text,
-        url: curr.url,
-        reason: curr.reason,
-        datasets: curr.sources,
-        retweet: curr.retweet,
-        label: curr.score.label,
-        rebuttals: curr.rebuttals,
-        fact_checked: fact_checked,
-        domain: curr.domain
-      });
-      return acc;
-    }, []);
-  }
-
   onSubmit() {
     console.log('submit with ' + this.screen_name.value, ' from ' + this.state_screen_name);
     if (this.state_screen_name !== this.screen_name.value) {
@@ -352,7 +189,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse() {
     this.main_profile_state = LoadStates.Loading;
     console.log('clicked!!!');
-    this.apiService.postUserCountWithUpdate(this.screen_name.value).pipe(
+    this.apiService.postUserCountWithUpdates(this.screen_name.value).pipe(
       map(result_update => {
         console.log(result_update);
         // update the message
@@ -366,15 +203,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     ).subscribe((result: CountResult) => {
       this.result_you = result;
       this.loading_str = '';
-      this.pie_data_you = this.extract_results(result);
-
-      this.table_data_bad = this.prepare_table_data(result.fake_urls);
-      this.table_data_mixed = this.prepare_table_data(result.mixed_urls);
-      this.table_data_good = this.prepare_table_data(result.verified_urls);
-      this.table_data_rebuttals = this.prepare_table_data(result.rebuttals);
-
-      const grouped = this.group_tweets_hierarchically(result.fake_urls.concat(result.mixed_urls).concat(result.verified_urls));
-      this.create_nested_list(grouped);
 
       this.update_overall().add(something => {
 

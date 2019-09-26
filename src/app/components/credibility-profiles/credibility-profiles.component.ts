@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { APIService, LoadStates } from 'src/app/services/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map, first } from 'rxjs/operators';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-credibility-profiles',
@@ -14,6 +15,7 @@ export class CredibilityProfilesComponent implements OnInit {
 
   state_screen_name: string; // the value that comes from the url parameter
   screen_name = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+')]);
+  evaluation_type: string; // from the settings
   private sub: Subscription;
 
   // state management
@@ -24,7 +26,8 @@ export class CredibilityProfilesComponent implements OnInit {
 
   analysis_result: any;
 
-  constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private apiService: APIService, private settingsService: SettingsService,
+    private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -35,6 +38,7 @@ export class CredibilityProfilesComponent implements OnInit {
         this.analyse();
       }
     });
+    this.evaluation_type = this.settingsService.evaluationType;
   }
 
   onSubmit() {
@@ -50,8 +54,20 @@ export class CredibilityProfilesComponent implements OnInit {
   analyse() {
     const screen_name = this.state_screen_name;
     this.main_profile_state = LoadStates.Loading;
-    this.apiService.getUserCredibilityWithUpdates(screen_name).pipe(
-      map(result_update => {
+    let observable;
+    console.log(this.settingsService.evaluationType);
+    switch (this.settingsService.evaluationType) {
+      case 'credibility':
+        observable = this.apiService.getUserCredibilityWithUpdates(screen_name);
+        break;
+      case 'legacy':
+        observable = this.apiService.postUserCountWithUpdates(screen_name);
+        break;
+      default:
+        throw Error(`invalid setting ${this.settingsService.evaluationType}`);
+    }
+    observable.pipe(
+      map((result_update: any) => {
         console.log(result_update);
         // update the message
         this.loading_str = result_update.state;

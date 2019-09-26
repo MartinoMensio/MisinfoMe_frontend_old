@@ -60,6 +60,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SearchSourceComponent } from './components/search-source/search-source.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-analysis.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ScoringInfoComponent,
     SearchSourceComponent,
     SettingsComponent,
+    LegacyAnalysisComponent,
   ],
   imports: [
     BrowserModule,

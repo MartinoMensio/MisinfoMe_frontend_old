@@ -130,7 +130,7 @@ export class APIService {
   getUserCredibilityWithUpdates(screen_name) {
     return this.keepWatchingJobStatus(this.createJobCredibilityProfile(screen_name));
   }
-  postUserCountWithUpdate(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
+  postUserCountWithUpdates(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
     return this.keepWatchingJobStatus(this.createJobAnalysisProfile(screen_name));
   }
   private keepWatchingJobStatus(o: Observable<Object>) {

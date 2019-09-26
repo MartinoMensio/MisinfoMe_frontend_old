@@ -1,0 +1,57 @@
+.bad {
+    color: rgb(161, 10, 40);
+}
+
+.good {
+    color: rgb(90, 164, 84);
+}
+.mixed {
+    color: rgb(199, 180, 44);
+}
+
+.table-container-2 {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.mat-slider-horizontal {
+    width: 300px;
+}
+
+/* this makes the chart size dynamic in width but fixed in height https://github.com/swimlane/ngx-charts/issues/147#issuecomment-492959081 */
+.piechart-container {
+    display: grid;
+    height: 250px;
+}
+
+.piechart-container-tiny {
+    display: grid;
+    height: 130px;
+}
+.piechart-container-tiny ngx-charts-advanced-pie-chart {
+    transform: scale(0.65,0.65) translate(-120px, 0px);
+}
+
+/* these two css are for the scrollbar to be always visible, but only work in chrome */
+/*
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+*/
+
+.barchart-container {
+    display: grid;
+    height: 150px;
+}
+
+.graph-container {
+    display: grid;
+    /* height: 500px;  SET BY ANGULAR DYNAMICALLY */
+}
