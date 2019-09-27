@@ -61,6 +61,7 @@ import { SearchSourceComponent } from './components/search-source/search-source.
 import { SettingsComponent } from './components/settings/settings.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-analysis.component';
+import { TweetsListComponent } from './components/tweets-list/tweets-list.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-ana
     SearchSourceComponent,
     SettingsComponent,
     LegacyAnalysisComponent,
+    TweetsListComponent,
   ],
   imports: [
     BrowserModule,
@@ -130,7 +132,7 @@ import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-ana
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [SourceCardComponent]
+  entryComponents: [SourceCardComponent, TweetsListComponent]
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {

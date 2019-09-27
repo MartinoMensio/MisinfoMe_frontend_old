@@ -1,0 +1,8 @@
+<div>
+    <h3 *ngIf="title">{{title}}</h3>
+    <mat-spinner *ngIf="tweets_loading" class="center"></mat-spinner>
+    <div *ngFor="let t_id of tweets; let i=index">
+        <ngx-tweet tweetId="{{t_id}}" width="250">
+        </ngx-tweet>
+    </div>
+</div>

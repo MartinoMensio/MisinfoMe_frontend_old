@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ScoringInfoComponent } from '../scoring-info/scoring-info.component';
 import { SourceCardComponent } from '../source-card/source-card.component';
+import { TweetsListComponent } from '../tweets-list/tweets-list.component';
 
 @Component({
   selector: 'app-profile-card',
@@ -9,6 +10,10 @@ import { SourceCardComponent } from '../source-card/source-card.component';
   styleUrls: ['./profile-card.component.css']
 })
 export class ProfileCardComponent implements OnInit {
+
+  detail_panel_is_expanded: boolean;
+  detail_panel: string;
+  tweets_to_show: Array<any>;
 
   @Input()
   screen_name: string;
@@ -55,6 +60,34 @@ export class ProfileCardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The source dialog was closed');
+    });
+  }
+
+  setDetailTo(detail_type) {
+    if (this.detail_panel === detail_type) {
+      // clicking on the same again, closes it
+      this.detail_panel_is_expanded = !this.detail_panel_is_expanded;
+    } else {
+      this.detail_panel_is_expanded = true;
+    }
+    this.detail_panel = detail_type;
+  }
+
+  closeDetails() {
+    this.detail_panel_is_expanded = false;
+  }
+
+  seeTweets(tweets, sourceName) {
+    this.tweets_to_show = tweets;
+    const title = `Tweet${(tweets.length > 1) ? 's' : ''} using ${sourceName}`
+    const dialogRef = this.dialog.open(TweetsListComponent, {
+      // width: '250px',
+      maxHeight: '90vh',
+      data: {tweets: tweets, title: title}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
 
