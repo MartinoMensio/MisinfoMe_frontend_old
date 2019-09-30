@@ -72,8 +72,8 @@
                             <p class="accent-color">The URLs shared don't match with the ones that we know about.</p>
                         </div>
                     </div>
-                    <button *ngIf="profileAssessment.urls_credibility.assessments.length" (click)="setDetailTo('urls')" mat-button color="primary" class="full-width"
-                        matTooltip="Expand">
+                    <button *ngIf="profileAssessment.urls_credibility.assessments.length" (click)="setDetailTo('urls')"
+                        mat-button color="primary" class="full-width" matTooltip="Expand">
                         <div class="bigger-icon">
                             <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
                         </div>
@@ -95,7 +95,8 @@
                             </div>
                         </div>
                     </div>
-                    <button *ngIf="profileAssessment.sources_credibility.assessments.length" (click)="setDetailTo('sources')" mat-button color="primary" class="full-width"
+                    <button *ngIf="profileAssessment.sources_credibility.assessments.length"
+                        (click)="setDetailTo('sources')" mat-button color="primary" class="full-width"
                         matTooltip="Expand">
                         <div class="bigger-icon">
                             <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
@@ -103,7 +104,7 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="detail_panel_is_expanded">
+            <div *ngIf="detail_panel_is_expanded" [@enterAnimation]>
                 <div fxLayout="row">
                     <h4>Details</h4>
                     <span style="flex: 1 1 auto;"></span>
@@ -117,47 +118,38 @@
                     </app-source-card>
                 </div>
                 <div *ngIf="detail_panel === 'urls'">
-                    <div *ngIf="profileAssessment.urls_credibility.assessments.length" fxLayout="row"
-                        fxLayoutGap="20px">
-                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="column" fxLayoutGap="10px"
-                            class="mat-elevation-z8">
+                    <div *ngIf="profileAssessment.urls_credibility.assessments.length">
+                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid"
+                            class="mat-elevation-z8 padded">
                             <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
                             <div *ngFor="let assessment of profileAssessment.urls_credibility.assessments">
-                                <div>
-                                    <p>
-                                        <a href="{{assessment.itemReviewed}}" target="_blank;">
-                                            {{ (assessment.itemReviewed.length>30)? (assessment.itemReviewed | slice:0:30)+'..':(assessment.itemReviewed) }}</a>
-                                        matched (TODO who reviewed the claim?)
-                                    </p>
-                                </div>
-                                <div fxLayout="row" fxLayoutGap="20px">
-                                    <div>
-                                        <a mat-raised-button matTooltip="See details for this URL">
-                                            <app-credibility-meter [credibility]='assessment.credibility'>
-                                            </app-credibility-meter>
+                                <div class="mat-elevation-z4">
+                                    <div class="padded">
+                                        <a matTooltip="See details for this URL"
+                                            (click)="openSourceDialog(assessment)" class="pointer">
+                                            <div>
+                                                <div class="center" style="text-align: center">
+                                                    <p><b>
+                                                            <a href="{{assessment.itemReviewed}}"
+                                                                target="_blank;">{{ (assessment.itemReviewed.length>30)? (assessment.itemReviewed | slice:0:30)+'..':(assessment.itemReviewed) }}</a>
+                                                        </b></p>
+                                                </div>
+                                                <!-- TODO get icon from the website reviewed? or not? -->
+                                                <!-- <div style="width: 100px; height: 70px; justify-content: center"
+                                                        class="center" fxLayoutAlign="center center">
+                                                        <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
+                                                            appImgFallback style="max-height: 100%; max-width: 100%;">
+                                                    </div> -->
+                                                <app-credibility-meter [credibility]='assessment.credibility'>
+                                                </app-credibility-meter>
+                                            </div>
                                         </a>
                                     </div>
-                                    <div>
-                                        <mat-expansion-panel class="mat-elevation-z5"
-                                            (opened)="assessment.show_tweets = true"
-                                            (closed)="assessment.show_tweets = false">
-                                            <mat-expansion-panel-header>
-                                                <mat-panel-title>
-                                                    {{assessment.tweets_containing.length}} Tweets with this URL
-                                                </mat-panel-title>
-                                                <mat-panel-description>
-                                                    Click to expand
-                                                </mat-panel-description>
-                                            </mat-expansion-panel-header>
-                                            <div *ngIf="assessment.show_tweets"
-                                                style="max-width: 100%; overflow-x:scroll;">
-                                                <div *ngFor="let t_id of assessment.tweets_containing">
-                                                    <ngx-tweet tweetId="{{t_id}}" width="500"></ngx-tweet>
-                                                </div>
-                                            </div>
-                                        </mat-expansion-panel>
-                                    </div>
-                                    <!-- TODO link [routerLink]="[ '/credibility/sources', assessment.itemReviewed ]" -->
+                                    <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)"
+                                        mat-button color="primary" class="full-width" matTooltip="See tweets">
+                                        {{assessment.tweets_containing.length}}
+                                        Tweet{{(assessment.tweets_containing.length > 1)? 's': ''}} using this URL
+                                    </button>
                                 </div>
                             </div>
                         </div>

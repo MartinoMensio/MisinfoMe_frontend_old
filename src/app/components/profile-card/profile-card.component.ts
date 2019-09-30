@@ -3,11 +3,26 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { ScoringInfoComponent } from '../scoring-info/scoring-info.component';
 import { SourceCardComponent } from '../source-card/source-card.component';
 import { TweetsListComponent } from '../tweets-list/tweets-list.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-profile-card',
   templateUrl: './profile-card.component.html',
-  styleUrls: ['./profile-card.component.css']
+  styleUrls: ['./profile-card.component.css'],
+  animations: [
+    trigger(
+      'enterAnimation', [
+        transition(':enter', [
+          style({ opacity: 0 }),
+          animate('500ms', style({ opacity: 1 }))
+        ]),
+        transition(':leave', [
+          style({ opacity: 1 }),
+          animate('500ms', style({ opacity: 0 }))
+        ])
+      ]
+    )
+  ]
 })
 export class ProfileCardComponent implements OnInit {
 
