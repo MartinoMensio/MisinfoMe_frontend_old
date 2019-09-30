@@ -55,6 +55,7 @@ export class APIService {
   }
 
   getOverallCounts() {
+    // TODO this need to be updated if using credibility
     return this.getPath('/stats/twitter_accounts');
   }
 
@@ -74,11 +75,11 @@ export class APIService {
     return this.getPath('/entities/factcheckers_table');
   }
 
-  getFriendsCount(screen_name, limit: number = 500) {
+  getFriendsCount(screen_name, limit: number = 500, use_credibility=true) {
     if (limit) {
-      return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&limit=${limit}`);
+      return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&limit=${limit}&use_credibility=${use_credibility}`);
     } else {
-      return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}`);
+      return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&use_credibility=${use_credibility}`);
     }
   }
 
@@ -119,9 +120,9 @@ export class APIService {
     console.log(`creating job for ${screen_name}`);
     return this.httpClient.get(`${this.CREDIBILITY_URL}/users/?screen_name=${screen_name}&wait=false`);
   }
-  createJobAnalysisProfile(screen_name) {
+  createJobAnalysisProfile(screen_name, use_credibility) {
     console.log(`creating job for ${screen_name}`);
-    return this.postPath(`/analysis/twitter_accounts?screen_name=${screen_name}&wait=false`, {});
+    return this.postPath(`/analysis/twitter_accounts?screen_name=${screen_name}&wait=false&use_credibility=${use_credibility}`, {});
   }
   getJobStatus(status_id) {
     console.log(`getting status ${status_id}`);
@@ -130,8 +131,8 @@ export class APIService {
   getUserCredibilityWithUpdates(screen_name) {
     return this.keepWatchingJobStatus(this.createJobCredibilityProfile(screen_name));
   }
-  postUserCountWithUpdates(screen_name, allow_cached: Boolean = false, only_cached: Boolean = false, limit: number = 500) {
-    return this.keepWatchingJobStatus(this.createJobAnalysisProfile(screen_name));
+  postUserCountWithUpdates(screen_name, use_credibility = true) {
+    return this.keepWatchingJobStatus(this.createJobAnalysisProfile(screen_name, use_credibility));
   }
   private keepWatchingJobStatus(o: Observable<Object>) {
     return o.pipe(

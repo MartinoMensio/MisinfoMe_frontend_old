@@ -5,6 +5,12 @@
     <p>Insert the Twitter screen name, we will verify how its tweets are related to known misinformation.</p>
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <app-search-user [formField]="screen_name"></app-search-user>
+      <div style="display: none;">
+        <mat-radio-group [formControl]="use_credibility" fxLayout="row" fxLayoutGap="20px">
+          <mat-radio-button [value]="true">credibility</mat-radio-button>
+          <mat-radio-button [value]="false">legacy</mat-radio-button>
+        </mat-radio-group>
+      </div>
     </form>
   </mat-card>
   <p></p>
@@ -159,7 +165,8 @@
         </ngx-charts-bar-horizontal-2d>
       </div>
       <p></p>
-      <p>The chart below shows a comparison of the final score. 0 corresponds to only sharing misinforming URLs, 100 to only verified URLs.</p>
+      <p>The chart below shows a comparison of the final score. 0 corresponds to only sharing misinforming URLs, 100 to
+        only verified URLs.</p>
       <div class="barchart-container">
         <ngx-charts-bar-horizontal [scheme]="colorSchemeLinear" [schemeType]="'linear'" [results]="you_vs_average"
           xScaleMax="100" xAxis="true" showDataLabel="true" yAxis="true" showXAxisLabel="true" xAxisLabel="Score"
@@ -185,7 +192,8 @@
         <p>Just to give you an idea of the amount of misinformation that circulates on Twitter, take a look at these
           numbers.</p>
         <p>So far we have analysed <b>{{result_overall.twitter_profiles_cnt}} profiles</b>, corresponding to
-          <b>{{result_overall.tweets_cnt}} tweets</b>, for a total of <b>{{result_overall.shared_urls_cnt}} URLs</b>.</p>
+          <b>{{result_overall.tweets_cnt}} tweets</b>, for a total of <b>{{result_overall.shared_urls_cnt}} URLs</b>.
+        </p>
       </div>
       <div class="piechart-container">
         <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs analysed" [scheme]="colorScheme"
@@ -195,7 +203,8 @@
           [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
       </div>
-      <button mat-button mat-stroked-button color="primary" [routerLink]="['/about']">More about our verification process</button>
+      <button mat-button mat-stroked-button color="primary" [routerLink]="['/about']">More about our verification
+        process</button>
     </div>
   </mat-card>
 </div>

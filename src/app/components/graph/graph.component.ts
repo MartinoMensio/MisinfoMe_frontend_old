@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Edge, Node, ClusterNode } from '@swimlane/ngx-graph';
 import * as shape from 'd3-shape';
 import { CountResult, APIService } from 'src/app/services/api.service';
+import { map, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-graph',
@@ -57,6 +58,7 @@ export class GraphComponent implements OnInit {
   total_friends = 0;
   analyse_remaining_disabled = true;
   friends_results: Array<CountResult>;
+  loading_str: string;
 
   private _main_profile: CountResult;
   @Input()
@@ -67,6 +69,9 @@ export class GraphComponent implements OnInit {
   get main_profile() {
     return this._main_profile;
   }
+
+  // @Input()
+  credibility_use = false; // TODO get the value from input, now is broken
 
   // For differentiate drag and click
   last_event: any = null;
@@ -126,7 +131,8 @@ export class GraphComponent implements OnInit {
   }
 
   create_graph() {
-    this.apiService.getFriendsCount(this.main_profile.screen_name).subscribe((res: Array<CountResult>) => {
+    console.log(this.credibility_use)
+    this.apiService.getFriendsCount(this.main_profile.screen_name, 500, this.credibility_use).subscribe((res: Array<CountResult>) => {
       this.friends_graph = this.generateGraph(this.main_profile, []);
       this.already_analysed = 0;
       this.total_friends = res.length;
@@ -229,7 +235,9 @@ export class GraphComponent implements OnInit {
   analyse_remaining() {
     this.analyse_remaining_disabled = true;
     const candidate = this.get_candidate();
-    return this.analyse_candidate(candidate);
+    return this.analyse_candidate(candidate).finally(() => {
+      this.loading_str = ''
+    });
   }
 
   get_candidate() {
@@ -240,7 +248,19 @@ export class GraphComponent implements OnInit {
     if (!candidate) {
       return Promise.resolve();
     }
-    return this.apiService.postUserCount([candidate]).toPromise().then((result: CountResult) => {
+    this.loading_str = `Analysing ${candidate}...`
+    return this.apiService.postUserCountWithUpdates([candidate], this.credibility_use).pipe(
+      map(result_update => {
+        console.log(result_update);
+        // update the message
+        this.loading_str = `Analysing ${candidate}: ${result_update.state}`;
+        return result_update;
+      }),
+      // wait until success
+      first((res: any) => res.state === 'SUCCESS'),
+      // then unwrap the result
+      map((result_ok: any) => result_ok.result)
+    ).toPromise().then((result: CountResult) => {
       this.update_friends_stat_with_new(result);
       this.friends_screen_names[candidate] = true;
       const next = this.get_candidate();

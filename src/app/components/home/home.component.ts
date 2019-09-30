@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   score_neg: number;
   score_unk: number;
   tweet_cnt: number;
+  use_credibility: FormControl = new FormControl(false);
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -187,7 +188,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse() {
     this.main_profile_state = LoadStates.Loading;
     console.log('clicked!!!');
-    this.apiService.postUserCountWithUpdates(this.screen_name.value).pipe(
+    this.apiService.postUserCountWithUpdates(this.screen_name.value, this.use_credibility.value).pipe(
       map(result_update => {
         console.log(result_update);
         // update the message

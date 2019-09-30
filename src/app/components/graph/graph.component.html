@@ -7,6 +7,7 @@
     remaining</button>
     <mat-progress-spinner color="accent" mode="indeterminate" [diameter]="40"
     *ngIf="analyse_remaining_disabled && (already_analysed !== total_friends)"></mat-progress-spinner>
+    <div class="accent-color">{{loading_str}}</div>
   </div>
 
 
