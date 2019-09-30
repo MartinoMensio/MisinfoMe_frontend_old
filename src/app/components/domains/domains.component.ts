@@ -48,8 +48,8 @@ export class DomainsComponent implements OnInit {
         return prev;
       }, initial_sets) as Array<any>;
       this.domain_sets = sets_with_counts.map(el => {
-        return {size: el.size as number, sets: Array.from(el.sets) as Array<string>, label: el.label}
-      });//.slice(0, 10);
+        return {size: el.size as number, sets: Array.from(el.sets) as Array<string>, label: el.label};
+      }); // .slice(0, 10);
     });
   }
 

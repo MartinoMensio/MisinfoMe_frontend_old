@@ -66,7 +66,7 @@ export class ProfileCardComponent implements OnInit {
   }
 
   openSourceDialog(sourceAssessment): void {
-    console.log(sourceAssessment)
+    console.log(sourceAssessment);
     const dialogRef = this.dialog.open(SourceCardComponent, {
       // width: '250px',
       maxHeight: '90vh',
@@ -94,7 +94,7 @@ export class ProfileCardComponent implements OnInit {
 
   seeTweets(tweets, sourceName) {
     this.tweets_to_show = tweets;
-    const title = `Tweet${(tweets.length > 1) ? 's' : ''} using ${sourceName}`
+    const title = `Tweet${(tweets.length > 1) ? 's' : ''} using ${sourceName}`;
     const dialogRef = this.dialog.open(TweetsListComponent, {
       // width: '250px',
       maxHeight: '90vh',
