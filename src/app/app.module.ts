@@ -62,6 +62,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-analysis.component';
 import { TweetsListComponent } from './components/tweets-list/tweets-list.component';
+import { UrlReviewedCardComponent } from './components/url-reviewed-card/url-reviewed-card.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { TweetsListComponent } from './components/tweets-list/tweets-list.compon
     SettingsComponent,
     LegacyAnalysisComponent,
     TweetsListComponent,
+    UrlReviewedCardComponent,
   ],
   imports: [
     BrowserModule,
