@@ -29,6 +29,10 @@ export class ProfileCardComponent implements OnInit {
   detail_panel_is_expanded: boolean;
   detail_panel: string;
   tweets_to_show: Array<any>;
+  bad_sources: Array<any>;
+  bad_sources_tweets: Array<string> = [];
+  fact_checkers_reviewing: Array<any> = [];
+  fact_checked: any; 
 
   @Input()
   screen_name: string;
@@ -37,6 +41,7 @@ export class ProfileCardComponent implements OnInit {
   @Input()
   set profileAssessment(profileAssessment) {
     this._profileAssessment = profileAssessment;
+    // sort
     this.profileAssessment.urls_credibility.assessments = this.profileAssessment.urls_credibility.assessments.sort((e1, e2) => {
       // (e2.credibility.confidence - e1.credibility.confidence) +
       return (e1.credibility.value - e2.credibility.value);
@@ -45,6 +50,21 @@ export class ProfileCardComponent implements OnInit {
       // (e2.credibility.confidence - e1.credibility.confidence) +
       return (e1.credibility.value - e2.credibility.value);
     });
+    this.bad_sources = this.profileAssessment.sources_credibility.assessments.filter((element) => {
+      return element.credibility.value < 0;
+    });
+    for (let source_ass of this.bad_sources) {
+      this.bad_sources_tweets = [...new Set([...this.bad_sources_tweets, ...source_ass.tweets_containing])];
+    };
+    for (let ass of this.profileAssessment.profile_as_source_credibility.assessments) {
+      if (ass.origin_id === 'factchecking_report') {
+        this.fact_checked = ass.original.overall;
+        this.fact_checkers_reviewing = Object.keys(ass.original);
+        this.fact_checkers_reviewing = this.fact_checkers_reviewing.filter((el) => {
+          return el !== 'overall';
+        })
+      }
+    }
   }
   get profileAssessment() {
     return this._profileAssessment;

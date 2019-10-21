@@ -7,9 +7,9 @@
                 <!-- first column: profile badge -->
                 <div fxLayout="column" fxFlex>
                     <a mat-raised-button href="https://twitter.com/{{profileAssessment.itemReviewed.screen_name}}"
-                        target="_blank;" class="button-regular">
+                        target="_blank;" class="button-regular" fxFlex>
                         <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-                            <img [src]="profileAssessment.itemReviewed.image_full" width="180px" class="center">
+                            <img [src]="profileAssessment.itemReviewed.image_full" width="120px" height="120px" class="center">
                             <div>
                                 <h3>@{{profileAssessment.itemReviewed.screen_name}}</h3>
                                 <p><i>{{profileAssessment.itemReviewed.description}}</i></p>
@@ -29,7 +29,15 @@
                             </app-credibility-meter>
                             <div>
                                 <h3>Credibility</h3>
-                                <p>Some details here</p>
+                                <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01">
+                                    <p>{{fact_checkers_reviewing.length}} fact-checking organisations have reviewed the tweets from this profile. Out of them, {{fact_checked.negative.length}} fact-checks have a negative outcome.</p>
+                                </div>
+                                <div *ngIf="profileAssessment.urls_credibility.assessments.length">
+                                    <p>{{profileAssessment.urls_credibility.assessments.length}} links with low credibility.</p>
+                                </div>
+                                <div *ngIf="bad_sources.length">
+                                    <p>{{bad_sources_tweets.length}} Tweet{{(bad_sources_tweets.length > 1)? 's': ''}} containing {{bad_sources.length}} sources with low credibility.</p>
+                                </div>
                             </div>
                         </div>
                     </a>
