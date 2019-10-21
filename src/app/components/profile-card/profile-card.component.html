@@ -30,7 +30,7 @@
                             <div>
                                 <h3>Credibility</h3>
                                 <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01">
-                                    <p>{{fact_checkers_reviewing.length}} fact-checking organisations have reviewed the tweets from this profile. Out of them, {{fact_checked.negative.length}} fact-checks have a negative outcome.</p>
+                                    <p>{{fact_checkers_reviewing.length}} fact-checking organisations have reviewed the tweets from this profile. Out of them, {{fact_checked.negative && fact_checked.negative.length || 0}} fact-checks have a negative outcome.</p>
                                 </div>
                                 <div *ngIf="profileAssessment.urls_credibility.assessments.length">
                                     <p>{{profileAssessment.urls_credibility.assessments.length}} links with low credibility.</p>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription, Observable } from 'rxjs';
 import { forceManyBody, forceCollide, forceX, forceY, forceLink, forceSimulation, forceCenter } from 'd3-force';
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
@@ -57,10 +57,13 @@ export class GraphComponent implements OnInit {
   already_analysed = 0;
   total_friends = 0;
   analyse_remaining_disabled = true;
-  friends_results: Array<CountResult>;
+  friends_results: Array<any>;
   loading_str: string;
 
-  private _main_profile: CountResult;
+  @Input()
+  credibility_use = true; // TODO get the value from input, now is broken
+
+  private _main_profile: any;
   @Input()
   set main_profile(profile) {
     this._main_profile = profile;
@@ -70,8 +73,7 @@ export class GraphComponent implements OnInit {
     return this._main_profile;
   }
 
-  // @Input()
-  credibility_use = false; // TODO get the value from input, now is broken
+  
 
   // For differentiate drag and click
   last_event: any = null;
@@ -131,22 +133,28 @@ export class GraphComponent implements OnInit {
   }
 
   create_graph() {
-    console.log(this.credibility_use)
-    this.apiService.getFriendsCount(this.main_profile.screen_name, 500, this.credibility_use).subscribe((res: Array<CountResult>) => {
+    console.log(`credibility_use = ${this.credibility_use}`)
+    this.already_analysed = 0;
+    this.friends_results = [];
+    let observable: Observable<any>;
+    if (this.credibility_use) {
+      observable = this.apiService.getFriendsCredibility(this.main_profile.itemReviewed.screen_name);
+    } else {
+      observable = this.apiService.getFriendsCount(this.main_profile.screen_name, 500, this.credibility_use);
+    }
+    observable.subscribe((res: Array<any>) => {
       this.friends_graph = this.generateGraph(this.main_profile, []);
-      this.already_analysed = 0;
       this.total_friends = res.length;
-      this.friends_results = [];
       this.friends_results.forEach(el => {
         this.new_friend_emitter.emit(el);
       });
-      res.forEach((el: CountResult) => {
+      res.forEach((el: any) => {
         if (el.cache === 'miss') {
           // this is a cache miss, profile not yet evaluated
-          this.friends_screen_names[el.screen_name] = false;
+          this.friends_screen_names[el.screen_name || el.itemReviewed.screen_name] = false;
         } else {
           // cache hit
-          this.friends_screen_names[el.screen_name] = true;
+          this.friends_screen_names[el.screen_name || el.itemReviewed.screen_name] = true;
           this.update_friends_stat_with_new(el);
         }
       });
@@ -169,17 +177,17 @@ export class GraphComponent implements OnInit {
     this.friends_graph = this.generateGraph(this.main_profile, this.friends_results);
   }
 
-  generateGraph(you: CountResult, friends_scores: Array<CountResult>) {
+  generateGraph(you: any, friends_scores: Array<any>) {
     const graph = {
       links: [],
       nodes: []
     };
     graph.nodes.push({
-      value: you.screen_name,
-      label: you.screen_name,
-      id: you.screen_name,
+      value: you.screen_name || you.itemReviewed.screen_name,
+      label: you.screen_name || you.itemReviewed.screen_name,
+      id: you.screen_name || you.itemReviewed.screen_name,
       options: {
-        image: you.profile_image_url,
+        image: you.profile_image_url || you.itemReviewed.image_full,
         size: 20,
         fill: this.getColor(you),
         stroke: this.getColor(you)
@@ -192,33 +200,37 @@ export class GraphComponent implements OnInit {
     return graph;
   }
 
-  getColor(counts: CountResult) {
-    if (counts.score > 50) {
-      return 'rgb(90, 164, 84)';
-    } else if (counts.score < 50) {
-      return 'rgb(161, 10, 40)';
+  getColor(counts: any) {
+    if (counts.score !== undefined) {
+      if (counts.score > 50) {
+        return 'rgb(90, 164, 84)';
+      } else if (counts.score < 50) {
+        return 'rgb(161, 10, 40)';
+      } else {
+        return 'grey';
+      }
     } else {
-      return 'grey';
+      return this.getCredibilityColor(counts.credibility)
     }
   }
 
   updateGraphWithFriend(graph, you, friend_score) {
     graph.nodes.push({
-      value: friend_score.screen_name, // do I want it?
-      label: friend_score.screen_name, // wanted by GroupResultsBy
-      id: friend_score.screen_name, // wanted by graph structure
+      value: friend_score.screen_name || friend_score.itemReviewed.screen_name, // do I want it?
+      label: friend_score.screen_name || friend_score.itemReviewed.screen_name, // wanted by GroupResultsBy
+      id: friend_score.screen_name || friend_score.itemReviewed.screen_name, // wanted by graph structure
       // x: -100,
       // y: 0,
       options: {
-        image: friend_score.profile_image_url,
+        image: friend_score.profile_image_url || friend_score.itemReviewed.image_full,
         size: 20,
         fill: this.getColor(friend_score),
         stroke: this.getColor(friend_score)
       }
     });
     graph.links.push({
-      source: you.screen_name,
-      target: friend_score.screen_name,
+      source: you.screen_name || you.itemReviewed.screen_name,
+      target: friend_score.screen_name || friend_score.itemReviewed.screen_name,
       options: {
         color: this.getColor(friend_score) + '!important'
       }
@@ -249,7 +261,13 @@ export class GraphComponent implements OnInit {
       return Promise.resolve();
     }
     this.loading_str = `Analysing ${candidate}...`
-    return this.apiService.postUserCountWithUpdates([candidate], this.credibility_use).pipe(
+    let observable: Observable<any>;
+    if (this.credibility_use) {
+      observable = this.apiService.getUserCredibilityWithUpdates(candidate);
+    } else {
+      observable = this.apiService.postUserCountWithUpdates([candidate], this.credibility_use);
+    }
+    return observable.pipe(
       map(result_update => {
         console.log(result_update);
         // update the message
@@ -280,7 +298,11 @@ export class GraphComponent implements OnInit {
     console.log(event);
     const screen_name = event.id;
     // console.log(screen_name);
-    this.router.navigate(['/analyse', screen_name]);
+    if (this.credibility_use) {
+      this.router.navigate(['/credibility/profiles', screen_name]);
+    } else {
+      this.router.navigate(['/analyse', screen_name]);
+    }
     return;
   }
 
@@ -294,6 +316,43 @@ export class GraphComponent implements OnInit {
     console.log(`up ${event.clientX} ${event.clientY}`);
     if (event.clientX === this.last_event.clientX && event.clientY === this.last_event.clientY) {
       this.select_node(node);
+    }
+  }
+
+
+  // TODO move those to a service, for now they are copy-pasted from credibility-meter
+  getCredibilityColor(credibility) {
+    const red = this._confidence_fade_to_grey(this._red_quantity(credibility.value), credibility.confidence);
+    const green = this._confidence_fade_to_grey(this._green_quantity(credibility.value), credibility.confidence);
+    const blue = this._confidence_fade_to_grey(0, credibility.confidence, true);
+    const rgb_str = `rgb(${red},${green},${blue})`;
+    console.log(rgb_str);
+    return rgb_str
+  }
+
+  _red_quantity(credibility_value) {
+    let red = 200;
+    if (credibility_value > 0) {
+      red = (1 - credibility_value) * 200;
+    }
+    return red;
+  }
+
+  _green_quantity(credibility_value) {
+    let green = 200;
+    if (credibility_value < 0) {
+      green = (1 + credibility_value) * 200;
+    }
+    return green;
+  }
+
+  _confidence_fade_to_grey(value, confidence, opposite = false) {
+    const uncertainty = 1 - confidence;
+    if (opposite || !opposite) {
+      // how far from 200
+      const gap = 200 - value;
+      const bonus = gap * uncertainty;
+      return value + bonus;
     }
   }
 }

@@ -76,11 +76,21 @@ export class APIService {
   }
 
   getFriendsCount(screen_name, limit: number = 500, use_credibility=true) {
+    if (use_credibility) {
+      throw Error('using credibility on old evaluation!!!!');
+    }
     if (limit) {
       return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&limit=${limit}&use_credibility=${use_credibility}`);
     } else {
       return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&use_credibility=${use_credibility}`);
     }
+  }
+
+  getFriendsCredibility(screen_name, limit: number = 300, use_credibility=true) {
+    if (!use_credibility) {
+      throw Error('not using credibility on new evaluation!!!!');
+    }
+    return this.getPath(`/credibility/user-friends?&screen_name=${screen_name}&limit=${limit}`);
   }
 
   getAllFactcheckingByDomain() {

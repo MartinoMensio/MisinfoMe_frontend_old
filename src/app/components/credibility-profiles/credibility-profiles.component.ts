@@ -25,6 +25,7 @@ export class CredibilityProfilesComponent implements OnInit {
   error_detail_profile: string;
 
   analysis_result: any;
+  analysis_result_backward_compat: any;
 
   constructor(private apiService: APIService, private settingsService: SettingsService,
     private router: Router, private route: ActivatedRoute) { }
@@ -80,12 +81,24 @@ export class CredibilityProfilesComponent implements OnInit {
     ).subscribe(result => {
       console.log(result);
       this.analysis_result = result;
+      this.analysis_result_backward_compat = result; 
+      // {
+      //   screen_name: result.itemReviewed.screen_name,
+      //   profile_image_url: result.itemReviewed.image_full,
+      //   // score is used for the colour, TODO fix with new colour computation
+      //   score: (result.credibility.value + 1) * 50
+      // }
       this.loading_str = '';
       this.main_profile_state = LoadStates.Loaded;
     }, (error) => {
       this.main_profile_state = LoadStates.Error;
       this.error_detail_profile = error.error.detail;
     });
+  }
+
+  update_friends_stat_with_new(friend_analysis) {
+    // TODO update friend statistics
+    return;
   }
 
 }

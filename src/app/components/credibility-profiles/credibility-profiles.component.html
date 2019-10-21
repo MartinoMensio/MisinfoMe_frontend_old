@@ -22,9 +22,9 @@
             </div>
         </div>
         <p></p>
-        <mat-card>
+        <mat-card *ngIf="analysis_result_backward_compat && main_profile_state == loadStates.Loaded">
             <h2>The social network of {{state_screen_name}}</h2>
-            <p>TODO just put here app-graph with parameter credibility=true</p>
+            <app-graph [main_profile]="analysis_result_backward_compat" (new_friend_emitter)="update_friends_stat_with_new($event)" [credibility_use]="true"></app-graph>
         </mat-card>
         <p></p>
         <mat-card>

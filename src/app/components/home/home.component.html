@@ -30,7 +30,7 @@
           href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a></h3>
       <p>The Twitter feed of any account is built with tweets that come from people that he is following. For this
         reason this tool can analyse the profiles that are being followed by the account you choose.</p>
-      <app-graph [main_profile]="result_you" (new_friend_emitter)="update_friends_stat_with_new($event)"></app-graph>
+      <app-graph [main_profile]="result_you" (new_friend_emitter)="update_friends_stat_with_new($event)" [credibility_use]="false"></app-graph>
       <div>
         <!-- *ngIf="friends_analysis_show" -->
         <!-- <div class="graph-container" [style.height.px]="getGraphHeight()">
