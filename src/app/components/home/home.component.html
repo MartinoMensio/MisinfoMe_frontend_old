@@ -60,13 +60,13 @@
           </ngx-charts-force-directed-graph>
         </div> -->
         <div id="asdasdasd" style="height: 100px;"></div>
-        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} URLs analysed from the network
+        <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_friends.shared_urls_cnt}} {{settingsService.showUnknown ? 'analysed' : 'matching'}} URLs from the network
         </h2>
         <div class="piechart-container">
           <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs analysed from the network"
             [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient" [labels]="true">
           </ngx-charts-pie-chart>
-          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs analysed from the network"
+          <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="{{settingsService.showUnknown ? 'analysed' : 'matching'}} URLs from the network"
             [scheme]="colorScheme" [results]="pie_data_friends" [gradient]="gradient">
           </ngx-charts-advanced-pie-chart>
         </div>
@@ -118,13 +118,13 @@
           <mat-card class="table-container-2 mat-elevation-z5">
             <div *ngFor=" let f of friends_results_sorted; let i=index">
               <div *ngIf="i < max_worst">
-                <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs analysed from {{f.screen_name}}</h3>
+                <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}} from {{f.screen_name}}</h3>
                 <div class="piechart-container-tiny">
                   <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
                     [results]="f.pie_data" [gradient]="gradient" [labels]="true">
                   </ngx-charts-pie-chart>
                   <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true"
-                    label="URLs analysed from {{f.screen_name}}" [view]="[undefined, 200]" [scheme]="colorScheme"
+                    label="URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}} from {{f.screen_name}}" [view]="[undefined, 200]" [scheme]="colorScheme"
                     [results]="f.pie_data" [gradient]="gradient">
                   </ngx-charts-advanced-pie-chart>
                 </div>
@@ -196,10 +196,11 @@
         </p>
       </div>
       <div class="piechart-container">
-        <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" label="URLs analysed" [scheme]="colorScheme"
+          <h3 fxShow.xs="true" fxShow.gt-xs="false">URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}</h3>
+        <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
           [results]="pie_data_overall" [gradient]="gradient" [labels]="true">
         </ngx-charts-pie-chart>
-        <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs analysed"
+        <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}"
           [scheme]="colorScheme" [results]="pie_data_overall" [gradient]="gradient">
         </ngx-charts-advanced-pie-chart>
       </div>

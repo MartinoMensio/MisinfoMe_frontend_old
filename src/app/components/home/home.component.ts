@@ -5,6 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { map, first } from 'rxjs/operators';
 import { CountResult, LoadStates, OverallCounts, APIService } from 'src/app/services/api.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 interface CountResultWithPieData extends CountResult {
   pie_data: Array<any>;
@@ -102,7 +103,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  constructor(private apiService: APIService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private apiService: APIService, private settingsService: SettingsService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -160,7 +161,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private extract_results(json_data: any) {
-    return [{
+    const result = [{
       name: 'Valid',
       value: json_data.verified_urls_cnt
     }, {
@@ -169,10 +170,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, {
       name: 'Mixed',
       value: json_data.mixed_urls_cnt
-    }, {
-      name: 'Unknown',
-      value: json_data.unknown_urls_cnt
     }];
+    if (this.settingsService.showUnknown) {
+      result.push({
+        name: 'Unknown',
+        value: json_data.unknown_urls_cnt
+      });
+    }
+    return result;
   }
 
   onSubmit() {
@@ -229,9 +234,6 @@ export class HomeComponent implements OnInit, OnDestroy {
               }, {
                 name: 'Mixed',
                 value: result.mixed_urls_cnt
-              }, {
-                name: 'Unknown',
-                value: result.unknown_urls_cnt
               }
             ]
           }, {
@@ -246,13 +248,20 @@ export class HomeComponent implements OnInit, OnDestroy {
               }, {
                 name: 'Mixed',
                 value: this.result_overall.mixed_urls_cnt / this.result_overall.twitter_profiles_cnt
-              }, {
-                name: 'Unknown',
-                value: this.result_overall.unknown_urls_cnt / this.result_overall.twitter_profiles_cnt
               }
             ]
           }
         ];
+        if (this.settingsService.showUnknown) {
+          this.you_vs_average_multi[0].series.push({
+            name: 'Unknown',
+            value: result.unknown_urls_cnt
+          })
+          this.you_vs_average_multi[1].series.push({
+            name: 'Unknown',
+            value: this.result_overall.unknown_urls_cnt / this.result_overall.twitter_profiles_cnt
+          })
+        }
       });
       this.friends_analysis_show = false;
       this.result_friends = this.get_resetted_counts();

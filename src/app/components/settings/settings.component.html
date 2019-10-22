@@ -12,6 +12,15 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Do you want to show the "unknown" labels?</mat-label>
+            <mat-select [(value)]="show_unknown">
+                <mat-option *ngFor="let o of [true, false]" [value]="o">
+                    {{o}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div>
         <h3>Credibility settings</h3>

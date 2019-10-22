@@ -17,12 +17,12 @@
             <div>This is how the URLs that have been shared by <a
                     href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a> are classified
             </div>
-            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs analysed</h2>
+            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}</h2>
             <div class="piechart-container">
                 <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
                     [results]="pie_data_you" [gradient]="gradient" [labels]="true">
                 </ngx-charts-pie-chart>
-                <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs analysed"
+                <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}"
                     [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
                 </ngx-charts-advanced-pie-chart>
             </div>

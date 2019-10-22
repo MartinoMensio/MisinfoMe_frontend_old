@@ -54,7 +54,7 @@ export class LegacyAnalysisComponent implements OnInit {
   }
 
   private extract_results(json_data: any) {
-    return [{
+    const result = [{
       name: 'Valid',
       value: json_data.verified_urls_cnt
     }, {
@@ -63,10 +63,14 @@ export class LegacyAnalysisComponent implements OnInit {
     }, {
       name: 'Mixed',
       value: json_data.mixed_urls_cnt
-    }, {
-      name: 'Unknown',
-      value: json_data.unknown_urls_cnt
     }];
+    if (this.settingsService.showUnknown) {
+      result.push({
+        name: 'Unknown',
+        value: json_data.unknown_urls_cnt
+      })
+    }
+    return result;
   }
 
   create_nested_list(grouped) {

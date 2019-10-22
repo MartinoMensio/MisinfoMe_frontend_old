@@ -20,6 +20,7 @@ export class SettingsService {
   // local storage keys for the settings
   private credibilityMeterTypeLSkey = 'credibility_meter_type';
   private evaluationTypeLSkey = 'evaluation_type';
+  private showUnkownLSkey = 'show_unknown';
 
   // possible values
   public credibilityMeterTypes: Array<CredibilityMeterType> = [
@@ -44,6 +45,14 @@ export class SettingsService {
       description: 'Based mainly on OpenSources and other lists'
     }
   ];
+
+  public set showUnknown(show_unknown: boolean) {
+    localStorage.setItem(this.showUnkownLSkey, show_unknown.toString());
+  }
+
+  public get showUnknown() {
+    return (localStorage.getItem(this.showUnkownLSkey) || 'false') === 'true';
+  }
 
 
   public set credibilityMeterType(type_id: string) {

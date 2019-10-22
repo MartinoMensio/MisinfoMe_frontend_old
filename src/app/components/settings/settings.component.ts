@@ -13,6 +13,7 @@ export class SettingsComponent implements OnInit {
   credibility_meter_type: string;
   only_ifcn_factchecks: boolean;
   credibility_weights: Array<any>;
+  show_unknown: boolean;
 
   evaluation_type_options: Array<EvaluationType>;
   credibility_meter_type_options: Array<CredibilityMeterType>;
@@ -29,6 +30,7 @@ export class SettingsComponent implements OnInit {
   initForm() {
     this.evaluation_type = this.settingsService.evaluationType;
     this.credibility_meter_type = this.settingsService.credibilityMeterType;
+    this.show_unknown = this.settingsService.showUnknown;
     this.apiService.getCredibilityOrigins().subscribe((res: any) => {
       this.credibility_weights = res;
     });
@@ -43,6 +45,7 @@ export class SettingsComponent implements OnInit {
   save() {
     this.settingsService.evaluationType = this.evaluation_type;
     this.settingsService.credibilityMeterType = this.credibility_meter_type;
+    this.settingsService.showUnknown = this.show_unknown;
     this._snackBar.open('Settings have been saved!', 'OK', {duration: 3000});
   }
 
