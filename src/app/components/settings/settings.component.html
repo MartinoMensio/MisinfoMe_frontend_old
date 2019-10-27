@@ -22,7 +22,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div>
+    <!-- <div>
         <h3>Credibility settings</h3>
         <p>Customise the behaviour of the model</p>
         <mat-form-field>
@@ -35,7 +35,7 @@
         </mat-form-field>
         <mat-card *ngIf="evaluation_type === 'credibility'">
             <p>Customise the credibility model</p>
-            <!-- Weights (TODO this needs to be done also server-side) -->
+            <!<-- Weights (TODO this needs to be done also server-side) ->->
             <p class="accent-color"><i>This is under implementation!! Modifying the values has no effect!!</i></p>
             <mat-form-field>
                 <mat-label>Use only fact-checks coming from IFCN</mat-label>
@@ -50,7 +50,7 @@
                 <tr *ngFor="let o of credibility_weights"><td>{{o.name}}</td><td>{{o.weight}}</td></tr>
             </table>
         </mat-card>
-    </div>
+    </div> -->
 
     <p></p>
 

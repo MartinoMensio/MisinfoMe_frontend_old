@@ -182,8 +182,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     console.log('submit with ' + this.screen_name.value, ' from ' + this.state_screen_name);
-    if (this.state_screen_name !== this.screen_name.value) {
-      return this.router.navigate(['/analyse', this.screen_name.value]);
+    if (this.state_screen_name !== this.screen_name.value || this.use_credibility.dirty) {
+      if (this.use_credibility.value) {
+        return this.router.navigate(['/credibility/profiles', this.screen_name.value]);
+      } else {
+        return this.router.navigate(['/analyse', this.screen_name.value]);
+      }
     } else {
       // reload current page
       return this.ngOnInit();
@@ -193,7 +197,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   analyse() {
     this.main_profile_state = LoadStates.Loading;
     console.log('clicked!!!');
-    this.apiService.postUserCountWithUpdates(this.screen_name.value, this.use_credibility.value).pipe(
+    this.apiService.postUserCountWithUpdates(this.screen_name.value, false).pipe(
       map(result_update => {
         console.log(result_update);
         // update the message

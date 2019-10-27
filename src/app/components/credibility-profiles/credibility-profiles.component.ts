@@ -17,6 +17,7 @@ export class CredibilityProfilesComponent implements OnInit {
   screen_name = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+')]);
   evaluation_type: string; // from the settings
   private sub: Subscription;
+  use_credibility: FormControl = new FormControl(true);
 
   // state management
   loadStates = LoadStates;
@@ -44,8 +45,12 @@ export class CredibilityProfilesComponent implements OnInit {
 
   onSubmit() {
     console.log('submit with ' + this.screen_name.value, ' from ' + this.state_screen_name);
-    if (this.state_screen_name !== this.screen_name.value) {
-      return this.router.navigate(['/credibility/profiles', this.screen_name.value]);
+    if (this.state_screen_name !== this.screen_name.value || this.use_credibility.dirty) {
+      if (this.use_credibility.value) {
+        return this.router.navigate(['/credibility/profiles', this.screen_name.value]);
+      } else {
+        return this.router.navigate(['/analyse', this.screen_name.value]);
+      }
     } else {
       // reload current page
       return this.ngOnInit();

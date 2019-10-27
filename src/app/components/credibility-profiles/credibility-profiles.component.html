@@ -1,9 +1,19 @@
 <div>
     <h2>Credibility check on Twitter</h2>
+    <img src="assets/MisinfoMe-improved-screen-res-03.png" alt="logo" class="center proper-size">
     <div>
         <mat-card>
+            <p>It is hard to distinguish fact from fiction on social media.</p>
+            <p>Insert the Twitter screen name, we will verify how its tweets are related to known misinformation.</p>
             <form #main_form="ngForm" (ngSubmit)="onSubmit()">
                 <app-search-user [formField]="screen_name"></app-search-user>
+                <!-- <div>
+                    Which model to use:
+                    <mat-radio-group [formControl]="use_credibility" fxLayout="row" fxLayoutGap="20px">
+                        <mat-radio-button [value]="true">credibility</mat-radio-button>
+                        <mat-radio-button [value]="false">legacy</mat-radio-button>
+                    </mat-radio-group>
+                </div> -->
             </form>
         </mat-card>
         <p></p>
@@ -26,10 +36,10 @@
             <h2>The social network of {{state_screen_name}}</h2>
             <app-graph [main_profile]="analysis_result_backward_compat" (new_friend_emitter)="update_friends_stat_with_new($event)" [credibility_use]="true"></app-graph>
         </mat-card>
-        <p></p>
+        <!-- <p></p>
         <mat-card>
             <h2>Comparison of {{state_screen_name}} vs average user</h2>
             <p>TODO</p>
-        </mat-card>
+        </mat-card> -->
     </div>
 </div>
