@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, timer, interval, throwError } from 'rxjs';
-import { switchMap, takeWhile, map, startWith, filter, first, takeUntil } from 'rxjs/operators';
+import { switchMap, takeWhile, map, startWith, filter, first, takeUntil, repeatWhen, delay } from 'rxjs/operators';
 
 export interface CountResult {
   screen_name: string;
@@ -136,7 +136,12 @@ export class APIService {
   }
   getJobStatus(status_id) {
     console.log(`getting status ${status_id}`);
-    return this.httpClient.get(`${this.API_URL}/jobs/status/${status_id}`);
+    return this.httpClient.get(`${this.API_URL}/jobs/status/${status_id}`).pipe(
+      map((res) => {
+      console.log(res);
+      return res;
+      })
+    );
   }
   getUserCredibilityWithUpdates(screen_name) {
     return this.keepWatchingJobStatus(this.createJobCredibilityProfile(screen_name));
@@ -151,17 +156,22 @@ export class APIService {
         const job_id = job_create_res.job_id;
         console.log(job_id);
         // every 2 seconds
-        return interval(2000)
-          .pipe(
+        // return timer(0, 30000)
+        return this.getJobStatus(job_id).pipe(
+          repeatWhen(notifications => notifications.pipe(
+            delay(2000),
+          )),
+          // .pipe(
             // get the result of the job
-            switchMap(() => {
-              console.log('inside switchMap');
-              return this.getJobStatus(job_id);
-            }),
+            // switchMap(() => {
+            //   console.log('inside switchMap');
+            //   return this.getJobStatus(job_id);
+            // }),
             // and keep propagating the values while it's not completed
             takeWhile((val: any) => {
               console.log('checking the status of the job');
               console.log(val.state);
+              console.log(val);
               // turn the failure into an exception
               if (val.state === 'FAILURE') {
                 // the subscriber will receive an error in the error subscriber

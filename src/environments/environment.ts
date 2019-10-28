@@ -6,7 +6,9 @@ export const environment = {
   production: false,
   // in dev environment I want to use the live angular and live server, so this can be disjoint
   api_url: 'http://localhost:5000/misinfo/api',
-  credibility_url: 'http://localhost:5000/misinfo/api/credibility'
+  credibility_url: 'http://localhost:5000/misinfo/api/credibility',
+  // api_url: 'https://misinfo.me/misinfo/api',
+  // credibility_url: 'https://misinfo.me/misinfo/api/credibility'
 };
 
 /*

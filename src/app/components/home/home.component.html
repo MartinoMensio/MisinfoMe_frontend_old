@@ -5,13 +5,13 @@
     <p>Insert the Twitter screen name, we will verify how its tweets are related to known misinformation.</p>
     <form #main_form="ngForm" (ngSubmit)="onSubmit()">
       <app-search-user [formField]="screen_name"></app-search-user>
-      <!-- <div>
+      <div>
         Which model to use:
         <mat-radio-group [formControl]="use_credibility" fxLayout="row" fxLayoutGap="20px">
           <mat-radio-button [value]="true">credibility</mat-radio-button>
           <mat-radio-button [value]="false">legacy</mat-radio-button>
         </mat-radio-group>
-      </div> -->
+      </div>
     </form>
   </mat-card>
   <p></p>
