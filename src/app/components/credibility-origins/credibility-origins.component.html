@@ -9,12 +9,21 @@
                     <h4>{{origin.name}}</h4>
                     <div fxLayout="row" fxLayoutGap="20px">
                         <div>
+                            <div style="width: 100px; height: 70px; justify-content: center" class="center"
+                                fxLayoutAlign="center center">
+                                <img [src]="origin.logo" appImgFallback
+                                    style="max-height: 100%; max-width: 100%;">
+                            </div>
                             <p><a href="{{origin.homepage}}">Homepage</a></p>
                             <p>Weight: {{origin.weight}}</p>
                         </div>
                         <div>
 
-                            <p>Number of assessments: {{origin.assessments_count}}</p>
+                            <p>Number of assessments:</p>
+                                <ul>
+                                    <li *ngFor="let item of origin.assessments_count | keyvalue">{{item.key}} - {{item.value}}</li>
+                                </ul>
+                            
                         </div>
                         <div fxFlex="400px">
                             <p><i>"{{origin.description}}"</i></p>
