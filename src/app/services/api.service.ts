@@ -77,7 +77,7 @@ export class APIService {
 
   getFriendsCount(screen_name, limit: number = 500, use_credibility=true) {
     if (use_credibility) {
-      throw Error('using credibility on old evaluation!!!!');
+      console.log('using credibility on old evaluation!!!!');
     }
     if (limit) {
       return this.getPath(`/analysis/twitter_accounts?relation=friends&screen_name=${screen_name}&limit=${limit}&use_credibility=${use_credibility}`);

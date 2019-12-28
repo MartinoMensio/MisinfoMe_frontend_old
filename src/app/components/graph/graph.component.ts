@@ -140,7 +140,7 @@ export class GraphComponent implements OnInit {
     if (this.credibility_use) {
       observable = this.apiService.getFriendsCredibility(this.main_profile.itemReviewed.screen_name);
     } else {
-      observable = this.apiService.getFriendsCount(this.main_profile.screen_name, 500, this.credibility_use);
+      observable = this.apiService.getFriendsCount(this.main_profile.screen_name, 500, false);
     }
     observable.subscribe((res: Array<any>) => {
       this.friends_graph = this.generateGraph(this.main_profile, []);
@@ -265,7 +265,7 @@ export class GraphComponent implements OnInit {
     if (this.credibility_use) {
       observable = this.apiService.getUserCredibilityWithUpdates(candidate);
     } else {
-      observable = this.apiService.postUserCountWithUpdates([candidate], this.credibility_use);
+      observable = this.apiService.postUserCountWithUpdates([candidate], false);
     }
     return observable.pipe(
       map(result_update => {
