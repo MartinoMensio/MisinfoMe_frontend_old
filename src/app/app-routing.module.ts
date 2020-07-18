@@ -11,6 +11,7 @@ import { CredibilitySourcesComponent } from './components/credibility-sources/cr
 import { CredibilityComponent } from './components/credibility/credibility.component';
 import { CredibilityOriginsComponent } from './components/credibility-origins/credibility-origins.component';
 import { CredibilityProfilesComponent } from './components/credibility-profiles/credibility-profiles.component';
+import { CredibilityTweetsComponent } from './components/credibility-tweets/credibility-tweets.component';
 import { ScoringInfoComponent } from './components/scoring-info/scoring-info.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
@@ -34,6 +35,8 @@ const routes: Routes = [
   { path: 'credibility/origins', component: CredibilityOriginsComponent },
   { path: 'credibility/profiles', component: CredibilityProfilesComponent },
   { path: 'credibility/profiles/:screen_name', component: CredibilityProfilesComponent },
+  { path: 'credibility/tweets', component: CredibilityTweetsComponent },
+  { path: 'credibility/tweets/:tweet_id', component: CredibilityTweetsComponent },
   { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];

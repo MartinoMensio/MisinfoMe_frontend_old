@@ -63,6 +63,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LegacyAnalysisComponent } from './components/legacy-analysis/legacy-analysis.component';
 import { TweetsListComponent } from './components/tweets-list/tweets-list.component';
 import { UrlReviewedCardComponent } from './components/url-reviewed-card/url-reviewed-card.component';
+import { CredibilityTweetsComponent } from './components/credibility-tweets/credibility-tweets.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { UrlReviewedCardComponent } from './components/url-reviewed-card/url-rev
     LegacyAnalysisComponent,
     TweetsListComponent,
     UrlReviewedCardComponent,
+    CredibilityTweetsComponent,
   ],
   imports: [
     BrowserModule,

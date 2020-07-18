@@ -1,0 +1,50 @@
+<div>
+    <h2 class="center" style="text-align: center;">Tweet analysis</h2>
+    <div *ngIf="!state_tweet_id">
+        <h3>Search for a tweet</h3>
+        <div>TODO</div>
+    </div>
+    <div *ngIf="state_tweet_id" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+        <!-- <ngx-tweet tweetId="{{element.tweet_id}}" width="500"></ngx-tweet> -->
+        <div style="width: 500px;">
+            <ngx-tweet [tweetId]="state_tweet_id" width="500"></ngx-tweet>
+        </div>
+        <div style="width: 500px;">
+            <div *ngIf="analysis_state == loadStates.Loading">
+                <mat-spinner class="center"></mat-spinner>
+                <p style="text-align:center;" class="primary-color">{{loading_str}}</p>
+            </div>
+            <app-error *ngIf="main_pranalysis_stateofile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
+            <div *ngIf="analysis_state == loadStates.Loaded">
+                <mat-card>
+                    <h3>Credibility</h3>
+                    <div>
+                        <app-credibility-meter [credibility]='tweetCredibility.credibility' [size]="150">
+                        </app-credibility-meter>
+                    </div>
+                    <div fxLayout="row">
+                        <!-- profile as a source -->
+                        <!-- TODO: this is always empty -->
+                        <div fxFlex="33%">
+                            <p style="text-align: center;">Profile</p>
+                            <app-credibility-meter [credibility]='tweetCredibility.profile_as_source_credibility.credibility' [size]="80">
+                            </app-credibility-meter>
+                        </div>
+                        <!-- source of urls -->
+                        <div fxFlex="33%">
+                            <p style="text-align: center;">Sources</p>
+                            <app-credibility-meter [credibility]='tweetCredibility.sources_credibility.credibility' [size]="80">
+                            </app-credibility-meter>
+                        </div>
+                        <!-- urls -->
+                        <div fxFlex="33%">
+                            <p style="text-align: center;">URLS</p>
+                            <app-credibility-meter [credibility]='tweetCredibility.urls_credibility.credibility' [size]="80">
+                            </app-credibility-meter>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

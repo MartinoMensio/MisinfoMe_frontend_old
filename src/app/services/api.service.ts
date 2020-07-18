@@ -187,4 +187,8 @@ export class APIService {
     );
   }
 
+  getTweetCredibility(tweet_id) {
+    return this.httpClient.get(`${this.CREDIBILITY_URL}/tweets/${tweet_id}`);
+  }
+
 }
