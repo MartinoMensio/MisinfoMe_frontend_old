@@ -3,6 +3,8 @@ import { APIService, LoadStates } from 'src/app/services/api.service';
 import { Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SourceCardComponent } from '../source-card/source-card.component';
 
 @Component({
   selector: 'app-credibility-tweets',
@@ -18,7 +20,7 @@ export class CredibilityTweetsComponent implements OnInit {
   tweet_id = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
   private sub: Subscription;
 
-  constructor(private apiService: APIService, private route: ActivatedRoute) { }
+  constructor(private apiService: APIService, private route: ActivatedRoute, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
@@ -38,6 +40,18 @@ export class CredibilityTweetsComponent implements OnInit {
       this.tweetCredibility = result;
       this.analysis_state = LoadStates.Loaded;
     })
+  }
+
+  openSourceDialog(): void {
+    const dialogRef = this.dialog.open(SourceCardComponent, {
+      // width: '250px',
+      maxHeight: '90vh',
+      data: this.tweetCredibility.profile_as_source_credibility
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The scoring dialog was closed');
+    });
   }
 
 }
