@@ -5,11 +5,26 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SourceCardComponent } from '../source-card/source-card.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-credibility-tweets',
   templateUrl: './credibility-tweets.component.html',
-  styleUrls: ['./credibility-tweets.component.css']
+  styleUrls: ['./credibility-tweets.component.css'],
+  animations: [
+    trigger(
+      'enterAnimation', [
+        transition(':enter', [
+          style({ opacity: 0 }),
+          animate('500ms', style({ opacity: 1 }))
+        ]),
+        transition(':leave', [
+          style({ opacity: 1 }),
+          animate('500ms', style({ opacity: 0 }))
+        ])
+      ]
+    )
+  ]
 })
 export class CredibilityTweetsComponent implements OnInit {
 
@@ -19,6 +34,11 @@ export class CredibilityTweetsComponent implements OnInit {
   analysis_state = LoadStates.None;
   tweet_id = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
   private sub: Subscription;
+
+  detail_panel: string;
+  detail_panel_is_expanded: boolean;
+
+  fact_checks = [];
 
   constructor(private apiService: APIService, private route: ActivatedRoute, public dialog: MatDialog) { }
 
@@ -35,9 +55,20 @@ export class CredibilityTweetsComponent implements OnInit {
 
   analyse() {
     this.analysis_state = LoadStates.Loading;
-    this.apiService.getTweetCredibility(this.state_tweet_id).subscribe((result) => {
+    this.apiService.getTweetCredibility(this.state_tweet_id).subscribe((result: any) => {
       console.log(result);
       this.tweetCredibility = result;
+      if (result.tweet_direct_credibility) {
+        for (let ass of result.tweet_direct_credibility?.assessments) {
+          console.log(ass);
+          for (let k in ass.original.overall) {
+            console.log(k);
+            for (let url of ass.original.overall[k])
+              this.fact_checks.push(url);
+          }
+          this.fact_checks.push();
+        }
+      }
       this.analysis_state = LoadStates.Loaded;
     })
   }
@@ -52,6 +83,20 @@ export class CredibilityTweetsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The scoring dialog was closed');
     });
+  }
+
+  setDetailTo(detail_type) {
+    if (this.detail_panel === detail_type) {
+      // clicking on the same again, closes it
+      this.detail_panel_is_expanded = !this.detail_panel_is_expanded;
+    } else {
+      this.detail_panel_is_expanded = true;
+    }
+    this.detail_panel = detail_type;
+  }
+
+  closeDetails() {
+    this.detail_panel_is_expanded = false;
   }
 
 }

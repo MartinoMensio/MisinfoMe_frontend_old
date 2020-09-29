@@ -23,31 +23,144 @@
                             <app-credibility-meter [credibility]='tweetCredibility.credibility' [size]="150">
                             </app-credibility-meter>
                         </div>
+                        <div *ngIf="tweetCredibility.tweet_direct_credibility">
+                            <div mat-raised-button>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence <= 0.1 ">Fact-checked: Uncertain</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value > 0.1">Fact-checked: Credible</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence >= 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value <= -0.1">Fact-checked: Not credible</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value > -0.1 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.1">Fact-checked: Mixed</h4>
+                                <p>This tweet has been rated by Fact-checkers. The following reports are available:</p>
+                                <ul>
+                                    <li *ngFor="let l of fact_checks">
+                                        <a href="{{l}}">{{l}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div fxLayout="row">
                             <!-- profile as a source -->
                             <!-- TODO: this is always empty -->
                             <div fxFlex="33%">
-                                <a mat-raised-button (click)="openSourceDialog()" matTooltip="Why?" class="button-regular" fxFlex>
+                                <div>
                                     <!-- info-circle fontawesome -->
                                     <p style="text-align: center;">Profile</p>
                                     <app-credibility-meter [credibility]='tweetCredibility.profile_as_source_credibility.credibility' [size]="80">
                                     </app-credibility-meter>
-                                </a>
+                                </div>
+                                <button *ngIf="tweetCredibility.profile_as_source_credibility.credibility.confidence > 0.01" (click)="setDetailTo('as_source')" mat-button color="primary" class="full-width" matTooltip="Expand">
+                                    <div class="bigger-icon">
+                                        <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
+                                    </div>
+                                </button>
                             </div>
                             <!-- source of urls -->
                             <div fxFlex="33%">
                                 <p style="text-align: center;">Sources</p>
-                                <app-credibility-meter [credibility]='tweetCredibility.sources_credibility.credibility' [size]="80">
-                                </app-credibility-meter>
+                                <div>
+                                    <app-credibility-meter [credibility]='tweetCredibility.sources_credibility.credibility' [size]="80">
+                                    </app-credibility-meter>
+                                </div>
+                                <!-- <p>The sources used in the tweet</p> -->
+                                <button *ngIf="tweetCredibility.sources_credibility.assessments.length" (click)="setDetailTo('sources')" mat-button color="primary" class="full-width" matTooltip="Expand">
+                                    <div class="bigger-icon">
+                                        <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
+                                    </div>
+                                </button>
                             </div>
                             <!-- urls -->
                             <div fxFlex="33%">
                                 <p style="text-align: center;">URLS</p>
-                                <app-credibility-meter [credibility]='tweetCredibility.urls_credibility.credibility' [size]="80">
-                                </app-credibility-meter>
+                                <div>
+                                    <app-credibility-meter [credibility]='tweetCredibility.urls_credibility.credibility' [size]="80">
+                                    </app-credibility-meter>
+                                </div>
+                                <button *ngIf="tweetCredibility.urls_credibility.assessments.length" (click)="setDetailTo('urls')" mat-button color="primary" class="full-width" matTooltip="Expand">
+                                    <div class="bigger-icon">
+                                        <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </mat-card>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="detail_panel_is_expanded" [@enterAnimation]>
+            <div fxLayout="row">
+                <h4>Details</h4>
+                <span style="flex: 1 1 auto;"></span>
+                <button mat-button (click)="closeDetails()" color="accent">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <!-- this is the place for the expansion -->
+            <div *ngIf="detail_panel === 'as_source'">
+                <app-source-card [sourceAssessment]="tweetCredibility.profile_as_source_credibility">
+                </app-source-card>
+            </div>
+            <div *ngIf="detail_panel === 'urls'">
+                <div *ngIf="tweetCredibility.urls_credibility.assessments.length">
+                    <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid" class="mat-elevation-z8 padded">
+                        <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                        <div *ngFor="let assessment of tweetCredibility.urls_credibility.assessments">
+                            <div class="mat-elevation-z4">
+                                <div class="padded">
+                                    <a matTooltip="See details for this URL" (click)="openSourceDialog(assessment)" class="pointer">
+                                        <div>
+                                            <div class="center" style="text-align: center">
+                                                <p><b>
+                                                        <a href="{{assessment.itemReviewed}}"
+                                                            target="_blank;">{{ (assessment.itemReviewed.length>30)? (assessment.itemReviewed | slice:0:30)+'..':(assessment.itemReviewed) }}</a>
+                                                    </b></p>
+                                            </div>
+                                            <!-- TODO get icon from the website reviewed? or not? -->
+                                            <!-- <div style="width: 100px; height: 70px; justify-content: center"
+                                                    class="center" fxLayoutAlign="center center">
+                                                    <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
+                                                        appImgFallback style="max-height: 100%; max-width: 100%;">
+                                                </div> -->
+                                            <app-credibility-meter [credibility]='assessment.credibility'>
+                                            </app-credibility-meter>
+                                        </div>
+                                    </a>
+                                </div>
+                                <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)" mat-button color="primary" class="full-width" matTooltip="See tweets">
+                                    {{assessment.tweets_containing.length}}
+                                    Tweet{{(assessment.tweets_containing.length > 1)? 's': ''}} using this URL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="detail_panel === 'sources'">
+                <div *ngIf="tweetCredibility.sources_credibility.assessments.length">
+                    <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid" class="mat-elevation-z8 padded">
+                        <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
+                        <div *ngFor="let assessment of tweetCredibility.sources_credibility.assessments">
+                            <div class="mat-elevation-z4">
+                                <div class="padded">
+                                    <a matTooltip="See details for this source" (click)="openSourceDialog(assessment)" class="pointer">
+                                        <div>
+                                            <div class="center" style="text-align: center">
+                                                <p><b>{{assessment.itemReviewed}}</b></p>
+                                            </div>
+                                            <div style="width: 100px; height: 70px; justify-content: center" class="center" fxLayoutAlign="center center">
+                                                <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed" appImgFallback style="max-height: 100%; max-width: 100%;">
+                                            </div>
+                                            <app-credibility-meter [credibility]='assessment.credibility'>
+                                            </app-credibility-meter>
+                                        </div>
+                                    </a>
+                                </div>
+                                <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)" mat-button color="primary" class="full-width" matTooltip="See tweets">
+                                    {{assessment.tweets_containing.length}}
+                                    Tweet{{(assessment.tweets_containing.length > 1)? 's': ''}} using this source
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
