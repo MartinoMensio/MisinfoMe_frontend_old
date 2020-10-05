@@ -73,11 +73,12 @@ export class CredibilityTweetsComponent implements OnInit {
     })
   }
 
-  openSourceDialog(): void {
+  openSourceDialog(sourceAssessment): void {
+    console.log(sourceAssessment);
     const dialogRef = this.dialog.open(SourceCardComponent, {
       // width: '250px',
       maxHeight: '90vh',
-      data: this.tweetCredibility.profile_as_source_credibility
+      data: sourceAssessment
     });
 
     dialogRef.afterClosed().subscribe(result => {
