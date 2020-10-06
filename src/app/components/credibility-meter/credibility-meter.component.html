@@ -1,12 +1,9 @@
 <div style="padding: 5px;" [style.width]="size + 'px'" class="center">
-    <!-- <div *ngIf='credibility.confidence == 0'>
-        <p>Unknown!!!</p>
-    </div> -->
-    <div id="wrapper" *ngIf="credibility_meter_type === 'thumb'">
-        <!-- {{credibility.value}} -->
-        <fa-icon icon="thumbs-up" symbol="thumb{{nonce}}"
-            [styles]="{'stroke': rgb_value, 'color': rgb_value}"></fa-icon>
-        <svg id="meter" viewBox="0 0 100 100">
+    <div ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'" [tooltipTitle]="'Credibility value: ' + credibility.value + '<br>Confidence: ' + credibility.confidence">
+        <div id="wrapper" *ngIf="credibility_meter_type === 'thumb'">
+            <!-- {{credibility.value}} -->
+            <fa-icon icon="thumbs-up" symbol="thumb{{nonce}}" [styles]="{'stroke': rgb_value, 'color': rgb_value}"></fa-icon>
+            <svg id="meter" viewBox="0 0 100 100">
             <defs>
                 <linearGradient id="grad-vertical" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" style="stop-color:rgb(255, 0, 0);stop-opacity:1" />
@@ -22,12 +19,11 @@
                 <use attr.xlink:href="#thumb{{nonce}}"></use>
             </g>
         </svg>
-    </div>
-    <div *ngIf="credibility_meter_type === 'gauge'">
-        <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min"
-        [label]="gaugeLabel" [append]="gaugeAppendText" [backgroundColor]="backgroundColor" [foregroundColor]="foregroundColor">
-    </ngx-gauge>
-    <!-- <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
+        </div>
+        <div *ngIf="credibility_meter_type === 'gauge'">
+            <ngx-gauge [type]="gaugeType" [size]="size" [value]="credibility.value" [min]="min" [max]="max" [min]="min" [label]="gaugeLabel" [append]="gaugeAppendText" [backgroundColor]="backgroundColor" [foregroundColor]="foregroundColor">
+            </ngx-gauge>
+            <!-- <div style="margin-top: -30px;">Confidence: {{credibility.confidence * 100 | number}}%</div>
     <mat-progress-bar [value]="credibility.confidence * 100"></mat-progress-bar> -->
+        </div>
     </div>
-</div>

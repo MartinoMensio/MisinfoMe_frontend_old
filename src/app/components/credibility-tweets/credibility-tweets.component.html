@@ -9,11 +9,17 @@
             <mat-spinner class="center"></mat-spinner>
             <p style="text-align:center;" class="primary-color">{{loading_str}}</p>
         </div>
-        <app-error *ngIf="main_pranalysis_stateofile_state == loadStates.Error" [message]='error_detail_profile'></app-error>
+        <app-error *ngIf="analysis_state == loadStates.Error" [message]='error_detail_tweet'></app-error>
         <div *ngIf="analysis_state == loadStates.Loaded" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
             <!-- <ngx-tweet tweetId="{{element.tweet_id}}" width="500"></ngx-tweet> -->
             <div style="width: 500px;">
-                <ngx-tweet [tweetId]="state_tweet_id" width="500"></ngx-tweet>
+                <div *ngIf="!tweetCredibility.exception">
+                    <ngx-tweet [tweetId]="state_tweet_id" width="500"></ngx-tweet>
+                </div>
+                <div *ngIf="tweetCredibility.exception">
+                    <app-error message='The tweet is not available from the Twitter API. It has probably been removed or deleted. However, we have some information about it.'></app-error>
+                    <!-- <p>{{tweetCredibility.exception.json_error.detail}}</p> -->
+                </div>
             </div>
             <div style="width: 500px;">
                 <div>
@@ -25,10 +31,11 @@
                         </div>
                         <div *ngIf="tweetCredibility.tweet_direct_credibility">
                             <div mat-raised-button>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence <= 0.1 ">Fact-checked: Uncertain</h4>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value > 0.1">Fact-checked: Credible</h4>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence >= 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value <= -0.1">Fact-checked: Not credible</h4>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.1 && tweetCredibility.tweet_direct_credibility.credibility.value > -0.1 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.1">Fact-checked: Mixed</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence <= 0.5 ">Fact-checked: Not Verifiable</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value >= 0.6">Fact-checked: Credible</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value > 0.25 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.6">Fact-checked: Mostly Credible</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence >= 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value <= -0.25">Fact-checked: Not credible</h4>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value > -0.25 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.25">Fact-checked: Uncertain</h4>
                                 <p>This tweet has been rated by Fact-checkers. The following reports are available:</p>
                                 <ul>
                                     <li *ngFor="let l of fact_checks">

@@ -39,6 +39,7 @@ export class CredibilityTweetsComponent implements OnInit {
   detail_panel_is_expanded: boolean;
 
   fact_checks = [];
+  error_detail_tweet: string;
 
   constructor(private apiService: APIService, private route: ActivatedRoute, public dialog: MatDialog) { }
 
@@ -70,6 +71,10 @@ export class CredibilityTweetsComponent implements OnInit {
         }
       }
       this.analysis_state = LoadStates.Loaded;
+    }, () => {
+      console.log('error');
+      this.analysis_state = LoadStates.Error;
+      this.error_detail_tweet = 'Tweet not found'
     })
   }
 
