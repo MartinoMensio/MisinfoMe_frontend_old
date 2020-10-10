@@ -116,7 +116,7 @@ export class ProfileCardComponent implements OnInit {
     this.tweets_to_show = tweets;
     const title = `Tweet${(tweets.length > 1) ? 's' : ''} using ${sourceName}`;
     const dialogRef = this.dialog.open(TweetsListComponent, {
-      // width: '250px',
+      width: '600px',
       maxHeight: '90vh',
       data: {tweets: tweets, title: title}
     });

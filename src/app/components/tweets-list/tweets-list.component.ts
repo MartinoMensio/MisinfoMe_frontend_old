@@ -23,7 +23,7 @@ export class TweetsListComponent implements OnInit {
 
   ngOnInit() {
     this.tweets_loading = true;
-    this.waitForEl('twitter-widget', () => {
+    this.waitForEl('.twitter-tweet-rendered', () => {
       this.tweets_loading = false;
     });
   }
