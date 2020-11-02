@@ -62,13 +62,15 @@ export class CredibilityTweetsComponent implements OnInit {
       if (result.tweet_direct_credibility) {
         for (let ass of result.tweet_direct_credibility?.assessments) {
           console.log(ass);
-          for (let k in ass.original.overall) {
-            console.log(k);
-            for (let url of ass.original.overall[k])
-              this.fact_checks.push(url);
+          for (let el of ass.reports) {
+            this.fact_checks.push(el);
           }
-          this.fact_checks.push();
         }
+      }
+      if (this.tweetCredibility.ratingExplanationFormat === 'markdown') {
+        // remove last bit from explaination (self referencing)
+        const start = this.tweetCredibility.ratingExplanation.indexOf('For more details of this analysis')
+        this.tweetCredibility.ratingExplanation = this.tweetCredibility.ratingExplanation.substr(0, start)
       }
       this.analysis_state = LoadStates.Loaded;
     }, () => {

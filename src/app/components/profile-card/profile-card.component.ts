@@ -31,8 +31,10 @@ export class ProfileCardComponent implements OnInit {
   tweets_to_show: Array<any>;
   bad_sources: Array<any>;
   bad_sources_tweets: Array<string> = [];
-  fact_checkers_reviewing: Array<any> = [];
-  fact_checked: any; 
+  fact_checkers_reviewing: Set<any>;
+  reports: Array<any>;
+  fact_checked_positive_unique: Set<any>;
+  fact_checked_negative_unique: Set<any>;
 
   @Input()
   screen_name: string;
@@ -58,11 +60,18 @@ export class ProfileCardComponent implements OnInit {
     };
     for (let ass of this.profileAssessment.profile_as_source_credibility.assessments) {
       if (ass.origin_id === 'factchecking_report') {
-        this.fact_checked = ass.original.overall;
-        this.fact_checkers_reviewing = Object.keys(ass.original);
-        this.fact_checkers_reviewing = this.fact_checkers_reviewing.filter((el) => {
-          return el !== 'overall';
-        })
+        this.reports = ass.reports;
+        this.fact_checked_negative_unique = new Set(
+          this.reports
+            .filter(el =>el.coinform_label === 'not_credible')
+            .map(el => el.report_url)
+        );
+        this.fact_checked_positive_unique = new Set(
+          this.reports
+            .filter(el =>el.coinform_label === 'credibile')
+            .map(el => el.report_url)
+        );
+        this.fact_checkers_reviewing = new Set(this.reports.map(el => el.origin?.id));
       }
     }
   }

@@ -6,8 +6,7 @@
             <div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
                 <!-- first column: profile badge -->
                 <div fxLayout="column" fxFlex>
-                    <a mat-raised-button href="https://twitter.com/{{profileAssessment.itemReviewed.screen_name}}"
-                        target="_blank;" class="button-regular" fxFlex>
+                    <a mat-raised-button href="https://twitter.com/{{profileAssessment.itemReviewed.screen_name}}" target="_blank;" class="button-regular" fxFlex>
                         <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
                             <img [src]="profileAssessment.itemReviewed.image_full" width="120px" height="120px" class="center">
                             <div>
@@ -30,7 +29,8 @@
                             <div>
                                 <h3>Credibility</h3>
                                 <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01">
-                                    <p>{{fact_checkers_reviewing.length}} fact-checking organisations have reviewed the tweets from this profile. Out of the fact-checks, {{fact_checked.negative && fact_checked.negative.length || 0}} have a negative outcome.</p>
+                                    <p>{{fact_checkers_reviewing.size}} fact-checking organisations have reviewed the tweets from this profile. Out of the fact-checks, {{fact_checked_negative_unique && fact_checked_negative_unique.size || 0}} have a negative
+                                        outcome.</p>
                                 </div>
                                 <div *ngIf="profileAssessment.urls_credibility.assessments.length">
                                     <p>{{profileAssessment.urls_credibility.assessments.length}} links with low credibility.</p>
@@ -46,21 +46,17 @@
             <!-- second row: details and source assessments -->
             <div fxLayout="row" fxLayoutGap="10px">
                 <!-- this first panel is just shown for profiles that have been reviewed directly -->
-                <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01"
-                    class="mat-elevation-z8" fxFlex fxLayout="column">
+                <div *ngIf="profileAssessment.profile_as_source_credibility.credibility.confidence > 0.01" class="mat-elevation-z8" fxFlex fxLayout="column">
                     <div class="padded" fxFlex>
                         <h3>As a source</h3>
                         <div>
-                            <app-credibility-meter
-                                [credibility]="profileAssessment.profile_as_source_credibility.credibility"
-                                [size]="150">
+                            <app-credibility-meter [credibility]="profileAssessment.profile_as_source_credibility.credibility" [size]="150">
                             </app-credibility-meter>
                         </div>
                         <p>This profile has been reviewed directly as a source of information.</p>
                         <p>This component of the score comes from established Fact-Checkers and other organisations.</p>
                     </div>
-                    <button (click)="setDetailTo('as_source')" mat-button color="primary" class="full-width"
-                        matTooltip="Expand">
+                    <button (click)="setDetailTo('as_source')" mat-button color="primary" class="full-width" matTooltip="Expand">
                         <div class="bigger-icon">
                             <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
                         </div>
@@ -70,8 +66,7 @@
                     <div class="padded" fxFlex>
                         <h3>Links shared</h3>
                         <div>
-                            <app-credibility-meter [credibility]='profileAssessment.urls_credibility.credibility'
-                                [size]="150">
+                            <app-credibility-meter [credibility]='profileAssessment.urls_credibility.credibility' [size]="150">
                             </app-credibility-meter>
                         </div>
                         <p>This part of the score comes from the links shared.</p>
@@ -80,8 +75,7 @@
                             <p class="accent-color">The URLs shared don't match with the ones that we know about.</p>
                         </div>
                     </div>
-                    <button *ngIf="profileAssessment.urls_credibility.assessments.length" (click)="setDetailTo('urls')"
-                        mat-button color="primary" class="full-width" matTooltip="Expand">
+                    <button *ngIf="profileAssessment.urls_credibility.assessments.length" (click)="setDetailTo('urls')" mat-button color="primary" class="full-width" matTooltip="Expand">
                         <div class="bigger-icon">
                             <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
                         </div>
@@ -92,8 +86,7 @@
                         <h3>Sources used</h3>
                         <div>
                             <div>
-                                <app-credibility-meter [credibility]='profileAssessment.sources_credibility.credibility'
-                                    [size]="150">
+                                <app-credibility-meter [credibility]='profileAssessment.sources_credibility.credibility' [size]="150">
                                 </app-credibility-meter>
                             </div>
                             <p>This part of the score comes from the sources used in the tweets.</p>
@@ -103,9 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <button *ngIf="profileAssessment.sources_credibility.assessments.length"
-                        (click)="setDetailTo('sources')" mat-button color="primary" class="full-width"
-                        matTooltip="Expand">
+                    <button *ngIf="profileAssessment.sources_credibility.assessments.length" (click)="setDetailTo('sources')" mat-button color="primary" class="full-width" matTooltip="Expand">
                         <div class="bigger-icon">
                             <mat-icon [inline]="true">keyboard_arrow_down</mat-icon>
                         </div>
@@ -127,14 +118,12 @@
                 </div>
                 <div *ngIf="detail_panel === 'urls'">
                     <div *ngIf="profileAssessment.urls_credibility.assessments.length">
-                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid"
-                            class="mat-elevation-z8 padded">
+                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid" class="mat-elevation-z8 padded">
                             <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
                             <div *ngFor="let assessment of profileAssessment.urls_credibility.assessments">
                                 <div class="mat-elevation-z4">
                                     <div class="padded">
-                                        <a matTooltip="See details for this URL"
-                                            (click)="openSourceDialog(assessment)" class="pointer">
+                                        <a matTooltip="See details for this URL" (click)="openSourceDialog(assessment)" class="pointer">
                                             <div>
                                                 <div class="center" style="text-align: center">
                                                     <p><b>
@@ -153,8 +142,7 @@
                                             </div>
                                         </a>
                                     </div>
-                                    <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)"
-                                        mat-button color="primary" class="full-width" matTooltip="See tweets">
+                                    <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)" mat-button color="primary" class="full-width" matTooltip="See tweets">
                                         {{assessment.tweets_containing.length}}
                                         Tweet{{(assessment.tweets_containing.length > 1)? 's': ''}} using this URL
                                     </button>
@@ -165,30 +153,25 @@
                 </div>
                 <div *ngIf="detail_panel === 'sources'">
                     <div *ngIf="profileAssessment.sources_credibility.assessments.length">
-                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid"
-                            class="mat-elevation-z8 padded">
+                        <div style="max-height: 500px; overflow-y:scroll;" fxLayout="row wrap" fxLayoutGap="10px grid" class="mat-elevation-z8 padded">
                             <!-- | orderBy: -assessment.credibility.value http://fuelinteractive.github.io/fuel-ui/#/pipe/orderby -->
                             <div *ngFor="let assessment of profileAssessment.sources_credibility.assessments">
                                 <div class="mat-elevation-z4">
                                     <div class="padded">
-                                        <a matTooltip="See details for this source"
-                                            (click)="openSourceDialog(assessment)" class="pointer">
+                                        <a matTooltip="See details for this source" (click)="openSourceDialog(assessment)" class="pointer">
                                             <div>
                                                 <div class="center" style="text-align: center">
                                                     <p><b>{{assessment.itemReviewed}}</b></p>
                                                 </div>
-                                                <div style="width: 100px; height: 70px; justify-content: center"
-                                                    class="center" fxLayoutAlign="center center">
-                                                    <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed"
-                                                        appImgFallback style="max-height: 100%; max-width: 100%;">
+                                                <div style="width: 100px; height: 70px; justify-content: center" class="center" fxLayoutAlign="center center">
+                                                    <img [src]="'https://logo.clearbit.com/' + assessment.itemReviewed" appImgFallback style="max-height: 100%; max-width: 100%;">
                                                 </div>
                                                 <app-credibility-meter [credibility]='assessment.credibility'>
                                                 </app-credibility-meter>
                                             </div>
                                         </a>
                                     </div>
-                                    <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)"
-                                        mat-button color="primary" class="full-width" matTooltip="See tweets">
+                                    <button (click)="seeTweets(assessment.tweets_containing, assessment.itemReviewed)" mat-button color="primary" class="full-width" matTooltip="See tweets">
                                         {{assessment.tweets_containing.length}}
                                         Tweet{{(assessment.tweets_containing.length > 1)? 's': ''}} using this source
                                     </button>

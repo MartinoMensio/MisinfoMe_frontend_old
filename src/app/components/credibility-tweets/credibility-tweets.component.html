@@ -29,17 +29,20 @@
                             <app-credibility-meter [credibility]='tweetCredibility.credibility' [size]="150">
                             </app-credibility-meter>
                         </div>
+                        <div>
+                            <markdown [data]="tweetCredibility.ratingExplanation"></markdown>
+                        </div>
                         <div *ngIf="tweetCredibility.tweet_direct_credibility">
                             <div mat-raised-button>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence <= 0.5 ">Fact-checked: Not Verifiable</h4>
+                                <!-- <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence <= 0.5 ">Fact-checked: Not Verifiable</h4>
                                 <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value >= 0.6">Fact-checked: Credible</h4>
                                 <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value > 0.25 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.6">Fact-checked: Mostly Credible</h4>
                                 <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence >= 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value <= -0.25">Fact-checked: Not credible</h4>
-                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value > -0.25 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.25">Fact-checked: Uncertain</h4>
-                                <p>This tweet has been rated by Fact-checkers. The following reports are available:</p>
+                                <h4 *ngIf="tweetCredibility.tweet_direct_credibility.credibility.confidence > 0.5 && tweetCredibility.tweet_direct_credibility.credibility.value > -0.25 && tweetCredibility.tweet_direct_credibility.credibility.value < 0.25">Fact-checked: Uncertain</h4> -->
+                                <p>The following reports are available:</p>
                                 <ul>
                                     <li *ngFor="let l of fact_checks">
-                                        <a href="{{l}}">{{l}}</a>
+                                        Labelled as <b>{{l.coinform_label}}</b> by {{l.origin?.id}}: <a href="{{l.report_url}}">report</a>
                                     </li>
                                 </ul>
                             </div>

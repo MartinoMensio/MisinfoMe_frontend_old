@@ -30,6 +30,7 @@ import { NestableModule } from 'ngx-nestable';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxGaugeModule } from 'ngx-gauge';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -132,7 +133,8 @@ import { CredibilityTweetsComponent } from './components/credibility-tweets/cred
     NestableModule,
     FlexLayoutModule,
     InfiniteScrollModule,
-    NgxGaugeModule
+    NgxGaugeModule,
+    MarkdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent],
