@@ -45,16 +45,16 @@ export class VennComponent implements OnInit {
     div.datum(this.sets).call(chart);
 
     const tooltip = d3.select('#venn').append('div').attr('class', 'venntooltip')
-    .style('position', 'absolute')
-    .style('text-align', 'center')
-    .style('width', '128px')
-    .style('height', '16px')
-    .style('background', '#333')
-    .style('color', '#ddd')
-    .style('padding', '2px')
-    .style('border', '0px')
-    .style('border-radius', '8px')
-    .style('opacity', '0');
+      .style('position', 'absolute')
+      .style('text-align', 'center')
+      .style('width', '128px')
+      .style('height', '16px')
+      .style('background', '#333')
+      .style('color', '#ddd')
+      .style('padding', '2px')
+      .style('border', '0px')
+      .style('border-radius', '8px')
+      .style('opacity', '0');
 
     div.selectAll('path')
       .style('stroke-opacity', 0)
@@ -64,7 +64,7 @@ export class VennComponent implements OnInit {
     const that = this;
 
     div.selectAll('g')
-      .on('mouseover', function(d: any, i) {
+      .on('mouseover', function (d: any, i) {
         // sort all the areas relative to the current item
         venn.sortAreas(div, d);
 
