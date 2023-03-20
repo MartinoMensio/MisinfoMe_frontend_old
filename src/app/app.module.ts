@@ -14,7 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -113,6 +113,7 @@ import { CredibilityTweetsComponent } from './components/credibility-tweets/cred
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatDividerModule,
+    MatTableDataSource,
     MatTableModule,
     MatExpansionModule,
     MatGridListModule,
