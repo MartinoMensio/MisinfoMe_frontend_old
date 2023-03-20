@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LegacyAnalysisComponent } from './legacy-analysis.component';
 
@@ -6,7 +6,7 @@ describe('LegacyAnalysisComponent', () => {
   let component: LegacyAnalysisComponent;
   let fixture: ComponentFixture<LegacyAnalysisComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LegacyAnalysisComponent ]
     })

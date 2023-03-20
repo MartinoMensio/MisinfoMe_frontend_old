@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImpactFactcheckingComponent } from './impact-factchecking.component';
 
@@ -6,7 +6,7 @@ describe('ImpactFactcheckingComponent', () => {
   let component: ImpactFactcheckingComponent;
   let fixture: ComponentFixture<ImpactFactcheckingComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImpactFactcheckingComponent ]
     })

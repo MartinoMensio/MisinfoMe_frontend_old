@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FactCheckingComponent } from './fact-checking.component';
 
@@ -6,7 +6,7 @@ describe('FactCheckingComponent', () => {
   let component: FactCheckingComponent;
   let fixture: ComponentFixture<FactCheckingComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FactCheckingComponent ]
     })
