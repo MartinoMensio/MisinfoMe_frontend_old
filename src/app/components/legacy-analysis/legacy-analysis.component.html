@@ -17,13 +17,15 @@
             <div>This is how the URLs that have been shared by <a
                     href="https://twitter.com/{{result_you.screen_name}}">{{result_you.screen_name}}</a> are classified
             </div>
-            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}</h2>
+            <h2 fxShow.xs="true" fxShow.gt-xs="false">{{result_you.shared_urls_cnt}} URLs {{settingsService.showUnknown
+                ? 'analysed' : 'matching'}}</h2>
             <div class="piechart-container">
                 <ngx-charts-pie-chart fxShow.xs="true" fxShow.gt-xs="false" [scheme]="colorScheme"
                     [results]="pie_data_you" [gradient]="gradient" [labels]="true">
                 </ngx-charts-pie-chart>
-                <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true" label="URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}"
-                    [scheme]="colorScheme" [results]="pie_data_you" [gradient]="gradient">
+                <ngx-charts-advanced-pie-chart fxShow.xs="false" fxShow.gt-xs="true"
+                    label="URLs {{settingsService.showUnknown ? 'analysed' : 'matching'}}" [scheme]="colorScheme"
+                    [results]="pie_data_you" [gradient]="gradient">
                 </ngx-charts-advanced-pie-chart>
             </div>
         </div>
@@ -34,15 +36,16 @@
         <mat-card class="mat-elevation-z5">
             <h3>Details of the URLs shared</h3>
 
-            <ngx-nestable [(list)]="list" [options]="options" [template]="itemTemplate">
-            </ngx-nestable>
+            <!-- TODO: ngx-nestable is old does not support angular 13 and newer-->
+            <!-- <ngx-nestable [(list)]="list" [options]="options" [template]="itemTemplate">
+            </ngx-nestable> -->
 
             <ng-template #itemTemplate let-row>
                 <!-- <button mat-icon-button [ngxNestableDragHandle]="row">
               <mat-icon>drag_handle</mat-icon>
             </button> -->
                 <div fxLayout="column" class="full-width">
-                    <div [ngxNestableExpandCollapse]="row" fxLayout="row" class="full-width">
+                    <!-- <div [ngxNestableExpandCollapse]="row" fxLayout="row" class="full-width">
                         <button mat-icon-button *ngIf="row.item.children && row.item.children.length; else empty_item">
                             <mat-icon>{{row.item.$$expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
                             </mat-icon>
@@ -54,7 +57,7 @@
                         </div>
                         <span fxFlex></span>
                         <div>{{row.item.count}}</div>
-                    </div>
+                    </div> -->
                     <div *ngIf="!row.item.children" class="full-width">
                         <!-- display content for leaf nodes -->
                         <app-table-tweets [data]="row.item.tweets" fxFlex="100%"></app-table-tweets>

@@ -26,7 +26,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxTweetModule } from 'ngx-tweet';
-import { NestableModule } from 'ngx-nestable';
+// import { NestableModule } from 'ngx-nestable';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxGaugeModule } from 'ngx-gauge';
@@ -131,7 +131,7 @@ import { CredibilityTweetsComponent } from './components/credibility-tweets/cred
     NgxGraphModule,
     NgxChartsModule,
     NgxTweetModule,
-    NestableModule,
+    // NestableModule,
     FlexLayoutModule,
     InfiniteScrollModule,
     NgxGaugeModule,
